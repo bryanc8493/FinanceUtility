@@ -28,7 +28,7 @@ public class FinanceUtility {
 	public static AppLogger appLogger;
 
 	public static void main(String[] args) throws GeneralSecurityException,
-			IOException, InterruptedException {
+			IOException {
 		appLogger = new AppLogger();
 		logger = Logger.getLogger(FinanceUtility.class);
 

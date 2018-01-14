@@ -1,0 +1,7 @@
+.classpath
+.iml
+.settings
+.properties
+build/
+config/
+test-output/
