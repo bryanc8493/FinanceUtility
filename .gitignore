@@ -6,4 +6,4 @@ build/
 config/
 test-output/
 out/
-.idea/
+.idea/workspace.xml
