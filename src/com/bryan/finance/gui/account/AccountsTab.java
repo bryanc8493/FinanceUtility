@@ -30,6 +30,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.bryan.finance.database.Connect;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.UpdatedRecord;
@@ -59,7 +60,8 @@ public class AccountsTab extends JPanel {
 	private boolean passVerified = false;
 	private int attempts = 1;
 
-	public AccountsTab(final Connection con) {
+	public AccountsTab() {
+		Connection con = Connect.getConnection();
 		logger.debug("Initializing and populating Accounts Tab");
 		getAccountData(false);
 
@@ -114,13 +116,11 @@ public class AccountsTab extends JPanel {
 			}
 		});
 
-		add.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					InsertAccount.InsertFrame(con);
-				} catch (ParseException e1) {
-					throw new AppException(e1);
-				}
+		add.addActionListener(e -> {
+			try {
+				InsertAccount.InsertFrame(con);
+			} catch (ParseException e1) {
+				throw new AppException(e1);
 			}
 		});
 
@@ -243,8 +243,8 @@ public class AccountsTab extends JPanel {
 		fullTable.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
-				String changedData = null;
-				String ID = null;
+				String changedData;
+				String ID;
 				int row = fullTable.getSelectedRow();
 				int column = fullTable.getSelectedColumn();
 				changedData = (String) fullTable.getValueAt(row, column);
