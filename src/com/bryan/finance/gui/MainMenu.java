@@ -203,10 +203,10 @@ public class MainMenu extends Icons {
 		JTabbedPane screen = new JTabbedPane(JTabbedPane.TOP);
 		screen.add("Finance", mainPanel);
 		if (Connect.getUsersPermission() == '1') {
-			screen.add("Investments", new InvestmentsTab(con));
-			screen.add("Accounts", new AccountsTab(con));
+			screen.add("Investments", new InvestmentsTab());
+			screen.add("Accounts", new AccountsTab());
 		}
-		screen.add("Addresses", new AddressTab(con));
+		screen.add("Addresses", new AddressTab());
 		screen.setSelectedIndex(persistedTab);
 
 		MenuBar m = new MenuBar(frame, screen);

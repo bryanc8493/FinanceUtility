@@ -49,7 +49,8 @@ public class AddressTab extends JPanel {
 	private static JTable table;
 	private static Logger logger = Logger.getLogger(AddressTab.class);
 
-	public AddressTab(final Connection con) {
+	public AddressTab() {
+		Connection con = Connect.getConnection();
 		logger.debug("Initializing and populating Address Tab");
 		final JButton view = new MultiLabelButton("View Addresses",
 				MultiLabelButton.BOTTOM, Icons.VIEW_ICON);

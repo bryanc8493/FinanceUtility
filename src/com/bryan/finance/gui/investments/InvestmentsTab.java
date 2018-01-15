@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.Connect;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.database.InvestmentBalance;
@@ -33,8 +34,10 @@ public class InvestmentsTab extends JPanel {
 			MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
 	public final static JButton janus = new MultiLabelButton("Update Janus",
 			MultiLabelButton.BOTTOM, Icons.JANUS_ICON);
+	private Connection con;
 
-	public InvestmentsTab(final Connection con) {
+	public InvestmentsTab() {
+		con = Connect.getConnection();
 		final JButton fidelityV = new MultiLabelButton("View 401K",
 				MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
 		final JButton janusV = new MultiLabelButton("View Janus",
