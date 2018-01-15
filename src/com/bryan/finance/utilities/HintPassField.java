@@ -15,7 +15,7 @@ public class HintPassField extends JPasswordField {
 
 	public HintPassField(String hint) {
 		_hint = hint;
-		this.setEchoChar('•');
+		this.setEchoChar('*');
 	}
 
 	@Override

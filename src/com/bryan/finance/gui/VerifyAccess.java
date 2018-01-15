@@ -197,7 +197,7 @@ public class VerifyAccess extends ApplicationLiterals {
 			public void actionPerformed(ActionEvent e) {
 				showButton.setVisible(false);
 				hideButton.setVisible(true);
-				passField.setEchoChar((char) 0);
+				passField.setEchoChar('*');
 			}
 		});
 
@@ -205,7 +205,7 @@ public class VerifyAccess extends ApplicationLiterals {
 			public void actionPerformed(ActionEvent e) {
 				hideButton.setVisible(false);
 				showButton.setVisible(true);
-				passField.setEchoChar('•');
+				passField.setEchoChar('*');
 			}
 		});
 
