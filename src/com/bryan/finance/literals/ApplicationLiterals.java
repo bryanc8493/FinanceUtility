@@ -73,7 +73,6 @@ public abstract class ApplicationLiterals {
 	public static final String HTML_TEMPLATE = "HTMLTemplateFile";
 	public static final String CHART_OUTPUT = "ChartOutputFile";
 	public static final String REPORTS_OUTPUT_DIR = "ReportsOutputDirectory";
-	public static final String DEVELOPMENT_WORKSPACE = "DevelopmentWorkspace";
 	public static final String THEME_FILE_NAME = "ThemeFileName";
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String DEFAULT_PASSWORD = "DefaultPassword";
@@ -103,8 +102,7 @@ public abstract class ApplicationLiterals {
 			"RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI",
 			"WY" };
 
-	public static final String LOCAL_WORKSPACE = ReadConfig
-			.getConfigValue(DEVELOPMENT_WORKSPACE);
+	public static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\FinanceUtility";
 
 	public static String getLaunchPath() {
 		String path = FinanceUtility.class.getProtectionDomain()
