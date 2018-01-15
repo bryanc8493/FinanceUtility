@@ -61,13 +61,13 @@ public class Connect extends ApplicationLiterals {
 		String url = ReadConfig.getConfigValue(DB_URL);
 		String className = ReadConfig.getConfigValue(MY_SQL_CLASS);
 		String username = ReadConfig.getConfigValue(DB_USER);
-		String Dpass = "";
+		String pass;
 
-		Connection con = null;
+		Connection con;
 		try {
-			Dpass = Encoding.decrypt(ReadConfig.getConfigValue(DB_PASS));
+			pass = Encoding.decrypt(ReadConfig.getConfigValue(DB_PASS));
 			Class.forName(className);
-			con = DriverManager.getConnection(url, username, Dpass);
+			con = DriverManager.getConnection(url, username, pass);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error connecting to Database:"
 					+ NEW_LINE + e.toString(), "Database Error",

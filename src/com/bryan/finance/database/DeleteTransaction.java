@@ -16,13 +16,13 @@ public class DeleteTransaction {
 	private static Logger logger = Logger.getLogger(DeleteTransaction.class);
 	private static final String MonthlyTransSQL = "Delete from "
 			+ Tables.MONTHLY_TRANSACTIONS + " where TRANSACTION_ID = ?";
-	private static String otherSQL;
 
 	public static boolean removeAllTransactions(ReportRecord record, String id,
 			final Connection con) {
 
 		int ID = Integer.parseInt(id);
-		PreparedStatement ps = null;
+		PreparedStatement ps;
+		String deleteSql;
 
 		Tables table = record.getType().equalsIgnoreCase(
 				ApplicationLiterals.EXPENSE) ? Tables.EXPENSES : Tables.INCOME;
@@ -31,7 +31,7 @@ public class DeleteTransaction {
 		logger.debug("Deleting related " + table + " record: '"
 				+ record.getTitle() + "' - '" + record.getDate() + "' - '"
 				+ record.getAmount() + "'");
-		otherSQL = "Delete from " + table + " where TITLE = '"
+		deleteSql = "Delete from " + table + " where TITLE = '"
 				+ record.getTitle() + "'" + " and TRANSACTION_DATE = '"
 				+ record.getDate() + "'" + " and AMOUNT like '"
 				+ record.getAmount() + "%'";
@@ -40,7 +40,7 @@ public class DeleteTransaction {
 			ps = con.prepareStatement(MonthlyTransSQL);
 			ps.setInt(1, ID);
 			ps.execute();
-			ps = con.prepareStatement(otherSQL);
+			ps = con.prepareStatement(deleteSql);
 			ps.execute();
 			return true;
 		} catch (SQLException e) {

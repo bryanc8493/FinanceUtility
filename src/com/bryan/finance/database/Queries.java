@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.bryan.finance.enums.Tables;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Account;
@@ -45,8 +46,8 @@ public class Queries {
 
 		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions "
 				+ "where monthly_transactions.CREDIT_PAID <> '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -66,11 +67,11 @@ public class Queries {
 		final Connection con = Connect.getConnection();
 		String balance = null;
 
-		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions "
+		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM " + Tables.MONTHLY_TRANSACTIONS
 				+ "where TRANSACTION_DATE <= now() "
 				+ "AND monthly_transactions.CREDIT_PAID <> '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -91,8 +92,8 @@ public class Queries {
 		String balance = null;
 
 		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
