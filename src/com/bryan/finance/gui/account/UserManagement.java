@@ -117,8 +117,8 @@ public class UserManagement extends JFrame {
 		JLabel title = new Title("Change Password");
 		final JPasswordField newPass = new JPasswordField();
 		final JPasswordField newPassConf = new JPasswordField();
-		newPass.setEchoChar('*');
-		newPassConf.setEchoChar('*');
+		newPass.setEchoChar('•');
+		newPassConf.setEchoChar('•');
 
 		JButton cancel = new JButton("Cancel");
 		JButton submit = new JButton("Submit");
