@@ -68,7 +68,7 @@ public class Queries {
 		String balance = null;
 
 		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM " + Tables.MONTHLY_TRANSACTIONS
-				+ "where TRANSACTION_DATE <= now() "
+				+ " where TRANSACTION_DATE <= now() "
 				+ "AND monthly_transactions.CREDIT_PAID <> '0'";
 		Statement statement;
 		ResultSet rs;
