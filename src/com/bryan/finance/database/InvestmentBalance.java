@@ -89,8 +89,8 @@ public class InvestmentBalance {
 				+ " and t1.DATE = (select MAX(t2.DATE)" + " from "
 				+ Tables.INVESTMENTS + " t2"
 				+ " where t2.ACCOUNT_NAME = 'JANUS')";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -108,14 +108,12 @@ public class InvestmentBalance {
 				.getCurrencyInstance(locale);
 		String strBal = currencyFormatter.format(balance);
 		JOptionPane.showMessageDialog(null,
-				"<html>The most recent Janus Invesment Acount balance details:<br><ul><li>"
+				"<html>The most recent Janus Investment Account balance details:<br><ul><li>"
 						+ date + ":&emsp;<b>" + strBal + "</b></html>",
 				"Janus Balance", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private static String getToday() {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return sdf.format(new Date());
+		return ApplicationLiterals.YEAR_MONTH_DAY.format(new Date());
 	}
 }

@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.bryan.finance.enums.Tables;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Account;
@@ -45,8 +46,8 @@ public class Queries {
 
 		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions "
 				+ "where monthly_transactions.CREDIT_PAID <> '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -66,11 +67,11 @@ public class Queries {
 		final Connection con = Connect.getConnection();
 		String balance = null;
 
-		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions "
-				+ "where TRANSACTION_DATE <= now() "
+		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM " + Tables.MONTHLY_TRANSACTIONS
+				+ " where TRANSACTION_DATE <= now() "
 				+ "AND monthly_transactions.CREDIT_PAID <> '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -91,8 +92,8 @@ public class Queries {
 		String balance = null;
 
 		String SQL_TEXT = "select sum(COMBINED_AMOUNT) FROM monthly_transactions";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -139,8 +140,8 @@ public class Queries {
 
 		String SQL_TEXT = "select TRANSACTION_ID, TITLE, TYPE, TRANSACTION_DATE, AMOUNT FROM monthly_transactions order by TRANSACTION_ID desc limit "
 				+ MAX_RECORDS;
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		int recordCount = 0;
 
 		try {
@@ -578,16 +579,12 @@ public class Queries {
 		return address;
 	}
 
-	public static Transaction getSpecifiedTransaction(String title,
-			String type, String amount) {
+	public static Transaction getSpecifiedTransaction(String tranId) {
 		String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, CATEGORY, TRANSACTION_DATE, AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID "
-				+ "FROM monthly_transactions WHERE TITLE = '"
-				+ title
-				+ "' AND TYPE = '" + type + "' AND AMOUNT = '" + amount + "'";
-		Statement statement = null;
-		ResultSet rs = null;
+				+ "FROM monthly_transactions WHERE TRANSACTION_ID = " + tranId;
+		Statement statement;
+		ResultSet rs;
 		Transaction tran = new Transaction();
-
 		try {
 			Connection con = Connect.getConnection();
 			statement = con.createStatement();
@@ -604,8 +601,10 @@ public class Queries {
 				tran.setCreditPaid(rs.getString(9).charAt(0));
 			}
 			con.close();
-		} catch (Exception e) {
-			throw new AppException(e);
+		} catch (StringIndexOutOfBoundsException e) {
+			tran.setCreditPaid(' ');
+		} catch (SQLException sqlE) {
+			throw new AppException(sqlE);
 		}
 		return tran;
 	}

@@ -45,7 +45,7 @@ public class AppSettings extends ApplicationLiterals {
 
 	private JButton update = new PrimaryButton("Apply & Save");
 
-	public AppSettings(boolean isModifable) {
+	public AppSettings(boolean isModifiable) {
 		final JFrame frame = new JFrame("Application Settings");
 
 		JLabel title = new Title("Current Application Settings");
@@ -78,7 +78,7 @@ public class AppSettings extends ApplicationLiterals {
 
 		JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		bottom.add(update);
-		update.setVisible(isModifable);
+		update.setVisible(isModifiable);
 		bottom.add(close);
 
 		JPanel main = new JPanel(new BorderLayout());

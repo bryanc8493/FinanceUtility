@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.bryan.finance.enums.Databases;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
@@ -49,7 +50,7 @@ public class Updates {
 		final Connection con = Connect.getConnection();
 		for (UpdatedRecord a : updates) {
 			try {
-				String query = "UPDATE + " + Tables.SITES
+				String query = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.SITES
 						+ " set attr = {data} where ID = {id}";
 				query = query.replace("attr", a.getAttribute());
 				if (a.getAttribute().equalsIgnoreCase("PASS")) {

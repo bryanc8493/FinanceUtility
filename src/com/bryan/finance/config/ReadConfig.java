@@ -14,9 +14,9 @@ public class ReadConfig extends ApplicationLiterals {
 
 	public static String getConfigValue(String property) {
 
-		String value = "";
+		String value;
 		Properties prop = new Properties();
-		InputStream input = null;
+		InputStream input;
 
 		try {
 			input = new FileInputStream(getConfigFile(getLaunchPath()));
@@ -37,10 +37,10 @@ public class ReadConfig extends ApplicationLiterals {
 	}
 
 	public static Map<String, String> getAllProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new HashMap<>();
 
 		Properties props = new Properties();
-		InputStream input = null;
+		InputStream input;
 
 		try {
 			input = new FileInputStream(getConfigFile(getLaunchPath()));

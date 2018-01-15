@@ -355,7 +355,7 @@ public class CustomReport {
 
 	private static Integer[] getCurrentYear() {
 
-		List<Integer> yearsList = new ArrayList<Integer>();
+		List<Integer> yearsList = new ArrayList<>();
 		String currentYearString = ApplicationLiterals.YEAR.format(new Date());
 		int currentYear = Integer.parseInt(currentYearString);
 

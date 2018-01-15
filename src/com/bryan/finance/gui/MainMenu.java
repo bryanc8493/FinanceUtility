@@ -35,6 +35,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.apache.log4j.Logger;
 
@@ -116,7 +117,7 @@ public class MainMenu extends Icons {
 		} else {
 			Double amt = Double.parseDouble(futurePayments);
 			futurePayments = decimal.format(amt);
-			isFutureBalancePositive = amt > 0.00 ? true : false;
+			isFutureBalancePositive = amt > 0.00;
 			futureBalBtn.setText("<html><u>($ " + futurePayments
 					+ ")</u></html>");
 		}
@@ -337,7 +338,7 @@ public class MainMenu extends Icons {
 	private static JScrollPane getLatestRecords() {
 		Object[][] records = Queries.getPastEntries();
 		Object[][] partialRecords = getPartialDataColumns(records);
-		Object[] columnNames = { "Title", "Type", "Amount" };
+		Object[] columnNames = { "Transaction ID", "Title", "Type", "Amount" };
 
 		DefaultTableModel model = new DefaultTableModel(partialRecords,
 				columnNames) {
@@ -358,16 +359,15 @@ public class MainMenu extends Icons {
 		addrSP.setPreferredSize(new Dimension(d.width,
 				table.getRowHeight() * 12));
 
+		TableColumn tranIdColumn = table.getColumnModel().getColumn(0);
+		table.getColumnModel().removeColumn(tranIdColumn);
+
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					int row = table.getSelectedRow();
-					String title = (String) table.getValueAt(row, 0);
-					String type = (String) table.getValueAt(row, 1);
-					String amount = (String) table.getValueAt(row, 2);
+					String id = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
 
-					Transaction selectedTran = Queries.getSpecifiedTransaction(
-							title, type, amount);
+					Transaction selectedTran = Queries.getSpecifiedTransaction(id);
 					new TransactionRecord(selectedTran);
 				}
 			}
@@ -378,11 +378,12 @@ public class MainMenu extends Icons {
 
 	private static Object[][] getPartialDataColumns(Object[][] data) {
 
-		Object[][] returnData = new Object[data.length][3];
+		Object[][] returnData = new Object[data.length][4];
 		for (int i = 0; i < data.length; i++) {
-			returnData[i][0] = data[i][1];
-			returnData[i][1] = data[i][2];
-			returnData[i][2] = data[i][4];
+			returnData[i][0] = data[i][0];
+			returnData[i][1] = data[i][1];
+			returnData[i][2] = data[i][2];
+			returnData[i][3] = data[i][4];
 		}
 		return returnData;
 	}
