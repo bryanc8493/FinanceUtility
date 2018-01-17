@@ -29,13 +29,6 @@ import com.bryan.finance.literals.Icons;
 
 public class AppSettings extends ApplicationLiterals {
 
-	private JLabel expenseCategoriesLabel = new JLabel("Expense Categories");
-	private JLabel incomeCategoriesLabel = new JLabel("Income Categories");
-	private JLabel savingsSafeAmtLabel = new JLabel("Savings Emergency Amount");
-	private JLabel viewingRecordsLabel = new JLabel("Last Viewing Records");
-	private JLabel htmlTemplateLabel = new JLabel("HTML Template File");
-	private JLabel chartOutputLabel = new JLabel("HTML Chart Output File");
-
 	private JTextField expenseCategories = new JTextField(30);
 	private JTextField incomeCategories = new JTextField(30);
 	private JTextField savingsSafeAmt = new JTextField(30);
@@ -52,6 +45,13 @@ public class AppSettings extends ApplicationLiterals {
 
 		Map<String, String> props = ReadConfig.getAllProperties();
 		setCurrentAppSettings(props);
+
+		JLabel expenseCategoriesLabel = new JLabel("Expense Categories");
+		JLabel incomeCategoriesLabel = new JLabel("Income Categories");
+		JLabel savingsSafeAmtLabel = new JLabel("Savings Emergency Amount");
+		JLabel viewingRecordsLabel = new JLabel("Last Viewing Records");
+		JLabel htmlTemplateLabel = new JLabel("HTML Template File");
+		JLabel chartOutputLabel = new JLabel("HTML Chart Output File");
 
 		JPanel contentLabels = new JPanel(new GridLayout(6, 1, 10, 10));
 		contentLabels.add(expenseCategoriesLabel);

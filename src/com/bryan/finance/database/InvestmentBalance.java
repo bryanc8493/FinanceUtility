@@ -54,8 +54,8 @@ public class InvestmentBalance {
 				+ " and t1.DATE = (select MAX(t2.DATE)" + " from "
 				+ Tables.INVESTMENTS + " t2"
 				+ " where t2.ACCOUNT_NAME = 'FIDELITY')";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);

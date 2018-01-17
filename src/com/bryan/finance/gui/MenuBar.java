@@ -273,9 +273,9 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				logger.debug("Dislaying savings data");
 				double savingsAmount = Queries.getSavingsBalance();
-				String safteyAmount = ReadConfig
+				String safetyAmount = ReadConfig
 						.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);
-				double safeAmt = Double.parseDouble(safteyAmount);
+				double safeAmt = Double.parseDouble(safetyAmount);
 				JOptionPane
 						.showMessageDialog(
 								null,
@@ -283,7 +283,7 @@ public class MenuBar extends JMenuBar {
 										+ "Total Amount:&emsp;&emsp;&ensp;$"
 										+ savingsAmount
 										+ "<br>Safety:&ensp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;$"
-										+ safteyAmount + "<br>"
+										+ safetyAmount + "<br>"
 										+ "Wedding Savings:&ensp;$"
 										+ (savingsAmount - safeAmt) + "</html>",
 								"Savings Details",
@@ -293,7 +293,7 @@ public class MenuBar extends JMenuBar {
 
 		viewAppSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.debug("Dislaying app settings");
+				logger.debug("Displaying app settings");
 				new AppSettings(false);
 			}
 		});

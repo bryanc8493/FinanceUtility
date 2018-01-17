@@ -31,14 +31,12 @@ public class AppLogger {
 	}
 
 	private void logHeader() {
-
 		logger.info("===========================================");
 		logger.info("STARTING APPLICATION");
 		logger.info("===========================================");
 	}
 
 	public void logFooter() {
-
 		logger.info("===========================================");
 		logger.info("APPLICATION CLOSED");
 		logger.info("===========================================\n\n\n");

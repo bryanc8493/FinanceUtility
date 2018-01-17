@@ -34,7 +34,7 @@ public class InsertAccount {
 
 	private static Logger logger = Logger.getLogger(InsertAccount.class);
 
-	public static void InsertFrame(final Connection con) throws ParseException {
+	public static void InsertFrame() {
 		logger.debug("Displaying frame for new account");
 		final JFrame frame = new JFrame("New Account");
 		JLabel frameTitle = new Title("Insert New Account");

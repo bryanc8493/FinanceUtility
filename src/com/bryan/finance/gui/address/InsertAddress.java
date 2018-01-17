@@ -34,7 +34,7 @@ public class InsertAddress {
 
 	private static Logger logger = Logger.getLogger(InsertAddress.class);
 
-	public static void InsertFrame(final Connection con) throws ParseException {
+	public static void InsertFrame() {
 		logger.debug("Displaying GUI to insert new Address");
 		final JFrame frame = new JFrame("New Address");
 

@@ -17,7 +17,7 @@ public class DateLabelFormatter extends AbstractFormatter {
 	}
 
 	@Override
-	public String valueToString(Object value) throws ParseException {
+	public String valueToString(Object value) {
 		if (value != null) {
 			Calendar cal = (Calendar) value;
 			return ApplicationLiterals.YEAR_MONTH_DAY.format(cal.getTime());

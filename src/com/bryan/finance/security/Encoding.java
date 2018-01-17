@@ -20,10 +20,6 @@ public class Encoding {
 	private static final byte[] SALT = { (byte) 0xde, (byte) 0x33, (byte) 0x10,
 			(byte) 0x12, (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12, };
 
-	public static String getPass(String PASS) {
-		return PASS;
-	}
-
 	public static String encrypt(String property)
 			throws GeneralSecurityException, UnsupportedEncodingException {
 		SecretKeyFactory keyFactory = SecretKeyFactory
@@ -35,7 +31,7 @@ public class Encoding {
 		return base64Encode(pbeCipher.doFinal(property.getBytes("UTF-8")));
 	}
 
-	public static String base64Encode(byte[] bytes) {
+	private static String base64Encode(byte[] bytes) {
 		return new BASE64Encoder().encode(bytes);
 	}
 
@@ -50,7 +46,7 @@ public class Encoding {
 		return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
 	}
 
-	public static byte[] base64Decode(String property) throws IOException {
+	private static byte[] base64Decode(String property) throws IOException {
 		return new BASE64Decoder().decodeBuffer(property);
 	}
 

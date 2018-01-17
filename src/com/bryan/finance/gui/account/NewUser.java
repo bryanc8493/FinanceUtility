@@ -35,7 +35,7 @@ public class NewUser {
 
 	private static Logger logger = Logger.getLogger(NewUser.class);
 
-	public static void createUser() throws ParseException {
+	public static void createUser() {
 		logger.debug("Displaying GUI to create new user");
 		final JFrame frame = new JFrame("New User");
 

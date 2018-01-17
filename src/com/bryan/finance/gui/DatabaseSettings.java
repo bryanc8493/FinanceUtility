@@ -29,14 +29,6 @@ import com.bryan.finance.literals.Icons;
 
 public class DatabaseSettings extends ApplicationLiterals {
 
-	private JLabel urlLabel = new JLabel("Database Connection URL");
-	private JLabel mySqlClassLabel = new JLabel("MySQL Class Name");
-	private JLabel usernameLabel = new JLabel("Database User");
-	private JLabel passwordLabel = new JLabel("Database Password");
-	private JLabel portLabel = new JLabel("Database Port");
-	private JLabel directoryLabel = new JLabel("MySQL bin Directory");
-	private JLabel backupLabel = new JLabel("Backup Directory");
-
 	private JTextField url = new JTextField(30);
 	private JTextField mySqlClass = new JTextField(30);
 	private JTextField username = new JTextField(30);
@@ -54,6 +46,14 @@ public class DatabaseSettings extends ApplicationLiterals {
 
 		Map<String, String> props = ReadConfig.getAllProperties();
 		setCurrentAppSettings(props);
+
+		JLabel urlLabel = new JLabel("Database Connection URL");
+		JLabel mySqlClassLabel = new JLabel("MySQL Class Name");
+		JLabel usernameLabel = new JLabel("Database User");
+		JLabel passwordLabel = new JLabel("Database Password");
+		JLabel portLabel = new JLabel("Database Port");
+		JLabel directoryLabel = new JLabel("MySQL bin Directory");
+		JLabel backupLabel = new JLabel("Backup Directory");
 
 		JPanel contentLabels = new JPanel(new GridLayout(7, 1, 10, 10));
 		contentLabels.add(urlLabel);

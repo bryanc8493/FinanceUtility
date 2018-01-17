@@ -75,8 +75,8 @@ public class CustomReport {
 		final JFrame frame = new JFrame("Reporting");
 		JLabel title = new Title("Select Report Details");
 
-		reportCB = new JComboBox<String>(reports);
-		outputCB = new JComboBox<String>(outputs);
+		reportCB = new JComboBox<>(reports);
+		outputCB = new JComboBox<>(outputs);
 		reportCB.setSelectedItem(null);
 		outputCB.setSelectedItem(null);
 
@@ -85,8 +85,8 @@ public class CustomReport {
 		JLabel monthsLabel = new JLabel("Month:");
 		JLabel yearLabel = new JLabel("Year:");
 
-		years = new JComboBox<Integer>(getCurrentYear());
-		months = new JComboBox<Integer>(getMonths());
+		years = new JComboBox<>(getCurrentYear());
+		months = new JComboBox<>(getMonths());
 		months.setSelectedIndex(getLastMonth());
 		months.setMaximumRowCount(12);
 
@@ -281,7 +281,6 @@ public class CustomReport {
 	}
 
 	private static void runExpensesByCategory() {
-
 		Date selectedBeginDate = (Date) datePicker.getModel().getValue();
 		String startDate = ApplicationLiterals.YEAR_MONTH
 				.format(selectedBeginDate);
@@ -319,7 +318,6 @@ public class CustomReport {
 	}
 
 	private static void runMonthlyUpdates() {
-		// Get dates
 		if (monthly.isSelected()) {
 			int year = (int) years.getSelectedItem();
 			int month = (int) months.getSelectedItem();
@@ -354,7 +352,6 @@ public class CustomReport {
 	}
 
 	private static Integer[] getCurrentYear() {
-
 		List<Integer> yearsList = new ArrayList<>();
 		String currentYearString = ApplicationLiterals.YEAR.format(new Date());
 		int currentYear = Integer.parseInt(currentYearString);
@@ -376,7 +373,6 @@ public class CustomReport {
 	}
 
 	private static int getLastMonth() {
-
 		String monthString = ApplicationLiterals.MONTH.format(new Date());
 		int currentMonth = Integer.parseInt(monthString);
 
@@ -389,7 +385,6 @@ public class CustomReport {
 	}
 
 	private static Integer[] getMonths() {
-
 		Integer[] months = new Integer[12];
 		for (int i = 0; i < months.length; i++) {
 			months[i] = i + 1;
@@ -398,7 +393,6 @@ public class CustomReport {
 	}
 
 	private static boolean isValidInput() {
-
 		boolean valid = true;
 
 		if (!monthly.isSelected() && !custom.isSelected()) {

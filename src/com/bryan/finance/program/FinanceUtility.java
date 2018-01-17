@@ -63,7 +63,7 @@ public class FinanceUtility {
 						new FileReader(themeFile));
 				String line = br.readLine();
 				UIManager.setLookAndFeel(line);
-				logger.debug("Theme sucessfully set to class: "
+				logger.debug("Theme successfully set to class: "
 						+ line.substring(line
 								.lastIndexOf(ApplicationLiterals.DOT) + 1));
 				br.close();

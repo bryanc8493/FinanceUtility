@@ -56,21 +56,21 @@ public class ButtonEditor extends DefaultCellEditor {
 			String[] temp = label.split(ApplicationLiterals.SEMI_COLON);
 			String user = temp[0];
 			String status = temp[1];
-			String oppStatus = ApplicationLiterals.EMPTY;
+			String oppositeStatus = ApplicationLiterals.EMPTY;
 			if (status.equalsIgnoreCase(ApplicationLiterals.UNLOCKED)) {
-				oppStatus = ApplicationLiterals.LOCK;
+				oppositeStatus = ApplicationLiterals.LOCK;
 			} else {
-				oppStatus = ApplicationLiterals.UNLOCK;
+				oppositeStatus = ApplicationLiterals.UNLOCK;
 			}
 
 			int choice = JOptionPane.showConfirmDialog(null, user
 					+ " is currently " + status + "."
 					+ ApplicationLiterals.NEW_LINE + "Would you like to "
-					+ oppStatus + " " + user + "?", "Confirm",
+					+ oppositeStatus + " " + user + "?", "Confirm",
 					JOptionPane.YES_NO_OPTION);
 			if (choice == JOptionPane.YES_OPTION) {
 				currentFrame.dispose();
-				if (oppStatus.equalsIgnoreCase(ApplicationLiterals.LOCK)) {
+				if (oppositeStatus.equalsIgnoreCase(ApplicationLiterals.LOCK)) {
 					logger.info("LOCKING USER: " + user);
 					Queries.lockUser(user);
 					JOptionPane.showMessageDialog(null, user
@@ -87,7 +87,7 @@ public class ButtonEditor extends DefaultCellEditor {
 			}
 		}
 		isPushed = false;
-		return new String(label);
+		return label;
 	}
 
 	public boolean stopCellEditing() {

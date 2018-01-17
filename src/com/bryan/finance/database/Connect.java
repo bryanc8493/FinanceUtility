@@ -91,7 +91,7 @@ public class Connect extends ApplicationLiterals {
 	}
 
 	private static void updateUsersLastLogin() {
-		PreparedStatement ps = null;
+		PreparedStatement ps;
 		String SQL_TEXT = ("UPDATE " + Databases.ACCOUNTS + DOT + Tables.USERS
 				+ " set LAST_LOGIN = now() WHERE USERNAME = '"
 				+ currentUser.getUsername() + "'");

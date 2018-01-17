@@ -49,9 +49,9 @@ public class InsertRecord {
 	private static Logger logger = Logger.getLogger(InsertRecord.class);
 	private static String[] EXPENSE_CATEGORIES;
 	private static String[] INCOME_CATEGORIES;
-	private static JComboBox<String> selectCategory = new JComboBox<String>();
+	private static JComboBox<String> selectCategory = new JComboBox<>();
 
-	public static void InsertFrame() throws ParseException {
+	public static void InsertFrame() {
 		logger.debug("Displaying GUI to insert new transaction");
 		final Connection con = Connect.getConnection();
 		String rawExpCategories = ReadConfig
@@ -69,7 +69,7 @@ public class InsertRecord {
 
 		// Type selection (income or expense)
 		JLabel type = new JLabel("* Type");
-		final JComboBox<String> typeCb = new JComboBox<String>(TYPE_CATEGORIES);
+		final JComboBox<String> typeCb = new JComboBox<>(TYPE_CATEGORIES);
 		typeCb.setSelectedItem(null);
 
 		// Category Selection

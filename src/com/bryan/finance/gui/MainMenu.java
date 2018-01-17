@@ -235,11 +235,7 @@ public class MainMenu extends Icons {
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				try {
-					InsertRecord.InsertFrame();
-				} catch (ParseException e1) {
-					throw new AppException(e1);
-				}
+				InsertRecord.InsertFrame();
 			}
 		});
 

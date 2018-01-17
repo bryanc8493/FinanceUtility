@@ -33,7 +33,7 @@ public class SalaryManagement implements ActionListener {
 	private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
 
 	// Input components
-	private JComboBox<Integer> jobGrade = new JComboBox<Integer>();
+	private JComboBox<Integer> jobGrade = new JComboBox<>();
 	private JTextField compRatio = new HintTextField("80% - 120%");
 	private JTextField STIPerf = new HintTextField("0% - 200%");
 	private JTextField MTIPerf = new HintTextField("0% - 200%");
@@ -51,8 +51,6 @@ public class SalaryManagement implements ActionListener {
 	private JLabel totalPayAndBonus = new JLabel();
 
 	public SalaryManagement() {
-
-		// Get salary data from database
 		salaries = Queries.getSalaryData();
 
 		populateJobGrades();
@@ -64,7 +62,7 @@ public class SalaryManagement implements ActionListener {
 		JLabel STIlbl = new JLabel("STI Performance:");
 		JLabel MTIlbl = new JLabel("MTI Performance:");
 
-		// Outupt labels
+		// output labels
 		JLabel basePaylbl = new JLabel("Base Pay:");
 		JLabel monthlyPaylbl = new JLabel("Monthly Pay:");
 		JLabel biWeeklyPaylbl = new JLabel("Bi-Weekly Pay:");
@@ -142,7 +140,6 @@ public class SalaryManagement implements ActionListener {
 	}
 
 	private void populateJobGrades() {
-
 		for (Integer i = 6; i < 29; i++) {
 			if (!(i == 22 || (i > 23 & i < 28))) {
 				jobGrade.addItem(i);
@@ -153,7 +150,6 @@ public class SalaryManagement implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-
 		String comp = compRatio.getText().trim();
 		String sti = STIPerf.getText().trim();
 		String mti = MTIPerf.getText().trim();
@@ -236,7 +232,6 @@ public class SalaryManagement implements ActionListener {
 	}
 
 	private Salary getSelectedGradeData(int grade) {
-
 		Salary salary = null;
 		for (Salary s : salaries) {
 			if (s.getGrade() == grade) {
@@ -248,7 +243,6 @@ public class SalaryManagement implements ActionListener {
 	}
 
 	private void alignOutputLabels() {
-
 		basePay.setHorizontalAlignment(SwingConstants.RIGHT);
 		monthlyPay.setHorizontalAlignment(SwingConstants.RIGHT);
 		biWeeklyPay.setHorizontalAlignment(SwingConstants.RIGHT);

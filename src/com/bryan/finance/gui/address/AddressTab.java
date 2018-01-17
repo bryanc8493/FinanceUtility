@@ -103,11 +103,7 @@ public class AddressTab extends JPanel {
 
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					InsertAddress.InsertFrame(con);
-				} catch (ParseException e1) {
-					throw new AppException(e1);
-				}
+				InsertAddress.InsertFrame();
 			}
 		});
 

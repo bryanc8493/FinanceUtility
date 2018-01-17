@@ -54,7 +54,7 @@ public class CreditPayments {
 
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Set<Transaction> credits = new HashSet<Transaction>();
+				Set<Transaction> credits = new HashSet<>();
 
 				for (JCheckBox box : records) {
 					if (box.isSelected()) {
@@ -78,14 +78,14 @@ public class CreditPayments {
 
 	private JPanel getCreditPanel() {
 
-		records = new LinkedHashSet<JCheckBox>();
+		records = new LinkedHashSet<>();
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		String SQL_TEXT = "SELECT count(*) from " + Databases.FINANCIAL
 				+ ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
 				+ "where CREDIT = '1' AND CREDIT_PAID = '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 
 		try {
 			Connection con = Connect.getConnection();

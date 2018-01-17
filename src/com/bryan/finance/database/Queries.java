@@ -115,8 +115,8 @@ public class Queries {
 
 		String SQL_TEXT = "select sum(AMOUNT) FROM monthly_transactions "
 				+ "WHERE CREDIT = '1' AND CREDIT_PAID = '0'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -170,8 +170,8 @@ public class Queries {
 		Object[][] records = new Object[getMonthsSinceJan2016()][5];
 
 		String SQL_TEXT = "select MONTH, YEAR, TOTAL_EXPENSES, TOTAL_INCOME, MONTHLY_CASH_FLOW from financial.monthly_totals order by ID DESC";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		int recordCount = 0;
 		try {
 			statement = con.createStatement();
@@ -205,8 +205,8 @@ public class Queries {
 		double balance = 0.00;
 
 		String SQL_TEXT = "select sum(SUM_AMOUNT) from savings";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		try {
 			statement = con.createStatement();
 			rs = statement.executeQuery(SQL_TEXT);
@@ -225,8 +225,8 @@ public class Queries {
 		logger.debug("Getting all accounts...");
 		final Connection con = Connect.getConnection();
 		String SQL_TEXT = "select count(*) from accounts.sites";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		int recordCount = 0;
 		try {
 			statement = con.createStatement();
@@ -241,7 +241,7 @@ public class Queries {
 
 		Object[][] records = new Object[recordCount][3];
 
-		String key = null;
+		String key;
 		try {
 			key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
 		} catch (GeneralSecurityException | IOException e2) {
@@ -270,8 +270,8 @@ public class Queries {
 		logger.debug("Getting full accounts with password");
 		final Connection con = Connect.getConnection();
 		String SQL_TEXT = "select count(*) from accounts.sites";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		int recordCount = 0;
 		try {
 			statement = con.createStatement();
@@ -285,7 +285,7 @@ public class Queries {
 
 		Object[][] records = new Object[recordCount][4];
 
-		String key = null;
+		String key;
 		try {
 			key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
 		} catch (GeneralSecurityException | IOException e2) {
@@ -330,7 +330,7 @@ public class Queries {
 				+ "'"
 				+ Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
 				+ "'))";
-		PreparedStatement ps = null;
+		PreparedStatement ps;
 
 		int recordsInserted = 0;
 		try {
@@ -347,8 +347,8 @@ public class Queries {
 		logger.debug("Getting addresses...");
 		final Connection con = Connect.getConnection();
 		String SQL_TEXT = "select count(*) from accounts.addresses";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		int recordCount = 0;
 		try {
 			statement = con.createStatement();
@@ -401,7 +401,7 @@ public class Queries {
 				+ "', '"
 				+ addr
 				+ "', '" + city + "', '" + state + "', '" + zip + "')";
-		PreparedStatement ps = null;
+		PreparedStatement ps;
 
 		int recordsInserted = 0;
 		try {
@@ -435,11 +435,9 @@ public class Queries {
 	public static String getFuturePayments() {
 		logger.debug("Determining Future Payments...");
 		final Connection con = Connect.getConnection();
-		// String SQL_TEXT =
-		// "select SUM(AMOUNT) from financial.expenses where TRANSACTION_DATE > now()";
 		String SQL_TEXT = "select SUM(COMBINED_AMOUNT) from financial.monthly_transactions WHERE TRANSACTION_DATE > now()";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		String amount = null;
 		try {
 			statement = con.createStatement();
@@ -464,9 +462,9 @@ public class Queries {
 				+ "'), now(), " + "'" + user.getPermission() + "', '"
 				+ user.getStatus() + "')";
 
-		PreparedStatement ps = null;
+		PreparedStatement ps;
 
-		int recordsInserted = 0;
+		int recordsInserted;
 		try {
 			ps = con.prepareStatement(SQL_TEXT);
 			recordsInserted = ps.executeUpdate();
@@ -478,11 +476,11 @@ public class Queries {
 
 	public static Set<User> getAllUsers() {
 
-		Set<User> users = new LinkedHashSet<User>();
+		Set<User> users = new LinkedHashSet<>();
 		logger.debug("Getting all users...");
 		String SQL_TEXT = "SELECT * FROM accounts.users where USERNAME <> 'ROOT'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 
 		try {
 			Connection con = Connect.getConnection();
@@ -510,7 +508,7 @@ public class Queries {
 			Connection con = Connect.getConnection();
 			String[] systemInfo = VerifyAccess.getSystemInfo();
 
-			PreparedStatement ps = null;
+			PreparedStatement ps;
 			String SQL_TEXT = ("INSERT INTO accounts.banned_users VALUES('"
 					+ systemInfo[0] + "'," + "'" + systemInfo[1] + "', '"
 					+ systemInfo[2] + "', now(), '" + user + "')");
@@ -535,7 +533,7 @@ public class Queries {
 		try {
 			Connection con = Connect.getConnection();
 
-			PreparedStatement ps = null;
+			PreparedStatement ps;
 			String SQL_TEXT = "UPDATE accounts.users SET STATUS = 'UNLOCKED' where USERNAME = '"
 					+ user + "'";
 			logger.warn("Unlocking user: " + user);
@@ -557,8 +555,8 @@ public class Queries {
 				+ "FROM accounts.addresses where LAST_NAME = '"
 				+ lastName
 				+ "' " + "AND FIRST_NAMES = '" + firstName + "'";
-		Statement statement = null;
-		ResultSet rs = null;
+		Statement statement;
+		ResultSet rs;
 		Address address = new Address();
 
 		try {

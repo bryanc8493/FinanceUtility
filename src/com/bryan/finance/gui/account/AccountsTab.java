@@ -117,11 +117,8 @@ public class AccountsTab extends JPanel {
 		});
 
 		add.addActionListener(e -> {
-			try {
-				InsertAccount.InsertFrame(con);
-			} catch (ParseException e1) {
-				throw new AppException(e1);
-			}
+			InsertAccount.InsertFrame();
+
 		});
 
 		edit.addActionListener(new ActionListener() {
@@ -157,7 +154,7 @@ public class AccountsTab extends JPanel {
 					f.setVisible(true);
 					f.setLocationRelativeTo(null);
 
-					updates = new ArrayList<UpdatedRecord>();
+					updates = new ArrayList<>();
 
 					update.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
@@ -270,7 +267,7 @@ public class AccountsTab extends JPanel {
 				"Verify Encryption Key", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.WARNING_MESSAGE);
 		if (okCxl == JOptionPane.OK_OPTION) {
-			String inputKey = null;
+			String inputKey;
 			try {
 				inputKey = Encoding.encrypt(new String(pf.getPassword()));
 			} catch (UnsupportedEncodingException | GeneralSecurityException e1) {
@@ -288,7 +285,7 @@ public class AccountsTab extends JPanel {
 	}
 
 	private static Map<Integer, String> getAttributeMap() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(1, "ACCOUNT");
 		map.put(2, "USERNAME");
 		map.put(3, "PASS");

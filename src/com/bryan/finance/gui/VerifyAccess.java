@@ -219,11 +219,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		create.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				create.setForeground(LINK_CLICKED);
-				try {
-					NewUser.createUser();
-				} catch (ParseException e1) {
-					throw new AppException(e1);
-				}
+				NewUser.createUser();
 			}
 		});
 	}

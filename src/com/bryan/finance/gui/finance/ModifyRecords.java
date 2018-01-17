@@ -70,7 +70,7 @@ public class ModifyRecords {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		updates = new ArrayList<UpdatedRecord>();
+		updates = new ArrayList<>();
 
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -154,8 +154,8 @@ public class ModifyRecords {
 		table.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
-				String changedData = null;
-				String ID = null;
+				String changedData;
+				String ID;
 				int row = table.getSelectedRow();
 				int column = table.getSelectedColumn();
 				changedData = (String) table.getValueAt(row, column);
@@ -173,7 +173,7 @@ public class ModifyRecords {
 
 	private static Map<Integer, String> getAttributeMap() {
 
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(1, "TITLE");
 		map.put(3, "TRANSACTION_DATE");
 		map.put(4, "AMOUNT");

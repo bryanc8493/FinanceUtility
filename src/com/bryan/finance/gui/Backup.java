@@ -52,8 +52,7 @@ public class Backup {
 
 		JPanel buttons = new JPanel(new FlowLayout());
 		buttons.add(backup);
-		backup.setVisible(enableBackup(new File(BACKUP_DIR),
-				ApplicationLiterals.YEAR_MONTH_DAY_CONDENSED));
+		backup.setVisible(enableBackup(ApplicationLiterals.YEAR_MONTH_DAY_CONDENSED));
 		buttons.add(close);
 
 		JPanel panel = new JPanel(new BorderLayout());
@@ -142,7 +141,7 @@ public class Backup {
 				+ database + " > " + backupDir + "\\" + database + ".sql";
 	}
 
-	private boolean enableBackup(File file, SimpleDateFormat format) {
+	private boolean enableBackup(SimpleDateFormat format) {
 		String lastBackup = getLastBackupTime(format);
 		if (getToday().equals(lastBackup)) {
 			return false;
@@ -169,5 +168,4 @@ public class Backup {
 		}
 		return deletedBackups;
 	}
-
 }

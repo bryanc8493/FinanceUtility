@@ -19,7 +19,7 @@ public class InsertIncome {
 		int recordsInserted1 = 0;
 		int recordsInserted2 = 0;
 		int recordsInserted3 = 0;
-		PreparedStatement ps = null;
+		PreparedStatement ps;
 		String SQL_TEXT = ("INSERT INTO " + Tables.INCOME
 				+ " (TITLE, CATEGORY, TRANSACTION_DATE, AMOUNT, DESCRIPTION)"
 				+ " Values(\"" + tran.getTitle() + "\", \""
