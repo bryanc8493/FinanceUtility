@@ -21,6 +21,8 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.utilities.HintPassField;
+import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Account;
@@ -34,23 +36,16 @@ public class InsertAccount {
 
 	private static Logger logger = Logger.getLogger(InsertAccount.class);
 
-	public static void InsertFrame() {
+	public static void addNewAccount() {
 		logger.debug("Displaying frame for new account");
 		final JFrame frame = new JFrame("New Account");
 		JLabel frameTitle = new Title("Insert New Account");
 
-		final JLabel acccountLabel = new JLabel("* Account Name");
-		final JTextField accountField = new JTextField();
-
-		final JLabel usernameLabel = new JLabel("* Username");
-		final JTextField usernameField = new JTextField();
-
-		final JLabel passLabel = new JLabel("* Password");
-		final JPasswordField passField = new JPasswordField();
-
-		final JLabel confPassLabel = new JLabel(
-				"* Confirm Password              ");
-		final JPasswordField confPassField = new JPasswordField();
+		final JTextField accountField = new HintTextField("Account Name", true);
+		accountField.setColumns(18);
+		final JTextField usernameField = new HintTextField("Username", true);
+		final JPasswordField passField = new HintPassField("Password", true);
+		final JPasswordField confPassField = new HintPassField("Confirm Password", true);
 
 		final JButton insert = new PrimaryButton("    Insert    ");
 		final JButton close = new PrimaryButton("    Close    ");
@@ -60,15 +55,11 @@ public class InsertAccount {
 		missingField.setVisible(false);
 
 		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(4, 2, 5, 10));
-		grid.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-		grid.add(acccountLabel);
+		grid.setLayout(new GridLayout(4, 1, 5, 10));
+		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		grid.add(accountField);
-		grid.add(usernameLabel);
 		grid.add(usernameField);
-		grid.add(passLabel);
 		grid.add(passField);
-		grid.add(confPassLabel);
 		grid.add(confPassField);
 
 		JPanel missing = new JPanel();
@@ -146,7 +137,7 @@ public class InsertAccount {
 					account.setUsername(usernameField.getText().trim());
 					account.setPassword(new String(passField.getPassword())
 							.trim());
-					int recordCount = 0;
+					int recordCount;
 					try {
 						recordCount = Queries.newAccount(account);
 					} catch (Exception e1) {

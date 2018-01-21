@@ -3,7 +3,6 @@ package com.bryan.finance.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,7 +15,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -49,16 +47,13 @@ import com.bryan.finance.utilities.HintTextField;
 public class VerifyAccess extends ApplicationLiterals {
 
 	private static int attempts = 0;
-	private static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
-	private static Color LINK_CLICKED = new Color(102, 51, 102);
 	private static Logger logger = Logger.getLogger(VerifyAccess.class);
 
 	private static final Font font = new Font("Sans serif", Font.PLAIN, 16);
 
 	private static JFrame frame;
 
-	public static void CheckAccess() throws GeneralSecurityException,
-			IOException {
+	public static void CheckAccess() {
 
 		logger.debug("Displaying GUI Prompting verification");
 		frame = new JFrame("Verification");
@@ -67,12 +62,8 @@ public class VerifyAccess extends ApplicationLiterals {
 				SwingConstants.CENTER);
 		title.setFont(new Font("sans serif", Font.BOLD, 22));
 		title.setForeground(Color.darkGray);
-		final HintTextField userField = new HintTextField("Username");
-		final HintPassField passField = new HintPassField("Password");
-		Dimension d = passField.getPreferredSize();
-		d.height = d.height + 15;
-		passField.setPreferredSize(d);
-		userField.setPreferredSize(d);
+		final HintTextField userField = new HintTextField("Username", true);
+		final HintPassField passField = new HintPassField("Password", true);
 
 		final JButton submit = new JButton(Icons.LOGIN_ICON);
 		submit.setBorder(null);
@@ -87,8 +78,7 @@ public class VerifyAccess extends ApplicationLiterals {
 				0));
 		passwordPanel.add(passField);
 		passField.setColumns(13);
-		userField.setFont(font);
-		passField.setFont(font);
+
 		final JButton showButton = new JButton(Icons.SHOW_PASS_ICON);
 		final JButton hideButton = new JButton(Icons.HIDE_PASS_ICON);
 		hideButton.setBorder(null);
@@ -197,7 +187,7 @@ public class VerifyAccess extends ApplicationLiterals {
 			public void actionPerformed(ActionEvent e) {
 				showButton.setVisible(false);
 				hideButton.setVisible(true);
-				passField.setEchoChar('•');
+				passField.setEchoChar((char)0);
 			}
 		});
 

@@ -79,6 +79,7 @@ public class MenuBar extends JMenuBar {
 		JMenuItem changePass = new JMenuItem("Change Password", KeyEvent.VK_C);
 		changePass.setIcon(Icons.CHANGE_PASS_ICON);
 		JMenuItem refresh = new JMenuItem("Refresh");
+		refresh.setIcon(Icons.REFRESH_ICON);
 		toolsMenu.add(backup);
 		toolsMenu.addSeparator();
 		toolsMenu.add(changePass);

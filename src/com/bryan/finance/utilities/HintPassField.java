@@ -1,11 +1,8 @@
 package com.bryan.finance.utilities;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
+import com.bryan.finance.literals.ApplicationLiterals;
+
+import java.awt.*;
 
 import javax.swing.JPasswordField;
 
@@ -13,9 +10,15 @@ public class HintPassField extends JPasswordField {
 
 	private static final long serialVersionUID = 1372062886713071090L;
 
-	public HintPassField(String hint) {
+	public HintPassField(String hint, boolean isBig) {
 		_hint = hint;
 		this.setEchoChar('•');
+		if(isBig) {
+			this.setFont(ApplicationLiterals.APP_FONT);
+			Dimension d = this.getPreferredSize();
+			d.height = d.height + 10;
+			this.setPreferredSize(d);
+		}
 	}
 
 	@Override

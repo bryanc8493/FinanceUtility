@@ -69,6 +69,7 @@ public class InvestmentsTab extends JPanel {
 						ApplicationLiterals.getCurrencyFormat());
 				tf.setColumns(10);
 				tf.setValue(0.0);
+				tf.setFont(ApplicationLiterals.APP_FONT);
 				tf.addAncestorListener(new RequestFocusListener());
 				int input = JOptionPane.showConfirmDialog(null, tf,
 						"Updated Fidelity Balance",
@@ -97,6 +98,7 @@ public class InvestmentsTab extends JPanel {
 						ApplicationLiterals.getCurrencyFormat());
 				tf.setColumns(10);
 				tf.setValue(0.0);
+				tf.setFont(ApplicationLiterals.APP_FONT);
 				tf.addAncestorListener(new RequestFocusListener());
 				int input = JOptionPane.showConfirmDialog(null, tf,
 						"Updated Janus Balance", JOptionPane.OK_CANCEL_OPTION,

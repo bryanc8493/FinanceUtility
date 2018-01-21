@@ -35,6 +35,7 @@ import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
+import com.bryan.finance.utilities.HintPassField;
 
 public class UserManagement extends JFrame {
 
@@ -113,21 +114,16 @@ public class UserManagement extends JFrame {
 
 		final JFrame f = new JFrame("Change Password");
 		JLabel title = new Title("Change Password");
-		final JPasswordField newPass = new JPasswordField();
-		final JPasswordField newPassConf = new JPasswordField();
-		newPass.setEchoChar('•');
-		newPassConf.setEchoChar('•');
+		final JPasswordField newPass = new HintPassField("New Password", true);
+		newPass.setColumns(18);
+		final JPasswordField newPassConf = new HintPassField("Confirm Password", true);
 
-		JButton cancel = new JButton("Cancel");
-		JButton submit = new JButton("Submit");
-		cancel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		submit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		JButton cancel = new PrimaryButton("Cancel");
+		JButton submit = new PrimaryButton("Submit");
 
-		JPanel grid = new JPanel(new GridLayout(2, 2, 10, 10));
-		grid.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		grid.add(new JLabel("New Password:"));
+		JPanel grid = new JPanel(new GridLayout(2, 1, 10, 10));
+		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		grid.add(newPass);
-		grid.add(new JLabel("Confirm Password"));
 		grid.add(newPassConf);
 
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));

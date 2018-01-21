@@ -34,9 +34,9 @@ public class SalaryManagement implements ActionListener {
 
 	// Input components
 	private JComboBox<Integer> jobGrade = new JComboBox<>();
-	private JTextField compRatio = new HintTextField("80% - 120%");
-	private JTextField STIPerf = new HintTextField("0% - 200%");
-	private JTextField MTIPerf = new HintTextField("0% - 200%");
+	private JTextField compRatio = new HintTextField("80% - 120%", false);
+	private JTextField STIPerf = new HintTextField("0% - 200%", false);
+	private JTextField MTIPerf = new HintTextField("0% - 200%", false);
 
 	// Output components
 	private JLabel basePay = new JLabel();
