@@ -20,6 +20,10 @@ import com.bryan.finance.logging.AppLogger;
 
 /**
  * Application Entry Point
+ * TODO - refactor app and database to use just one transaction table,
+ * want to eliminate having expenses and income table.  Eventually moving
+ * towards full table normalization - this will eliminate redundant data
+ * and make querying significantly easier.
  */
 public class FinanceUtility {
 
