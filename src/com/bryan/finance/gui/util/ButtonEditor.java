@@ -10,6 +10,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import com.bryan.finance.database.Connect;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.database.Queries;
@@ -24,21 +25,20 @@ public class ButtonEditor extends DefaultCellEditor {
 	private boolean isPushed;
 	private Logger logger = Logger.getLogger(ButtonEditor.class);
 	private UserManagement currentFrame;
+	private static final String currentUser = Connect.getCurrentUser();
 
 	public ButtonEditor(JCheckBox checkBox, UserManagement current) {
 		super(checkBox);
 		button = new JButton();
 		button.setOpaque(true);
 		currentFrame = current;
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fireEditingStopped();
-			}
+		button.addActionListener(e -> {
+			fireEditingStopped();
 		});
 	}
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
-			boolean isSelected, int row, int column) {
+												 boolean isSelected, int row, int column) {
 		if (isSelected) {
 			button.setForeground(table.getSelectionForeground());
 			button.setBackground(table.getSelectionBackground());
@@ -55,33 +55,19 @@ public class ButtonEditor extends DefaultCellEditor {
 		if (isPushed) {
 			String[] temp = label.split(ApplicationLiterals.SEMI_COLON);
 			String user = temp[0];
+			if(isCurrentUser(user))
+				return label;
 			String status = temp[1];
-			String oppositeStatus = ApplicationLiterals.EMPTY;
-			if (status.equalsIgnoreCase(ApplicationLiterals.UNLOCKED)) {
-				oppositeStatus = ApplicationLiterals.LOCK;
-			} else {
-				oppositeStatus = ApplicationLiterals.UNLOCK;
-			}
+			String oppositeStatus = getOppositeStatus(status);
 
-			int choice = JOptionPane.showConfirmDialog(null, user
-					+ " is currently " + status + "."
-					+ ApplicationLiterals.NEW_LINE + "Would you like to "
-					+ oppositeStatus + " " + user + "?", "Confirm",
-					JOptionPane.YES_NO_OPTION);
+			int choice = getConfirmationChoice(status, oppositeStatus, user);
+
 			if (choice == JOptionPane.YES_OPTION) {
 				currentFrame.dispose();
 				if (oppositeStatus.equalsIgnoreCase(ApplicationLiterals.LOCK)) {
-					logger.info("LOCKING USER: " + user);
-					Queries.lockUser(user);
-					JOptionPane.showMessageDialog(null, user
-							+ " has been locked", "Locked",
-							JOptionPane.INFORMATION_MESSAGE);
+					lockUser(user);
 				} else {
-					logger.info("UNLOCKING USER: " + user);
-					Queries.unlockUser(user);
-					JOptionPane.showMessageDialog(null, user
-							+ " has been unlocked", "Unlocked",
-							JOptionPane.INFORMATION_MESSAGE);
+					unlockUser(user);
 				}
 				new UserManagement();
 			}
@@ -97,5 +83,45 @@ public class ButtonEditor extends DefaultCellEditor {
 
 	protected void fireEditingStopped() {
 		super.fireEditingStopped();
+	}
+
+	private boolean isCurrentUser(String cellValue) {
+		String[] split = cellValue.split(ApplicationLiterals.SEMI_COLON);
+
+		if (split[0].equalsIgnoreCase(currentUser))
+			return true;
+		return false;
+	}
+
+	private int getConfirmationChoice(String status, String oppositeStatus, String user) {
+		return JOptionPane.showConfirmDialog(null, user
+						+ " is currently " + status + "."
+						+ ApplicationLiterals.NEW_LINE + "Would you like to "
+						+ oppositeStatus + " " + user + "?", "Confirm",
+				JOptionPane.YES_NO_OPTION);
+	}
+
+	private void lockUser(String user) {
+		logger.info("LOCKING USER: " + user);
+		Queries.lockUser(user);
+		JOptionPane.showMessageDialog(null, user
+						+ " has been locked", "Locked",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private void unlockUser(String user) {
+		logger.info("UNLOCKING USER: " + user);
+		Queries.unlockUser(user);
+		JOptionPane.showMessageDialog(null, user
+						+ " has been unlocked", "Unlocked",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private String getOppositeStatus(String status) {
+		if (status.equalsIgnoreCase(ApplicationLiterals.UNLOCKED)) {
+			return ApplicationLiterals.LOCK;
+		} else {
+			return ApplicationLiterals.UNLOCK;
+		}
 	}
 }

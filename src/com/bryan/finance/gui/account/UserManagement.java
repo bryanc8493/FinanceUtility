@@ -63,10 +63,8 @@ public class UserManagement extends JFrame {
 		setVisible(true);
 		setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
+		close.addActionListener(e -> {
+			dispose();
 		});
 	}
 
@@ -151,10 +149,8 @@ public class UserManagement extends JFrame {
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 
-		cancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				f.dispose();
-			}
+		cancel.addActionListener(e -> {
+			f.dispose();
 		});
 
 		submit.addActionListener(new ActionListener() {
