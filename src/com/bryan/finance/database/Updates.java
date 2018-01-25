@@ -82,7 +82,8 @@ public class Updates {
 	public static void deleteAddress(String ID) {
 		logger.debug("Deleting Address...");
 		final Connection con = Connect.getConnection();
-		String query = "DELETE from " + Tables.ADDRESSES + " WHERE ID = " + ID;
+		String query = "DELETE from " + Databases.ACCOUNTS + ApplicationLiterals.DOT +
+				Tables.ADDRESSES + " WHERE ID = " + ID;
 		try {
 			Statement statement = con.createStatement();
 			statement.executeUpdate(query);

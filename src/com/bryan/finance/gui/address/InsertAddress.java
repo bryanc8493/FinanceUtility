@@ -6,8 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,11 +19,13 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Address;
 import com.bryan.finance.database.Queries;
 import com.bryan.finance.gui.util.PrimaryButton;
+import com.bryan.finance.gui.util.PromptComboBoxRenderer;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
@@ -38,26 +38,18 @@ public class InsertAddress {
 		logger.debug("Displaying GUI to insert new Address");
 		final JFrame frame = new JFrame("New Address");
 
-		final JLabel LnameLabel = new JLabel("* Last Name");
-		final JTextField LnameField = new JTextField();
-
-		final JLabel FnameLabel = new JLabel(
-				"* First Name(s)                             ");
-		final JTextField FnameField = new JTextField();
-
-		final JLabel addressLabel = new JLabel("* Address");
-		final JTextField addressField = new JTextField();
-
-		final JLabel cityLabel = new JLabel("City");
-		final JTextField cityField = new JTextField();
-
-		final JLabel stateLabel = new JLabel("State");
-		final JComboBox<String> states = new JComboBox<String>(
-				ApplicationLiterals.STATE_CODES);
+		final JTextField LnameField = new HintTextField("Last Name", true);
+		final JTextField FnameField = new HintTextField("First Name(s)", true);
+		final JTextField addressField = new HintTextField("Address", true);
+		final JTextField cityField = new HintTextField("City", true);
+		cityField.setColumns(15);
+		final JComboBox<String> states = new JComboBox<>(ApplicationLiterals.STATE_CODES);
+		states.setRenderer(new PromptComboBoxRenderer("Select State"));
+		states.setSelectedIndex(-1);
 		states.setMaximumRowCount(12);
+		states.setFont(ApplicationLiterals.APP_FONT);
 
-		final JLabel zipLabel = new JLabel("Zip Code");
-		final JTextField zipField = new JTextField();
+		final JTextField zipField = new HintTextField("Zip Code", true);
 
 		final JButton insert = new PrimaryButton("    Insert    ");
 		final JButton close = new PrimaryButton("    Close    ");
@@ -67,19 +59,13 @@ public class InsertAddress {
 		missingField.setVisible(false);
 
 		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(6, 2, 5, 10));
-		grid.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-		grid.add(LnameLabel);
+		grid.setLayout(new GridLayout(3, 2, 10, 15));
+		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		grid.add(LnameField);
-		grid.add(FnameLabel);
 		grid.add(FnameField);
-		grid.add(addressLabel);
 		grid.add(addressField);
-		grid.add(cityLabel);
 		grid.add(cityField);
-		grid.add(stateLabel);
 		grid.add(states);
-		grid.add(zipLabel);
 		grid.add(zipField);
 
 		JPanel missing = new JPanel();
@@ -142,6 +128,25 @@ public class InsertAddress {
 					missingField.setVisible(true);
 					frame.pack();
 				}
+
+				else if (cityField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
+					missingField.setText("City cannot be blank");
+					missingField.setVisible(true);
+					frame.pack();
+				}
+
+				else if (states.getSelectedIndex() == -1) {
+					missingField.setText("Please select a state");
+					missingField.setVisible(true);
+					frame.pack();
+				}
+
+				else if (zipField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
+					missingField.setText("Zip code cannot be blank");
+					missingField.setVisible(true);
+					frame.pack();
+				}
+
 
 				else {
 					Address address = new Address();
