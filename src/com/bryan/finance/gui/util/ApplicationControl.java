@@ -79,11 +79,7 @@ public class ApplicationControl {
 					frame.dispose();
 					logger.info("Closed by user");
 
-					try {
-						VerifyAccess.CheckAccess();
-					} catch (GeneralSecurityException | IOException e1) {
-						e1.printStackTrace();
-					}
+					VerifyAccess.CheckAccess();
 				}
 			}
 		});

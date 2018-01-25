@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.prefs.AbstractPreferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,6 +26,8 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.gui.util.PromptComboBoxRenderer;
+import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -64,21 +67,13 @@ public class InsertRecord {
 
 		final JFrame frame = new JFrame(ApplicationLiterals.APP_TITLE);
 
-		JLabel title = new JLabel("* Title");
-		final JTextField titleField = new JTextField();
+		final JTextField titleField = new HintTextField("Transaction Title", true);
 
-		// Type selection (income or expense)
-		JLabel type = new JLabel("* Type");
 		final JComboBox<String> typeCb = new JComboBox<>(TYPE_CATEGORIES);
-		typeCb.setSelectedItem(null);
+		typeCb.setFont(ApplicationLiterals.APP_FONT);
+		typeCb.setSelectedIndex(-1);
+		typeCb.setRenderer(new PromptComboBoxRenderer("Select Type"));
 
-		// Category Selection
-		final JLabel category = new JLabel("* Category");
-
-		// Date Selection
-		JLabel transDate = new JLabel("* Date of Transaction");
-
-		// Date picker
 		UtilDateModel model = new UtilDateModel();
 		Properties p = new Properties();
 		p.put("text.today", "Today");
@@ -90,25 +85,17 @@ public class InsertRecord {
 		model.setValue(new Date());
 		model.setSelected(true);
 
-		// Amount selection
-		JLabel amount = new JLabel("* Amount");
 		final JFormattedTextField amountField = new JFormattedTextField(
 				ApplicationLiterals.getCurrencyFormat());
 		amountField.setColumns(10);
 		amountField.setValue(0.0);
+		amountField.setFont(ApplicationLiterals.APP_FONT);
 
-		// Description input
-		JLabel desc = new JLabel("  Description");
-		final JTextField descField = new JTextField();
+		final JTextField descField = new HintTextField("Description", true);
+		final JTextField storeField = new HintTextField("Store", true);
 
-		// Store input
-		final JLabel store = new JLabel("  Store");
-		final JTextField storeField = new JTextField();
-
-		// Credit input
 		final JCheckBox credit = new JCheckBox("  Credit");
 
-		// Buttons
 		final JButton insert = new PrimaryButton("    Insert    ");
 		final JButton back = new PrimaryButton("    < Back    ");
 		final JButton close = new PrimaryButton("    Close    ");
@@ -119,23 +106,15 @@ public class InsertRecord {
 		missingField.setVisible(false);
 
 		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(8, 2, 5, 10));
-		grid.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
-		grid.add(title);
+		grid.setLayout(new GridLayout(4, 2, 10, 20));
+		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		grid.add(titleField);
-		grid.add(type);
-		grid.add(typeCb);
-		grid.add(category);
-		grid.add(selectCategory);
-		grid.add(transDate);
-		grid.add(datePicker);
-		grid.add(amount);
-		grid.add(amountField);
-		grid.add(desc);
 		grid.add(descField);
-		grid.add(store);
+		grid.add(typeCb);
+		grid.add(selectCategory);
+		grid.add(datePicker);
+		grid.add(amountField);
 		grid.add(storeField);
-		grid.add(new JLabel());
 		grid.add(credit);
 
 		JPanel missing = new JPanel();
@@ -199,13 +178,11 @@ public class InsertRecord {
 				if (typeCb.getSelectedItem().toString()
 						.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
 					addCategories(true);
-					store.setVisible(true);
 					storeField.setVisible(true);
 					credit.setVisible(true);
 				} else if (typeCb.getSelectedItem().toString()
 						.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
 					addCategories(false);
-					store.setVisible(false);
 					storeField.setVisible(false);
 					credit.setSelected(false);
 					credit.setVisible(false);
@@ -327,5 +304,8 @@ public class InsertRecord {
 		for (String c : categories) {
 			selectCategory.addItem(c);
 		}
+		selectCategory.setFont(ApplicationLiterals.APP_FONT);
+		selectCategory.setRenderer(new PromptComboBoxRenderer("Select Category"));
+		selectCategory.setSelectedIndex(-1);
 	}
 }

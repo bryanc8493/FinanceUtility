@@ -74,5 +74,7 @@ public abstract class Icons extends ApplicationLiterals {
 			getLaunchPath() + IMAGES_ROOT_PATH + "hide-pass.png");
 	public static final ImageIcon LOGIN_ICON = new ImageIcon(getLaunchPath()
 			+ IMAGES_ROOT_PATH + "login.png");
+	public static final ImageIcon REFRESH_ICON = new ImageIcon(getLaunchPath()
+			+ IMAGES_ROOT_PATH + "refresh.png");
 
 }

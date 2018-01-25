@@ -1,20 +1,24 @@
 package com.bryan.finance.utilities;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
+import com.bryan.finance.literals.ApplicationLiterals;
 
-import javax.swing.JTextField;
+import java.awt.*;
+
+import javax.swing.*;
 
 public class HintTextField extends JTextField {
 
 	private static final long serialVersionUID = 1372062886713071090L;
+	private final String _hint;
 
-	public HintTextField(String hint) {
+	public HintTextField(String hint, boolean isBig) {
 		_hint = hint;
+		if(isBig) {
+			this.setFont(ApplicationLiterals.APP_FONT);
+			Dimension d = this.getPreferredSize();
+			d.height = d.height + 10;
+			this.setPreferredSize(d);
+		}
 	}
 
 	@Override
@@ -35,6 +39,4 @@ public class HintTextField extends JTextField {
 			g.drawString(_hint, ins.left, h / 2 + fm.getAscent() / 2 - 2);
 		}
 	}
-
-	private final String _hint;
 }

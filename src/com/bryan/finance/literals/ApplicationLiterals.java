@@ -1,6 +1,6 @@
 package com.bryan.finance.literals;
 
-import java.awt.Color;
+import java.awt.*;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -30,7 +30,7 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "0.0.4";
+	public static final String VERSION = "0.0.5";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -39,7 +39,11 @@ public abstract class ApplicationLiterals {
 	public static final String USER_NAME = "user.name";
 	public static final String THEME_DIR = getLaunchPath() + SLASH + "theme";
 
+	public static final Font APP_FONT = new Font("Sans serif", Font.PLAIN, 16);
+
 	public static final Color APP_COLOR = new Color(26, 88, 127);
+	public static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
+	public static Color LINK_CLICKED = new Color(102, 51, 102);
 
 	public static final String LOG_PROPERTY_FILE = SLASH + "config" + SLASH
 			+ "log4j.properties";
