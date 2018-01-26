@@ -13,8 +13,8 @@ public class HintPassField extends JPasswordField {
 	public HintPassField(String hint, boolean isBig) {
 		_hint = hint;
 		this.setEchoChar('•');
+		this.setFont(ApplicationLiterals.APP_FONT);
 		if(isBig) {
-			this.setFont(ApplicationLiterals.APP_FONT);
 			Dimension d = this.getPreferredSize();
 			d.height = d.height + 10;
 			this.setPreferredSize(d);

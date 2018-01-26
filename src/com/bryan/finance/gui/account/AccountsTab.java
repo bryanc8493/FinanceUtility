@@ -261,7 +261,7 @@ public class AccountsTab extends JPanel {
 		if (isPassVerified()) {
 			return true;
 		}
-		JPasswordField pf = new HintPassField("Verify Encryption Key", true);
+		JPasswordField pf = new HintPassField("Verify Encryption Key", false);
 		pf.addAncestorListener(new RequestFocusListener());
 		int okCxl = JOptionPane.showConfirmDialog(null, pf,
 				"Verify Encryption Key", JOptionPane.OK_CANCEL_OPTION,

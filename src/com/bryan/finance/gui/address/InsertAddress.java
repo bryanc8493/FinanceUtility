@@ -38,10 +38,10 @@ public class InsertAddress {
 		logger.debug("Displaying GUI to insert new Address");
 		final JFrame frame = new JFrame("New Address");
 
-		final JTextField LnameField = new HintTextField("Last Name", true);
-		final JTextField FnameField = new HintTextField("First Name(s)", true);
-		final JTextField addressField = new HintTextField("Address", true);
-		final JTextField cityField = new HintTextField("City", true);
+		final JTextField LnameField = new HintTextField("Last Name", false);
+		final JTextField FnameField = new HintTextField("First Name(s)", false);
+		final JTextField addressField = new HintTextField("Address", false);
+		final JTextField cityField = new HintTextField("City", false);
 		cityField.setColumns(15);
 		final JComboBox<String> states = new JComboBox<>(ApplicationLiterals.STATE_CODES);
 		states.setRenderer(new PromptComboBoxRenderer("Select State"));
@@ -49,7 +49,7 @@ public class InsertAddress {
 		states.setMaximumRowCount(12);
 		states.setFont(ApplicationLiterals.APP_FONT);
 
-		final JTextField zipField = new HintTextField("Zip Code", true);
+		final JTextField zipField = new HintTextField("Zip Code", false);
 
 		final JButton insert = new PrimaryButton("    Insert    ");
 		final JButton close = new PrimaryButton("    Close    ");

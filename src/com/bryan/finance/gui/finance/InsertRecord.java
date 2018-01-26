@@ -67,7 +67,7 @@ public class InsertRecord {
 
 		final JFrame frame = new JFrame(ApplicationLiterals.APP_TITLE);
 
-		final JTextField titleField = new HintTextField("Transaction Title", true);
+		final JTextField titleField = new HintTextField("Transaction Title", false);
 
 		final JComboBox<String> typeCb = new JComboBox<>(TYPE_CATEGORIES);
 		typeCb.setFont(ApplicationLiterals.APP_FONT);
@@ -91,8 +91,8 @@ public class InsertRecord {
 		amountField.setValue(0.0);
 		amountField.setFont(ApplicationLiterals.APP_FONT);
 
-		final JTextField descField = new HintTextField("Description", true);
-		final JTextField storeField = new HintTextField("Store", true);
+		final JTextField descField = new HintTextField("Description", false);
+		final JTextField storeField = new HintTextField("Store", false);
 
 		final JCheckBox credit = new JCheckBox("  Credit");
 
