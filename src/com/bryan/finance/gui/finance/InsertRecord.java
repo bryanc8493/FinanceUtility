@@ -13,18 +13,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.prefs.AbstractPreferences;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import com.bryan.finance.gui.util.PromptComboBoxRenderer;
 import com.bryan.finance.utilities.HintTextField;
@@ -54,6 +43,12 @@ public class InsertRecord {
 	private static String[] INCOME_CATEGORIES;
 	private static JComboBox<String> selectCategory = new JComboBox<>();
 
+	private final static JTextField descField = new HintTextField("Description", false);
+	private final static JTextField storeField = new HintTextField("Store", false);
+	private final static JTextField titleField = new HintTextField("Transaction Title", false);
+	private final static JFormattedTextField amountField = new JFormattedTextField(
+			ApplicationLiterals.getCurrencyFormat());
+
 	public static void InsertFrame() {
 		logger.debug("Displaying GUI to insert new transaction");
 		final Connection con = Connect.getConnection();
@@ -66,8 +61,6 @@ public class InsertRecord {
 		final String[] TYPE_CATEGORIES = { "Expense", "Income" };
 
 		final JFrame frame = new JFrame(ApplicationLiterals.APP_TITLE);
-
-		final JTextField titleField = new HintTextField("Transaction Title", false);
 
 		final JComboBox<String> typeCb = new JComboBox<>(TYPE_CATEGORIES);
 		typeCb.setFont(ApplicationLiterals.APP_FONT);
@@ -85,14 +78,9 @@ public class InsertRecord {
 		model.setValue(new Date());
 		model.setSelected(true);
 
-		final JFormattedTextField amountField = new JFormattedTextField(
-				ApplicationLiterals.getCurrencyFormat());
 		amountField.setColumns(10);
 		amountField.setValue(0.0);
 		amountField.setFont(ApplicationLiterals.APP_FONT);
-
-		final JTextField descField = new HintTextField("Description", false);
-		final JTextField storeField = new HintTextField("Store", false);
 
 		final JCheckBox credit = new JCheckBox("  Credit");
 
@@ -168,8 +156,25 @@ public class InsertRecord {
 
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new CreditPayments();
 				frame.dispose();
 				MainMenu.modeSelection(false, 0);
+			}
+		});
+
+		selectCategory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (selectCategory.getSelectedItem().toString().equalsIgnoreCase("Credit Card")) {
+						int choice = JOptionPane.showConfirmDialog(null,
+								"Would you like to pay existing outstanding credit charges?", "Confirm",
+								JOptionPane.YES_NO_OPTION);
+						if (choice == JOptionPane.YES_OPTION) {
+							new CreditPayments();
+							resetDefaults();
+						}
+					}
+				} catch (Exception ex) { }
 			}
 		});
 
@@ -189,6 +194,7 @@ public class InsertRecord {
 				}
 			}
 		});
+
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// First will check if any required fields are not filled in
@@ -261,30 +267,26 @@ public class InsertRecord {
 					if (typeCb.getSelectedItem().toString()
 							.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
 						tran.setStore(storeField.getText());
-						// Before running, check if the selected category was
-						// credit card payment, if yes then first show
-						// CreditPayments
-						if (tran.getCategory().equalsIgnoreCase("Credit Card")) {
-							new CreditPayments();
-						} else {
-							InsertExpense.NewExpense(tran, con);
-						}
+						InsertExpense.NewExpense(tran, con);
+
 					} else if (typeCb.getSelectedItem().toString()
 							.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
 						InsertIncome.NewIncome(tran, con);
 					}
-
-					// Reset GUI objects
-					titleField.setText(ApplicationLiterals.EMPTY);
-					selectCategory.setSelectedItem(null);
-					amountField.setText("0.00");
-					amountField.setCaretPosition(1);
-					descField.setText(ApplicationLiterals.EMPTY);
-					storeField.setText(ApplicationLiterals.EMPTY);
-					titleField.requestFocusInWindow();
+					resetDefaults();
 				}
 			}
 		});
+	}
+
+	private static void resetDefaults() {
+		titleField.setText(ApplicationLiterals.EMPTY);
+		selectCategory.setSelectedIndex(-1);
+		amountField.setText("0.00");
+		amountField.setCaretPosition(1);
+		descField.setText(ApplicationLiterals.EMPTY);
+		storeField.setText(ApplicationLiterals.EMPTY);
+		titleField.requestFocusInWindow();
 	}
 
 	private static String[] getCategories(String str) {

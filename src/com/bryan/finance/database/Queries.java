@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import org.apache.log4j.Logger;
 
@@ -748,16 +749,15 @@ public class Queries {
 		try {
 			Connection con = Connect.getConnection();
 
-			PreparedStatement ps = null;
-			String SQL_TEXT = "UPDATE financial.monthly_transactions SET CREDIT_PAID = '1' "
-					+ "where TITLE = ? AND CATEGORY = ? AND TRANSACTION_DATE = ? AND AMOUNT = ?";
+			PreparedStatement ps;
+			String SQL_TEXT = "UPDATE " + Databases.FINANCIAL + ApplicationLiterals.DOT
+					+ Tables.MONTHLY_TRANSACTIONS + " SET CREDIT_PAID = '1' "
+					+ "where TRANSACTION_ID = ?";
 
 			for (Transaction t : records) {
+				System.out.println(t.getTransactionID());
 				ps = con.prepareStatement(SQL_TEXT);
-				ps.setString(1, t.getTitle());
-				ps.setString(2, t.getCategory());
-				ps.setString(3, t.getDate());
-				ps.setString(4, t.getAmount());
+				ps.setString(1, t.getTransactionID());
 				ps.executeUpdate();
 			}
 
