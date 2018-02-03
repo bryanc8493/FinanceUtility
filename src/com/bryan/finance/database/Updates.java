@@ -26,7 +26,8 @@ public class Updates {
 		logger.debug("Updating address changes..");
 		final Connection con = Connect.getConnection();
 		for (UpdatedRecord a : updates) {
-			String query = "UPDATE " + Tables.ADDRESSES
+			String query = "UPDATE " + Databases.ACCOUNTS
+					+ ApplicationLiterals.DOT + Tables.ADDRESSES
 					+ " set attr = ? where ID = ?";
 			query = query.replace("attr", a.getAttribute());
 			try {
@@ -109,6 +110,30 @@ public class Updates {
 
 		JOptionPane.showMessageDialog(null, "Record deleted successfully",
 				"Deleted!", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public static void changeTransactions(List<UpdatedRecord> updates) {
+		logger.debug("Updating address changes..");
+		final Connection con = Connect.getConnection();
+		for (UpdatedRecord a : updates) {
+			String query = "UPDATE " + Databases.FINANCIAL
+					+ ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+					+ " set attr = ? where TRANSACTION_ID = ?";
+			query = query.replace("attr", a.getAttribute());
+			try {
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				preparedStmt.setString(1, a.getData());
+				preparedStmt.setString(2, a.getID());
+				preparedStmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new AppException(e);
+			}
+		}
+		int updatedCount = updates.size();
+		logger.debug("Made " + updatedCount + " updates");
+		JOptionPane.showMessageDialog(null, "Successfully updated "
+						+ updatedCount + " transaction records", "Updated!",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void deleteTransaction(Transaction tran) {

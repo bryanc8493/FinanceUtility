@@ -130,7 +130,7 @@ public class AddressTab extends JPanel {
 				f.setVisible(true);
 				f.setLocationRelativeTo(null);
 
-				updates = new ArrayList<UpdatedRecord>();
+				updates = new ArrayList<>();
 
 				update.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
