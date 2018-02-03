@@ -39,6 +39,8 @@ public class ModifyRecords {
 	private static JTable table;
 	private static List<UpdatedRecord> updates;
 	private static Logger logger = Logger.getLogger(ModifyRecords.class);
+	private static final JButton updateBtn = new PrimaryButton("Update");
+
 
 	public static void editData() {
 		logger.debug("Displaying GUI for user to modify transactions");
@@ -48,8 +50,8 @@ public class ModifyRecords {
 		JLabel title = new Title("Modify Transactions");
 
 		final JButton deleteBtn = new PrimaryButton("Delete");
-		final JButton updateBtn = new PrimaryButton("Update");
 		final JButton cancelBtn = new PrimaryButton("Cancel");
+		updateBtn.setEnabled(false);
 
 		final JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		bottom.add(cancelBtn);
@@ -81,7 +83,7 @@ public class ModifyRecords {
 
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				Updates.changeTransactions(updates);
 			}
 		});
 
@@ -160,12 +162,12 @@ public class ModifyRecords {
 				int column = table.getSelectedColumn();
 				changedData = (String) table.getValueAt(row, column);
 				ID = (String) table.getValueAt(row, 0);
-
 				UpdatedRecord changedRecord = new UpdatedRecord();
 				changedRecord.setID(ID);
 				changedRecord.setAttribute(map.get(column));
 				changedRecord.setData(changedData);
 				updates.add(changedRecord);
+				updateBtn.setEnabled(true);
 			}
 		});
 		return sp;

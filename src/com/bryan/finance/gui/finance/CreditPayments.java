@@ -43,7 +43,9 @@ public class CreditPayments {
 		JLabel label = new Title("Select Paid Credit Card Transactions");
 
 		JButton update = new PrimaryButton("Mark As Paid");
+		JButton close = new PrimaryButton("Close");
 		JPanel button = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		button.add(close);
 		button.add(update);
 		button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		p.add(label, BorderLayout.NORTH);
@@ -54,6 +56,12 @@ public class CreditPayments {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
+
+		close.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+			}
+		});
 
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
