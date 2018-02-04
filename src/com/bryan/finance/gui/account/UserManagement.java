@@ -1,7 +1,6 @@
 package com.bryan.finance.gui.account;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -27,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.bryan.finance.beans.User;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.ButtonEditor;
 import com.bryan.finance.gui.util.ButtonRenderer;

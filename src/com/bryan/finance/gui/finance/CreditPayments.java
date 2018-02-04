@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;

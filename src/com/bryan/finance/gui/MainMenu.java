@@ -15,7 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.text.NumberFormat;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -42,7 +41,9 @@ import org.apache.log4j.Logger;
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
+import com.bryan.finance.database.queries.Balance;
+import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.account.AccountsTab;
 import com.bryan.finance.gui.address.AddressTab;
@@ -85,21 +86,21 @@ public class MainMenu extends Icons {
 
 		// Get current balance as of current date and time
 		final Connection con = Connect.getConnection();
-		String amount = Queries.getTodaysBalance();
+		String amount = Balance.getTodaysBalance();
 		amount = decimal.format(Double.parseDouble(amount));
 
 		// Get full balance (todays balance minus future payments excluding
 		// unpaid credits)
-		String futureBalance = Queries.getFutureBalance();
+		String futureBalance = Balance.getFutureBalance();
 		futureBalance = decimal.format(Double.parseDouble(futureBalance));
 
 		// Get actual balance
-		String trueBalance = Queries.getTrueBalance();
+		String trueBalance = Balance.getTrueBalance();
 		trueBalance = decimal.format(Double.parseDouble(trueBalance));
 
 		// Get data for last specified (in config) past entries and put in
 		// scroll pane for table
-		Object[][] records = Queries.getPastEntries();
+		Object[][] records = Transactions.getPastEntries();
 		Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT" };
 		final JTable table = new JTable(records, columnNames);
 		final JScrollPane entriesScrollPane = new JScrollPane(table);
@@ -133,7 +134,7 @@ public class MainMenu extends Icons {
 			futureBalBtn.setForeground(Color.RED);
 		}
 
-		String credits = Queries.getCreditBalance();
+		String credits = Balance.getCreditBalance();
 		final JButton creditBalBtn = new JButton();
 		if (credits == null) {
 			creditBalBtn.setText(ApplicationLiterals.EMPTY);
@@ -332,9 +333,9 @@ public class MainMenu extends Icons {
 	}
 
 	private static JScrollPane getLatestRecords() {
-		Object[][] records = Queries.getPastEntries();
+		Object[][] records = Transactions.getPastEntries();
 		Object[][] partialRecords = getPartialDataColumns(records);
-		Object[] columnNames = { "Transaction ID", "Title", "Type", "Amount" };
+		Object[] columnNames = { "Transactions ID", "Title", "Type", "Amount" };
 
 		DefaultTableModel model = new DefaultTableModel(partialRecords,
 				columnNames) {

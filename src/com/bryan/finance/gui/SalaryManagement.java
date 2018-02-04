@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import com.bryan.finance.beans.Salary;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;

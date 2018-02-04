@@ -1,8 +1,6 @@
 package com.bryan.finance.gui.util;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -13,7 +11,7 @@ import javax.swing.JTable;
 import com.bryan.finance.database.Connect;
 import org.apache.log4j.Logger;
 
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.literals.ApplicationLiterals;
 

@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;
@@ -68,7 +68,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		final JButton submit = new JButton(Icons.LOGIN_ICON);
 		submit.setBorder(null);
 		submit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		final JButton create = new JButton("<html><u>Create Account</u></html>");
+		final JButton create = new JButton("<html><u>Create Accounts</u></html>");
 		makeButtonLink(create);
 		final JButton forgot = new JButton(
 				"<html><u>Forgot Password?</u></html>");

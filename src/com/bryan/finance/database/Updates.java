@@ -137,7 +137,7 @@ public class Updates {
 	}
 
 	public static void deleteTransaction(Transaction tran) {
-		logger.debug("Deleting Transaction...");
+		logger.debug("Deleting Transactions...");
 		final Connection con = Connect.getConnection();
 		int monthlyTableDel = 0;
 		int expenseTableDel = 0;

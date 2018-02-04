@@ -108,7 +108,7 @@ public class InvestmentBalance {
 				.getCurrencyInstance(locale);
 		String strBal = currencyFormatter.format(balance);
 		JOptionPane.showMessageDialog(null,
-				"<html>The most recent Janus Investment Account balance details:<br><ul><li>"
+				"<html>The most recent Janus Investment Accounts balance details:<br><ul><li>"
 						+ date + ":&emsp;<b>" + strBal + "</b></html>",
 				"Janus Balance", JOptionPane.INFORMATION_MESSAGE);
 	}

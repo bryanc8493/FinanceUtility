@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -23,7 +22,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.User;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.VerifyAccess;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -174,7 +173,7 @@ public class NewUser {
 						frame.pack();
 					} else {
 						JOptionPane.showMessageDialog(null,
-								"Account created successfully!", "Success",
+								"Accounts created successfully!", "Success",
 								JOptionPane.INFORMATION_MESSAGE);
 						frame.dispose();
 					}
