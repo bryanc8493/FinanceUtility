@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.queries.Balance;
 import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.exception.AppException;
