@@ -19,6 +19,7 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.queries.Addresses;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
@@ -157,7 +158,7 @@ public class InsertAddress {
 					address.setState(states.getSelectedItem().toString());
 					address.setZipcode(zipField.getText().trim());
 
-					int recordCount = Queries.newAddress(address);
+					int recordCount = Addresses.newAddress(address);
 					if (recordCount != 1) {
 						missingField
 								.setText("Error inserting new address - check database");

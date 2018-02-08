@@ -26,6 +26,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
@@ -226,7 +227,7 @@ public class VerifyAccess extends ApplicationLiterals {
 					"Unauthorized", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		if (Queries.resetPassword(user.trim()) > 0) {
+		if (Accounts.resetPassword(user.trim()) > 0) {
 			String defaultPassword = ReadConfig
 					.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
 			JOptionPane
@@ -245,7 +246,7 @@ public class VerifyAccess extends ApplicationLiterals {
 	}
 
 	public static void banUser(String user) {
-		Queries.lockUser(user);
+		Accounts.lockUser(user);
 
 		FinanceUtility.appLogger.logFooter();
 

@@ -110,7 +110,7 @@ public class MainMenu extends Icons {
 		entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table
 				.getRowHeight() * 15));
 
-		String futurePayments = Queries.getFuturePayments();
+		String futurePayments = Balance.getFuturePayments();
 		final JButton futureBalBtn = new JButton();
 		if (futurePayments == null) {
 			futureBalBtn.setText(ApplicationLiterals.EMPTY);
@@ -286,7 +286,7 @@ public class MainMenu extends Icons {
 				JPanel p = new JPanel(new BorderLayout(10, 0));
 				JLabel label = new Title("Future Transactions");
 				p.add(label, BorderLayout.NORTH);
-				p.add(Queries.getFutureRecordsPane(), BorderLayout.SOUTH);
+				p.add(getFutureRecordsPane(), BorderLayout.SOUTH);
 				f.add(p);
 				f.pack();
 				f.setVisible(true);
@@ -301,7 +301,7 @@ public class MainMenu extends Icons {
 				JPanel p = new JPanel(new BorderLayout(10, 0));
 				JLabel label = new Title("Unpaid Credit Card Transactions");
 				p.add(label, BorderLayout.NORTH);
-				p.add(Queries.getCreditRecordsPane(), BorderLayout.SOUTH);
+				p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
 				f.add(p);
 				f.pack();
 				f.setVisible(true);
@@ -331,6 +331,34 @@ public class MainMenu extends Icons {
 			throw new AppException(e);
 		}
 	}
+
+	private static JScrollPane getFutureRecordsPane() {
+		Object[] columns = { "Title", "Type", "Category", "Transaction_Date", "Amount" };
+
+		JTable table = new JTable(Transactions.getFutureRecords(), columns);
+		JScrollPane sp = new JScrollPane(table);
+		sp.setViewportView(table);
+		sp.setVisible(true);
+		Dimension d = table.getPreferredSize();
+		sp.setPreferredSize(new Dimension((d.width * 2) - 150, table
+				.getRowHeight() * 10));
+
+		return sp;
+	}
+
+	private static JScrollPane getCreditRecordsPane() {
+		Object[] columns = { "Title", "Category", "Date", "Amount" };
+
+		JTable table = new JTable(Transactions.getUnpaidCreditRecords(), columns);
+		JScrollPane sp = new JScrollPane(table);
+		sp.setViewportView(table);
+		sp.setVisible(true);
+		Dimension d = table.getPreferredSize();
+		sp.setPreferredSize(new Dimension(d.width * 2,
+				table.getRowHeight() * 10));
+
+		return sp;
+}
 
 	private static JScrollPane getLatestRecords() {
 		Object[][] records = Transactions.getPastEntries();
@@ -364,7 +392,7 @@ public class MainMenu extends Icons {
 				if (e.getClickCount() == 2) {
 					String id = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
 
-					Transaction selectedTran = Queries.getSpecifiedTransaction(id);
+					Transaction selectedTran = Transactions.getSpecifiedTransaction(id);
 					new TransactionRecord(selectedTran);
 				}
 			}

@@ -109,4 +109,22 @@ public class Balance {
             throw new AppException(e);
         }
     }
+
+    public static String getFuturePayments() {
+        logger.debug("Determining Future Payments...");
+        final Connection con = Connect.getConnection();
+        String SQL_TEXT = "SELECT SUM(COMBINED_AMOUNT) FROM " + Databases.FINANCIAL
+                + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+                + " WHERE TRANSACTION_DATE > now()";
+        Statement statement;
+        ResultSet rs;
+        try {
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getString(1);
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.bryan.finance.database.queries;
 
+import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.enums.Databases;
@@ -8,10 +9,8 @@ import com.bryan.finance.exception.AppException;
 import com.bryan.finance.literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Set;
 
 
 public class Transactions {
@@ -81,5 +80,144 @@ public class Transactions {
             throw new AppException(e);
         }
         return records;
+    }
+
+    public static Transaction getSpecifiedTransaction(String tranId) {
+        String SQL_TEXT = "SELECT TRANSACTION_ID, TITLE, TYPE, CATEGORY, TRANSACTION_DATE, AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID "
+                + "FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                + Tables.MONTHLY_TRANSACTIONS + " WHERE TRANSACTION_ID = " + tranId;
+        Statement statement;
+        ResultSet rs;
+        Transaction tran = new Transaction();
+        try {
+            Connection con = Connect.getConnection();
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            while (rs.next()) {
+                tran.setTransactionID(rs.getString(1));
+                tran.setTitle(rs.getString(2));
+                tran.setType(rs.getString(3));
+                tran.setCategory(rs.getString(4));
+                tran.setDate(rs.getString(5));
+                tran.setAmount(rs.getString(6));
+                tran.setDescription(rs.getString(7));
+                tran.setCredit(rs.getString(8).charAt(0));
+                tran.setCreditPaid(rs.getString(9).charAt(0));
+            }
+            con.close();
+        } catch (StringIndexOutOfBoundsException e) {
+            tran.setCreditPaid(' ');
+        } catch (SQLException sqlE) {
+            throw new AppException(sqlE);
+        }
+        return tran;
+    }
+
+    public static void markCreditsPaid(Set<Transaction> records) {
+        try {
+            Connection con = Connect.getConnection();
+
+            PreparedStatement ps;
+            String SQL_TEXT = "UPDATE " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                    + Tables.MONTHLY_TRANSACTIONS + " SET CREDIT_PAID = '1' "
+                    + "where TRANSACTION_ID = ?";
+
+            for (Transaction t : records) {
+                ps = con.prepareStatement(SQL_TEXT);
+                ps.setString(1, t.getTransactionID());
+                ps.executeUpdate();
+            }
+
+            con.close();
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static int getFutureRecordCount() {
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.FINANCIAL
+            + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+            + " WHERE TRANSACTION_DATE > now()";
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static Object[][] getFutureRecords() {
+        Object[][] data = new Object[getFutureRecordCount()][5];
+        String SQL_TEXT = "SELECT TITLE, TYPE, CATEGORY, TRANSACTION_DATE, AMOUNT "
+                + "FROM " + Databases.FINANCIAL
+                + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+                + " WHERE TRANSACTION_DATE > now()";
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            int count = 0;
+
+            while (rs.next()) {
+                data[count][0] = rs.getString(1);
+                data[count][1] = rs.getString(2);
+                data[count][2] = rs.getString(3);
+                data[count][3] = rs.getString(4);
+                if(data[count][1].toString().equalsIgnoreCase("Expense")) {
+                    data[count][4] = "( -" + rs.getString(5) + " )";
+                }else{
+                    data[count][4] = rs.getString(5);
+                }
+
+                count++;
+            }
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+        return data;
+    }
+
+    private static int getNumberOfUnpaidCredits() {
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.FINANCIAL
+            + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+                + " where CREDIT = '1' AND CREDIT_PAID = '0'";
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static Object[][] getUnpaidCreditRecords() {
+        Object[][] data = new Object[getNumberOfUnpaidCredits()][4];
+        String SQL_TEXT = "SELECT TITLE, CATEGORY, TRANSACTION_DATE, AMOUNT "
+                + "FROM " + Databases.FINANCIAL
+                + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS
+                + " where CREDIT = '1' AND CREDIT_PAID = '0'";
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            int count = 0;
+
+            while (rs.next()) {
+                for (int i=0; i<4; i++) {
+                    data[count][i] = rs.getString(i+1);
+                }
+                count++;
+            }
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+        return data;
     }
 }

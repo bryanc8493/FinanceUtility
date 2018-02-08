@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.bryan.finance.beans.User;
 import com.bryan.finance.database.Connect;
+import com.bryan.finance.database.queries.Accounts;
 import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.ButtonEditor;
@@ -69,7 +70,7 @@ public class UserManagement extends JFrame {
 	}
 
 	private JScrollPane createDataTable() {
-		Set<User> users = Queries.getAllUsers();
+		Set<User> users = Accounts.getAllUsers();
 
 		Object[][] records = convertSetTo2DArray(users);
 		Object[] columnNames = { "Username", "Email", "Last Login",
@@ -156,7 +157,7 @@ public class UserManagement extends JFrame {
 						.trim();
 				if (inputPass.equals(inputPassConf)) {
 					if (inputPass.length() > 3 && !mustReset) {
-						if (Queries.setNewPassword(inputPass) > 0) {
+						if (Accounts.setNewPassword(inputPass) > 0) {
 							f.dispose();
 							JOptionPane.showMessageDialog(null,
 									"Password Updated Successfully!",
@@ -168,8 +169,8 @@ public class UserManagement extends JFrame {
 											"Unknown error during password update.  Check logs.",
 											"Failed", JOptionPane.ERROR_MESSAGE);
 						}
-					} else if (inputPass.length() > 3 && mustReset) {
-						if (Queries.setNewPassword(user, inputPass) > 0) {
+					} else if (inputPass.length() > 3) {
+						if (Accounts.setNewPassword(user, inputPass) > 0) {
 							f.dispose();
 							JOptionPane.showMessageDialog(null,
 									"Password Updated Successfully!",

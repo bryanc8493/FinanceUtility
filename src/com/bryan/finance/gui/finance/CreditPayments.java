@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.literals.Icons;
 import org.apache.log4j.Logger;
@@ -80,7 +81,7 @@ public class CreditPayments {
 				// Call query to mark selected credits as paid
 				logger.debug("Marking " + credits.size()
 						+ " credit transactions as paid");
-				Queries.markCreditsPaid(credits);
+				Transactions.markCreditsPaid(credits);
 				frame.dispose();
 			}
 		});

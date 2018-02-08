@@ -19,6 +19,7 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.User;
@@ -161,7 +162,7 @@ public class NewUser {
 					user.setPermission('0');
 					int recordCount = 0;
 					try {
-						recordCount = Queries.newUser(user);
+						recordCount = Accounts.newUser(user);
 					} catch (Exception e1) {
 						throw new AppException(e1);
 					}
