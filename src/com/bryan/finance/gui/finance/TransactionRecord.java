@@ -33,9 +33,9 @@ public class TransactionRecord {
 
 	public TransactionRecord(Transaction selectedTran) {
 
-		final JFrame frame = new JFrame("Selected Transaction");
+		final JFrame frame = new JFrame("Selected Transactions");
 
-		JLabel tranIDLabel = new JLabel("Transaction ID:                   ");
+		JLabel tranIDLabel = new JLabel("Transactions ID:                   ");
 		JLabel titleLabel = new JLabel("Title:");
 		JLabel typeLabel = new JLabel("Type:");
 		JLabel categoryLabel = new JLabel("Category:");

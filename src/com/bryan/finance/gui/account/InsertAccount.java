@@ -6,8 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,12 +19,13 @@ import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.queries.Accounts;
 import com.bryan.finance.utilities.HintPassField;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Account;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.gui.util.Title;
@@ -38,10 +37,10 @@ public class InsertAccount {
 
 	public static void addNewAccount() {
 		logger.debug("Displaying frame for new account");
-		final JFrame frame = new JFrame("New Account");
-		JLabel frameTitle = new Title("Insert New Account");
+		final JFrame frame = new JFrame("New Accounts");
+		JLabel frameTitle = new Title("Insert New Accounts");
 
-		final JTextField accountField = new HintTextField("Account Name", false);
+		final JTextField accountField = new HintTextField("Accounts Name", false);
 		accountField.setColumns(18);
 		final JTextField usernameField = new HintTextField("Username", false);
 		final JPasswordField passField = new HintPassField("Password", false);
@@ -103,7 +102,7 @@ public class InsertAccount {
 			public void actionPerformed(ActionEvent e) {
 				// Verify account name field is not blank
 				if (accountField.getText().trim().equals("")) {
-					missingField.setText("Account name cannot be blank");
+					missingField.setText("Accounts name cannot be blank");
 					missingField.setVisible(true);
 					frame.pack();
 				}
@@ -139,7 +138,7 @@ public class InsertAccount {
 							.trim());
 					int recordCount;
 					try {
-						recordCount = Queries.newAccount(account);
+						recordCount = Accounts.newAccount(account);
 					} catch (Exception e1) {
 						throw new AppException(e1);
 					}
@@ -153,7 +152,7 @@ public class InsertAccount {
 					} else {
 						frame.dispose();
 						JOptionPane.showMessageDialog(null,
-								"New Account added successfully!", "Success",
+								"New Accounts added successfully!", "Success",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 				}

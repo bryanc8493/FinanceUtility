@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.Connection;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +30,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import com.bryan.finance.database.Connect;
+import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.UpdatedRecord;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.ApplicationControl;
@@ -67,9 +67,9 @@ public class AccountsTab extends JPanel {
 
 		final JButton view = new MultiLabelButton("View Passwords",
 				MultiLabelButton.BOTTOM, Icons.VIEW_ICON);
-		final JButton add = new MultiLabelButton(" New Account ",
+		final JButton add = new MultiLabelButton(" New Accounts ",
 				MultiLabelButton.BOTTOM, Icons.ADD_ICON);
-		final JButton edit = new MultiLabelButton(" Edit Account ",
+		final JButton edit = new MultiLabelButton(" Edit Accounts ",
 				MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
 
 		JLabel title = new Title("Current Accounts");
@@ -193,7 +193,7 @@ public class AccountsTab extends JPanel {
 	}
 
 	private void getAccountData(boolean showPassword) {
-		Object[][] records = Queries.getAccounts();
+		Object[][] records = Accounts.getAccounts();
 		Object[] columnNames = { "ACCOUNT", "USERNAME", "PASSWORD" };
 		table = new JTable(records, columnNames);
 		passwordColumn = table.getColumnModel().getColumn(2);
@@ -210,8 +210,8 @@ public class AccountsTab extends JPanel {
 	}
 
 	private JScrollPane getFullAccountData() {
-		Object[][] records = Queries.getFullAccounts();
-		Object[] columnNames = { "ID", "Account", "Username", "Password" };
+		Object[][] records = Accounts.getFullAccounts();
+		Object[] columnNames = { "ID", "Accounts", "Username", "Password" };
 
 		DefaultTableModel model = new DefaultTableModel(records, columnNames) {
 			private static final long serialVersionUID = 1L;

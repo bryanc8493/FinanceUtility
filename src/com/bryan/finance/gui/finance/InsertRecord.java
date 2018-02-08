@@ -45,7 +45,7 @@ public class InsertRecord {
 
 	private final static JTextField descField = new HintTextField("Description", false);
 	private final static JTextField storeField = new HintTextField("Store", false);
-	private final static JTextField titleField = new HintTextField("Transaction Title", false);
+	private final static JTextField titleField = new HintTextField("Transactions Title", false);
 	private final static JFormattedTextField amountField = new JFormattedTextField(
 			ApplicationLiterals.getCurrencyFormat());
 
@@ -122,7 +122,7 @@ public class InsertRecord {
 
 		JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
-		JLabel frameTitle = new Title("Insert Transaction");
+		JLabel frameTitle = new Title("Insert Transactions");
 		main.add(frameTitle, BorderLayout.NORTH);
 		main.add(middle, BorderLayout.CENTER);
 		main.add(buttons, BorderLayout.SOUTH);
@@ -156,7 +156,6 @@ public class InsertRecord {
 
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new CreditPayments();
 				frame.dispose();
 				MainMenu.modeSelection(false, 0);
 			}

@@ -1,8 +1,6 @@
 package com.bryan.finance.gui.util;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -11,9 +9,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import com.bryan.finance.database.Connect;
+import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.literals.ApplicationLiterals;
 
@@ -103,7 +102,7 @@ public class ButtonEditor extends DefaultCellEditor {
 
 	private void lockUser(String user) {
 		logger.info("LOCKING USER: " + user);
-		Queries.lockUser(user);
+		Accounts.lockUser(user);
 		JOptionPane.showMessageDialog(null, user
 						+ " has been locked", "Locked",
 				JOptionPane.INFORMATION_MESSAGE);
@@ -111,7 +110,7 @@ public class ButtonEditor extends DefaultCellEditor {
 
 	private void unlockUser(String user) {
 		logger.info("UNLOCKING USER: " + user);
-		Queries.unlockUser(user);
+		Accounts.unlockUser(user);
 		JOptionPane.showMessageDialog(null, user
 						+ " has been unlocked", "Unlocked",
 				JOptionPane.INFORMATION_MESSAGE);

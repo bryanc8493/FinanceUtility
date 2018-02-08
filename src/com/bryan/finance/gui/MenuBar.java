@@ -21,12 +21,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
+import com.bryan.finance.database.queries.Balance;
+import com.bryan.finance.database.queries.Transactions;
 import org.apache.log4j.Logger;
 
 import com.alee.laf.WebLookAndFeel;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
@@ -272,15 +274,15 @@ public class MenuBar extends JMenuBar {
 
 		savings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.debug("Dislaying savings data");
-				double savingsAmount = Queries.getSavingsBalance();
+				logger.debug("Displaying savings data");
+				double savingsAmount = Balance.getSavingsBalance();
 				String safetyAmount = ReadConfig
 						.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);
 				double safeAmt = Double.parseDouble(safetyAmount);
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"<html><center><b>Savings Account Details</b></center><br>"
+								"<html><center><b>Savings Accounts Details</b></center><br>"
 										+ "Total Amount:&emsp;&emsp;&ensp;$"
 										+ savingsAmount
 										+ "<br>Safety:&ensp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;$"
@@ -331,7 +333,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private static JScrollPane getMonthReportsData() {
-		Object[][] records = Queries.getMonthlySummaries();
+		Object[][] records = Transactions.getMonthlySummaries();
 		Object[] columnNames = { "MONTH", "YEAR", "TOTAL EXPENSES",
 				"TOTAL INCOME", "CASH FLOW" };
 		JTable table = new JTable(records, columnNames);

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +27,14 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.bryan.finance.database.queries.Addresses;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Address;
 import com.bryan.finance.beans.UpdatedRecord;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
-import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.ApplicationControl;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
@@ -168,7 +167,7 @@ public class AddressTab extends JPanel {
 	}
 
 	private JScrollPane getAddressData() {
-		Object[][] records = Queries.getAddresses();
+		Object[][] records = Addresses.getAddresses();
 		Object[] columnNames = { "ID", "Last Name", "First Name(s)", "Address",
 				"City", "State", "ZIP" };
 
@@ -221,7 +220,7 @@ public class AddressTab extends JPanel {
 	}
 
 	private JScrollPane getPartialAddressData() {
-		Object[][] records = Queries.getAddresses();
+		Object[][] records = Addresses.getAddresses();
 		Object[][] partialRecords = getFirstTwoDataColumns(records);
 		Object[] columnNames = { "Last Name", "First Name(s)" };
 
@@ -269,7 +268,7 @@ public class AddressTab extends JPanel {
 						firstNameValue = cell;
 					}
 
-					Address address = Queries.getSpecifiedAddress(
+					Address address = Addresses.getSpecifiedAddress(
 							lastNameValue, firstNameValue);
 					new AddressRecord(address);
 				}
@@ -290,7 +289,7 @@ public class AddressTab extends JPanel {
 
 	private Map<Integer, String> getAttributeMap() {
 
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(1, "LAST_NAME");
 		map.put(2, "FIRST_NAMES");
 		map.put(3, "ADDRESS");

@@ -44,7 +44,7 @@ public class FinanceUtility {
 
 		// Set security based on if it was launched from the dev workspace
 		if (ApplicationLiterals.isFromWorkspace()) {
-			USER_VALIDATION = false;
+			USER_VALIDATION = true;
 		}
 
 		if (USER_VALIDATION) {

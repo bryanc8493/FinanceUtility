@@ -16,21 +16,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
+import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.Queries;
 import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;
@@ -48,8 +40,6 @@ public class VerifyAccess extends ApplicationLiterals {
 
 	private static int attempts = 0;
 	private static Logger logger = Logger.getLogger(VerifyAccess.class);
-
-	private static final Font font = new Font("Sans serif", Font.PLAIN, 16);
 
 	private static JFrame frame;
 
@@ -106,7 +96,7 @@ public class VerifyAccess extends ApplicationLiterals {
 
 		frame.add(p);
 		frame.setIconImage(Icons.APP_ICON.getImage());
-		frame.setDefaultCloseOperation(3);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.pack();
 		Loading.terminate();
@@ -132,8 +122,8 @@ public class VerifyAccess extends ApplicationLiterals {
 							+ ApplicationLiterals.NEW_LINE
 							+ "Try again or create new account");
 					JOptionPane.showMessageDialog(frame, "Username " + username
-							+ " does not exist." + ApplicationLiterals.NEW_LINE
-							+ "Try again or create new account",
+									+ " does not exist." + ApplicationLiterals.NEW_LINE
+									+ "Try again or create new account",
 							"Invalid User", JOptionPane.ERROR_MESSAGE);
 					passField.setText("");
 					frame.pack();
@@ -226,7 +216,7 @@ public class VerifyAccess extends ApplicationLiterals {
 					"Unauthorized", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		if (Queries.resetPassword(user.trim()) > 0) {
+		if (Accounts.resetPassword(user.trim()) > 0) {
 			String defaultPassword = ReadConfig
 					.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
 			JOptionPane
@@ -244,8 +234,8 @@ public class VerifyAccess extends ApplicationLiterals {
 		}
 	}
 
-	public static void banUser(String user) {
-		Queries.lockUser(user);
+	private static void banUser(String user) {
+		Accounts.lockUser(user);
 
 		FinanceUtility.appLogger.logFooter();
 

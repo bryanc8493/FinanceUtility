@@ -23,11 +23,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.bryan.finance.database.queries.Transactions;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.beans.UpdatedRecord;
-import com.bryan.finance.database.Queries;
+import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -106,20 +107,20 @@ public class ModifyRecords {
 					if (choice == JOptionPane.YES_OPTION) {
 						frame.dispose();
 						Updates.deleteTransaction(tran);
-						MainMenu.modeSelection(false, 0);
+						editData();
+//						MainMenu.modeSelection(false, 0);
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
 							"Please select a record to delete", "No Selection",
 							JOptionPane.WARNING_MESSAGE);
-					MainMenu.modeSelection(false, 0);
 				}
 			}
 		});
 	}
 
 	private static JScrollPane getTransactionData() {
-		Object[][] records = Queries.getPastEntries();
+		Object[][] records = Transactions.getPastEntries();
 		Object[] columnNames = { "ID", "Title", "Type", "Date", "Amount" };
 
 		// Creating table model to hold data and only make certain columns
