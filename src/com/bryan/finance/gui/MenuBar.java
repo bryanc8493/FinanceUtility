@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import com.alee.laf.WebLookAndFeel;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;

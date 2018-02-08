@@ -25,7 +25,6 @@ import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Account;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.gui.util.Title;

@@ -85,7 +85,7 @@ public class CustomReport {
 		JLabel monthsLabel = new JLabel("Month:");
 		JLabel yearLabel = new JLabel("Year:");
 
-		years = new JComboBox<>(getCurrentYear());
+		years = new JComboBox<>(getValidYears());
 		months = new JComboBox<>(getMonths());
 		months.setSelectedIndex(getLastMonth());
 		months.setMaximumRowCount(12);
@@ -351,23 +351,16 @@ public class CustomReport {
 		}
 	}
 
-	private static Integer[] getCurrentYear() {
-		List<Integer> yearsList = new ArrayList<>();
+	private static Integer[] getValidYears() {
 		String currentYearString = ApplicationLiterals.YEAR.format(new Date());
 		int currentYear = Integer.parseInt(currentYearString);
+		int yearsBetween = currentYear - MIN_YEAR;
+		Integer[] years = new Integer[yearsBetween+1];
 
-		yearsList.add(MIN_YEAR);
-		int count = 0;
-		if (currentYear > MIN_YEAR + count) {
-			count++;
-			yearsList.add(MIN_YEAR + count);
-		}
-
-		Integer[] years = new Integer[yearsList.size()];
-		int countTwo = years.length - 1;
-		for (int year : yearsList) {
-			years[countTwo] = year;
-			countTwo--;
+		int c = 0;
+		for(int i=MIN_YEAR; i<currentYear+1; i++) {
+			years[c] = i;
+			c++;
 		}
 		return years;
 	}

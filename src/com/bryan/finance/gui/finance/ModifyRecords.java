@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.beans.UpdatedRecord;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;

@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 import com.bryan.finance.beans.Address;
 import com.bryan.finance.beans.UpdatedRecord;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
 import com.bryan.finance.gui.util.ApplicationControl;
 import com.bryan.finance.gui.util.Title;

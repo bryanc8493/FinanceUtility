@@ -34,7 +34,6 @@ import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.UpdatedRecord;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.database.Updates;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.ApplicationControl;

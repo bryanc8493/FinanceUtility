@@ -24,7 +24,6 @@ import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Address;
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.gui.util.PromptComboBoxRenderer;
 import com.bryan.finance.gui.util.Title;

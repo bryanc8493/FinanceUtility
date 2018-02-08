@@ -12,7 +12,6 @@ import com.bryan.finance.database.Connect;
 import com.bryan.finance.database.queries.Accounts;
 import org.apache.log4j.Logger;
 
-import com.bryan.finance.database.queries.Queries;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.literals.ApplicationLiterals;
 
