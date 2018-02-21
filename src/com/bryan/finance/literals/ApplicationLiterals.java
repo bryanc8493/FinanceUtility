@@ -30,7 +30,7 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "0.0.8";
+	public static final String VERSION = "0.0.9";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -40,6 +40,7 @@ public abstract class ApplicationLiterals {
 	public static final String THEME_DIR = getLaunchPath() + SLASH + "theme";
 
 	public static final Font APP_FONT = new Font("Sans serif", Font.PLAIN, 16);
+	public static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
 	public static final Color APP_COLOR = new Color(26, 88, 127);
 	public static Color LINK_NOT_CLICKED = new Color(6, 69, 173);

@@ -1,11 +1,11 @@
 package com.bryan.finance.gui;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Set;
+import javax.swing.text.Document;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.bryan.finance.beans.Salary;
 import com.bryan.finance.database.queries.QueryUtil;
@@ -25,12 +27,20 @@ import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 import com.bryan.finance.utilities.HintTextField;
+import com.bryan.finance.utilities.SimpleDocumentListener;
+import org.apache.log4j.Logger;
 
 public class SalaryManagement implements ActionListener {
 
+	private Logger logger = Logger.getLogger(SalaryManagement.class);
 	private JFrame frame = new JFrame("Salaries");
 	private Set<Salary> salaries;
 	private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
+
+	private final Double BONUS_MINIMUM = 0.0;
+	private final Double BONUS_MAXIMUM = 200.0;
+	private final Double COMP_RATIO_MIN = 80.0;
+	private final Double COMP_RATIO_MAX = 120.0;
 
 	// Input components
 	private JComboBox<Integer> jobGrade = new JComboBox<>();
@@ -51,6 +61,7 @@ public class SalaryManagement implements ActionListener {
 	private JLabel totalPayAndBonus = new JLabel();
 
 	public SalaryManagement() {
+		logger.debug("Displaying salary data");
 		salaries = QueryUtil.getSalaryData();
 
 		populateJobGrades();
@@ -132,11 +143,141 @@ public class SalaryManagement implements ActionListener {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		// Add listener action code to all input objects
 		jobGrade.addActionListener(this);
-		compRatio.addActionListener(this);
-		STIPerf.addActionListener(this);
-		MTIPerf.addActionListener(this);
+
+		compRatio.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
+			if(isValidCompRatio()) {
+				setValidUI(compRatio);
+				onChangeHandler();
+			}
+		});
+
+		STIPerf.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
+			if(isValidInput(STIPerf)) {
+				setValidUI(STIPerf);
+				onChangeHandler();
+			}
+		});
+
+		MTIPerf.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
+			if(isValidInput(MTIPerf)) {
+				setValidUI(MTIPerf);
+				onChangeHandler();
+			}
+		});
+	}
+
+	private void setInvalidUI(JTextField component) {
+		component.setForeground(Color.RED);
+		component.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.RED, 1),
+				BorderFactory.createEmptyBorder(1,5,1,0)));
+	}
+
+	private void setValidUI(JTextField component) {
+		component.setForeground(Color.BLACK);
+		component.setBorder(BorderFactory.createEmptyBorder(1,5,1,0));
+	}
+
+	private boolean isValidCompRatio() {
+		Double input;
+		try {
+			input = Double.parseDouble(compRatio.getText());
+			if (input >= COMP_RATIO_MIN && input <= COMP_RATIO_MAX) {
+				return true;
+			}
+		} catch (NumberFormatException e) {
+			logger.warn("Invalid comp ratio - must be a number");
+		}
+		setInvalidUI(compRatio);
+		return false;
+	}
+
+	private boolean isValidInput(JTextField component) {
+		Double input;
+		try {
+			input = Double.parseDouble(component.getText());
+			if (input >= BONUS_MINIMUM && input <= BONUS_MAXIMUM) {
+				return true;
+			}
+		} catch (NumberFormatException e) {
+			logger.warn("Invalid input - must be a number");
+		}
+		setInvalidUI(component);
+		return false;
+	}
+
+	private void renderBasePay(Salary salary, Double comp) {
+		basePay.setText("$ " + decimal.format(salary.getMidPay() * comp));
+
+		monthlyPay.setText("$ "
+				+ decimal.format((salary.getMidPay() * comp) / 12));
+
+		biWeeklyPay.setText("$ "
+				+ decimal.format((salary.getMidPay() * comp) / 12 / 2));
+	}
+
+	private void renderStiBonus(Double stiBonusPercentVal, Double basePayVal) {
+		STIBonusPercent.setText(decimal.format(stiBonusPercentVal) + " %");
+
+		stiBonusPercentVal = stiBonusPercentVal / 100;
+		STIBonusAmt.setText("$ "
+				+ decimal.format(stiBonusPercentVal * basePayVal));
+
+		basePayAndSTI.setText("$ "
+				+ decimal.format((stiBonusPercentVal * basePayVal)
+				+ basePayVal));
+	}
+
+	private void renderMtiBonus(Double mtiBonusPercentVal,
+								Double basePayVal, Double stiBonusPercentVal) {
+		MTIBonusPercent.setText(decimal.format(mtiBonusPercentVal)
+				+ " %");
+
+		mtiBonusPercentVal = mtiBonusPercentVal / 100;
+		double mtiBonusAmt = mtiBonusPercentVal * basePayVal;
+		MTIBonusAmt.setText("$ " + decimal.format(mtiBonusAmt));
+
+		totalBonusAmt.setText("$ "
+				+ decimal.format(mtiBonusAmt
+				+ (stiBonusPercentVal * basePayVal)));
+
+		double stiAndBaseAmt = (stiBonusPercentVal * basePayVal)
+				+ basePayVal;
+		totalPayAndBonus.setText("$ "
+				+ decimal.format(mtiBonusAmt + stiAndBaseAmt));
+	}
+
+	private void onChangeHandler() {
+		Double comp, sti, mti;
+		try {
+			comp = Double.parseDouble(compRatio.getText().trim()) / 100.0;
+			sti = Double.parseDouble(STIPerf.getText().trim()) / 100.0;
+
+			Salary salary = getSelectedGradeData(Integer.parseInt(jobGrade
+					.getSelectedItem().toString()));
+
+			double basePayVal = salary.getMidPay() * comp;
+			renderBasePay(salary, comp);
+
+			double stiBonusPercentVal = salary.getStiTarget() * sti;
+			renderStiBonus(stiBonusPercentVal, basePayVal);
+
+			if (salary.getGrade() < 8) {
+				MTIBonusPercent.setText("--");
+				MTIBonusAmt.setText("--");
+				totalBonusAmt.setText(STIBonusAmt.getText());
+				totalPayAndBonus.setText(basePayAndSTI.getText());
+			} else {
+				mti = Double.parseDouble(MTIPerf.getText().trim()) / 100.0;
+				double mtiBonusPercentVal = salary.getMtiTarget() * mti;
+				renderMtiBonus(mtiBonusPercentVal, basePayVal, stiBonusPercentVal);
+			}
+
+			formatOutputLabels();
+		} catch (NumberFormatException e) {
+			logger.warn("parse exception during on change handler - " + e);
+		}
 	}
 
 	private void populateJobGrades() {
@@ -146,88 +287,16 @@ public class SalaryManagement implements ActionListener {
 			}
 		}
 		jobGrade.setMaximumRowCount(10);
+		jobGrade.setFont(ApplicationLiterals.APP_FONT);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		String comp = compRatio.getText().trim();
-		String sti = STIPerf.getText().trim();
-		String mti = MTIPerf.getText().trim();
-
-		if (!(comp.equals("") || sti.equals("") || mti.equals(""))) {
-			double compVal = Double.parseDouble(comp);
-			double stiVal = Double.parseDouble(sti);
-			double mtiVal = Double.parseDouble(mti);
-
-			if (compVal < 80.0 || compVal > 120.0) {
-				JOptionPane.showMessageDialog(frame,
-						"Comp Ratio must be between 80 and 120",
-						"Invalid Comp Ratio", JOptionPane.WARNING_MESSAGE);
-			}
-
-			if (stiVal < 0.0 || stiVal > 200.0) {
-				JOptionPane.showMessageDialog(frame,
-						"STI Performance must be between 0 and 200",
-						"Invalid STI Perf", JOptionPane.WARNING_MESSAGE);
-			}
-
-			if (mtiVal < 0.0 || mtiVal > 200.0) {
-				JOptionPane.showMessageDialog(frame,
-						"MTI Performance must be between 0 and 200",
-						"Invalid MTI Perf", JOptionPane.WARNING_MESSAGE);
-			}
-
-			Salary salary = getSelectedGradeData(Integer.parseInt(jobGrade
-					.getSelectedItem().toString()));
-			compVal = compVal / 100.0;
-			stiVal = stiVal / 100.0;
-			mtiVal = mtiVal / 100.0;
-
-			double basePayVal = salary.getMidPay() * compVal;
-			basePay.setText("$ " + decimal.format(salary.getMidPay() * compVal));
-
-			monthlyPay.setText("$ "
-					+ decimal.format((salary.getMidPay() * compVal) / 12));
-
-			biWeeklyPay.setText("$ "
-					+ decimal.format((salary.getMidPay() * compVal) / 12 / 2));
-
-			double stiBonusPercentVal = salary.getStiTarget() * stiVal;
-			STIBonusPercent.setText(decimal.format(stiBonusPercentVal) + " %");
-
-			stiBonusPercentVal = stiBonusPercentVal / 100;
-			STIBonusAmt.setText("$ "
-					+ decimal.format(stiBonusPercentVal * basePayVal));
-
-			basePayAndSTI.setText("$ "
-					+ decimal.format((stiBonusPercentVal * basePayVal)
-							+ basePayVal));
-
-			if (salary.getGrade() < 8) {
-				MTIBonusPercent.setText("--");
-				MTIBonusAmt.setText("--");
-				totalBonusAmt.setText(STIBonusAmt.getText());
-				totalPayAndBonus.setText(basePayAndSTI.getText());
-			} else {
-				double mtiBonusPercentVal = salary.getMtiTarget() * mtiVal;
-				MTIBonusPercent.setText(decimal.format(mtiBonusPercentVal)
-						+ " %");
-
-				mtiBonusPercentVal = mtiBonusPercentVal / 100;
-				double mtiBonusAmt = mtiBonusPercentVal * basePayVal;
-				MTIBonusAmt.setText("$ " + decimal.format(mtiBonusAmt));
-
-				totalBonusAmt.setText("$ "
-						+ decimal.format(mtiBonusAmt
-								+ (stiBonusPercentVal * basePayVal)));
-
-				double stiAndBaseAmt = (stiBonusPercentVal * basePayVal)
-						+ basePayVal;
-				totalPayAndBonus.setText("$ "
-						+ decimal.format(mtiBonusAmt + stiAndBaseAmt));
-			}
-
-			alignOutputLabels();
+		int selectedGrade = Integer.parseInt(jobGrade.getSelectedItem().toString());
+		if (selectedGrade >= 8) {
+			MTIPerf.setEnabled(true);
+		}else{
+			MTIPerf.setEnabled(false);
 		}
 	}
 
@@ -242,7 +311,7 @@ public class SalaryManagement implements ActionListener {
 		return salary;
 	}
 
-	private void alignOutputLabels() {
+	private void formatOutputLabels() {
 		basePay.setHorizontalAlignment(SwingConstants.RIGHT);
 		monthlyPay.setHorizontalAlignment(SwingConstants.RIGHT);
 		biWeeklyPay.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -253,5 +322,9 @@ public class SalaryManagement implements ActionListener {
 		MTIBonusAmt.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalBonusAmt.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalPayAndBonus.setHorizontalAlignment(SwingConstants.RIGHT);
+		totalBonusAmt.setFont(ApplicationLiterals.BOLD_FONT);
+		totalPayAndBonus.setFont(ApplicationLiterals.BOLD_FONT);
+		totalPayAndBonus.setForeground(Color.BLUE);
+		totalBonusAmt.setForeground(Color.BLUE);
 	}
 }
