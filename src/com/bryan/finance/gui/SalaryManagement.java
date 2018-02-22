@@ -235,9 +235,13 @@ public class SalaryManagement implements ActionListener {
 				+ " %");
 
 		mtiBonusPercentVal = mtiBonusPercentVal / 100;
+		stiBonusPercentVal = stiBonusPercentVal / 100;
 		double mtiBonusAmt = mtiBonusPercentVal * basePayVal;
 		MTIBonusAmt.setText("$ " + decimal.format(mtiBonusAmt));
+		renderTotals(mtiBonusAmt, stiBonusPercentVal, basePayVal);
+	}
 
+	private void renderTotals(Double mtiBonusAmt, Double stiBonusPercentVal, Double basePayVal) {
 		totalBonusAmt.setText("$ "
 				+ decimal.format(mtiBonusAmt
 				+ (stiBonusPercentVal * basePayVal)));
@@ -249,6 +253,7 @@ public class SalaryManagement implements ActionListener {
 	}
 
 	private void onChangeHandler() {
+		formatOutputLabels();
 		Double comp, sti, mti;
 		try {
 			comp = Double.parseDouble(compRatio.getText().trim()) / 100.0;
@@ -268,13 +273,12 @@ public class SalaryManagement implements ActionListener {
 				MTIBonusAmt.setText("--");
 				totalBonusAmt.setText(STIBonusAmt.getText());
 				totalPayAndBonus.setText(basePayAndSTI.getText());
+				renderTotals(0.0, stiBonusPercentVal/100, basePayVal);
 			} else {
 				mti = Double.parseDouble(MTIPerf.getText().trim()) / 100.0;
 				double mtiBonusPercentVal = salary.getMtiTarget() * mti;
 				renderMtiBonus(mtiBonusPercentVal, basePayVal, stiBonusPercentVal);
 			}
-
-			formatOutputLabels();
 		} catch (NumberFormatException e) {
 			logger.warn("parse exception during on change handler - " + e);
 		}
