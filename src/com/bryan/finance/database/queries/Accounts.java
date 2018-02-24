@@ -156,8 +156,8 @@ public class Accounts {
     public static Set<User> getAllUsers() {
         Set<User> users = new LinkedHashSet<>();
         logger.debug("Getting all users...");
-        String SQL_TEXT = "SELECT * FROM : " + Databases.ACCOUNTS +
-                + ApplicationLiterals.DOT + Tables.SITES + " where USERNAME <> 'ROOT'";
+        String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS
+                + ApplicationLiterals.DOT + Tables.USERS + " where USERNAME <> 'ROOT'";
         Statement statement;
         ResultSet rs;
 
