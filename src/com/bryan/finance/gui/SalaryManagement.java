@@ -5,21 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Set;
-import javax.swing.text.Document;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import com.bryan.finance.beans.Salary;
 import com.bryan.finance.database.queries.QueryUtil;
@@ -36,11 +32,6 @@ public class SalaryManagement implements ActionListener {
 	private JFrame frame = new JFrame("Salaries");
 	private Set<Salary> salaries;
 	private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
-
-	private final Double BONUS_MINIMUM = 0.0;
-	private final Double BONUS_MAXIMUM = 200.0;
-	private final Double COMP_RATIO_MIN = 80.0;
-	private final Double COMP_RATIO_MAX = 120.0;
 
 	// Input components
 	private JComboBox<Integer> jobGrade = new JComboBox<>();
@@ -183,7 +174,8 @@ public class SalaryManagement implements ActionListener {
 		Double input;
 		try {
 			input = Double.parseDouble(compRatio.getText());
-			if (input >= COMP_RATIO_MIN && input <= COMP_RATIO_MAX) {
+			if (input >= ApplicationLiterals.COMP_RATIO_MIN &&
+					input <= ApplicationLiterals.COMP_RATIO_MAX) {
 				return true;
 			}
 		} catch (NumberFormatException e) {
@@ -197,7 +189,8 @@ public class SalaryManagement implements ActionListener {
 		Double input;
 		try {
 			input = Double.parseDouble(component.getText());
-			if (input >= BONUS_MINIMUM && input <= BONUS_MAXIMUM) {
+			if (input >= ApplicationLiterals.BONUS_MINIMUM &&
+					input <= ApplicationLiterals.BONUS_MAXIMUM) {
 				return true;
 			}
 		} catch (NumberFormatException e) {

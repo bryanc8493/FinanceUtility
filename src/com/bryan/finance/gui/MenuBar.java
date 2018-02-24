@@ -21,12 +21,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
-import com.bryan.finance.database.queries.Balance;
 import com.bryan.finance.database.queries.Transactions;
+import com.bryan.finance.gui.finance.Savings;
 import org.apache.log4j.Logger;
 
 import com.alee.laf.WebLookAndFeel;
-import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.gui.account.UserManagement;
 import com.bryan.finance.gui.util.Title;
@@ -271,26 +270,8 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 
-		savings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying savings data");
-				double savingsAmount = Balance.getSavingsBalance();
-				String safetyAmount = ReadConfig
-						.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);
-				double safeAmt = Double.parseDouble(safetyAmount);
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"<html><center><b>Savings Accounts Details</b></center><br>"
-										+ "Total Amount:&emsp;&emsp;&ensp;$"
-										+ savingsAmount
-										+ "<br>Safety:&ensp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;$"
-										+ safetyAmount + "<br>"
-										+ "Wedding Savings:&ensp;$"
-										+ (savingsAmount - safeAmt) + "</html>",
-								"Savings Details",
-								JOptionPane.INFORMATION_MESSAGE);
-			}
+		savings.addActionListener(e -> {
+			new Savings();
 		});
 
 		viewAppSettings.addActionListener(new ActionListener() {

@@ -30,12 +30,12 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.1.1";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
 
-	public static final String USER_DIR = "user.dir";
+	protected static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";
 	public static final String THEME_DIR = getLaunchPath() + SLASH + "theme";
 
@@ -43,7 +43,7 @@ public abstract class ApplicationLiterals {
 	public static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
 
 	public static final Color APP_COLOR = new Color(26, 88, 127);
-	public static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
+	protected static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
 	public static Color LINK_CLICKED = new Color(102, 51, 102);
 
 	public static final String LOG_PROPERTY_FILE = SLASH + "config" + SLASH
@@ -61,13 +61,19 @@ public abstract class ApplicationLiterals {
 	public static final String UNLOCK = "unlock";
 	public static final String UNLOCKED = "UNLOCKED";
 
+	// Salary Parameters
+	public static final Double BONUS_MINIMUM = 0.0;
+	public static final Double BONUS_MAXIMUM = 200.0;
+	public static final Double COMP_RATIO_MIN = 80.0;
+	public static final Double COMP_RATIO_MAX = 120.0;
+
 	/*
 	 * Config literals
 	 */
-	public static final String DB_URL = "ConnectionURL";
-	public static final String MY_SQL_CLASS = "MySQLClassName";
-	public static final String DB_USER = "DBUsername";
-	public static final String DB_PASS = "DBPassword";
+	protected static final String DB_URL = "ConnectionURL";
+	protected static final String MY_SQL_CLASS = "MySQLClassName";
+	protected static final String DB_USER = "DBUsername";
+	protected static final String DB_PASS = "DBPassword";
 	public static final String DB_PORT = "DBPort";
 	public static final String MY_SQL_DIR = "MySQLDirectory";
 	public static final String MY_SQL_BACKUP = "MySQLBackupLocation";
@@ -107,7 +113,7 @@ public abstract class ApplicationLiterals {
 			"RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI",
 			"WY" };
 
-	public static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\FinanceUtility";
+	private static final String LOCAL_WORKSPACE = "C:\\Users\\Bryan\\repos\\FinanceUtility";
 
 	public static String getLaunchPath() {
 		String path = FinanceUtility.class.getProtectionDomain()
@@ -125,7 +131,6 @@ public abstract class ApplicationLiterals {
 
 	public static NumberFormat getNumberFormat() {
 		NumberFormat nf = NumberFormat.getInstance();
-		nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
 		nf.setMinimumFractionDigits(2);
 		return nf;

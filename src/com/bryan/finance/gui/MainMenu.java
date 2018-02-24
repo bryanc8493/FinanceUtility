@@ -60,7 +60,7 @@ import com.bryan.finance.utilities.MultiLabelButton;
 
 public class MainMenu extends Icons {
 
-	public static final ImageIcon appIcon = APP_ICON;
+	private static final ImageIcon appIcon = APP_ICON;
 	private static Logger logger = Logger.getLogger(MainMenu.class);
 	private static NumberFormat decimal = ApplicationLiterals.getNumberFormat();
 
