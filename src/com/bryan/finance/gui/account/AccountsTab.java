@@ -291,19 +291,19 @@ public class AccountsTab extends JPanel {
 		return map;
 	}
 
-	public boolean isPassVerified() {
+	private boolean isPassVerified() {
 		return passVerified;
 	}
 
-	public void setPassVerified(boolean passVerified) {
+	private void setPassVerified(boolean passVerified) {
 		this.passVerified = passVerified;
 	}
 
-	public int getAttempts() {
+	private int getAttempts() {
 		return attempts;
 	}
 
-	public void setAttempts(int attempts) {
+	private void setAttempts(int attempts) {
 		this.attempts = attempts;
 	}
 }
