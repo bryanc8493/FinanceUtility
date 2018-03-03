@@ -35,6 +35,9 @@ public abstract class ApplicationLiterals {
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
 
+	public static final char VIEW_ONLY = '0';
+	public static final char FULL_ACCESS = '1';
+
 	protected static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";
 	public static final String THEME_DIR = getLaunchPath() + SLASH + "theme";

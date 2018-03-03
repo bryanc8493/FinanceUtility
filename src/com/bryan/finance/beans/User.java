@@ -1,5 +1,7 @@
 package com.bryan.finance.beans;
 
+import com.bryan.finance.literals.ApplicationLiterals;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -7,7 +9,7 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -7868034600250209563L;
 	
 	public User() {
-		this.permission = '0';
+		this.permission = ApplicationLiterals.VIEW_ONLY;
 	}
 	
 	private String username;

@@ -57,7 +57,7 @@ public class AddressTab extends JPanel {
 		final JButton edit = new MultiLabelButton(" Edit Addresses ",
 				MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
 
-		if (Connect.getUsersPermission() == '0') {
+		if (Connect.getUsersPermission() == ApplicationLiterals.VIEW_ONLY) {
 			logger.warn("Read permission only, edit button will be disabled");
 			edit.setEnabled(false);
 		}

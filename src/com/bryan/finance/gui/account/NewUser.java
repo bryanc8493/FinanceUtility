@@ -158,8 +158,8 @@ public class NewUser {
 					user.setEmail(emailField.getText().trim());
 					user.setPassword(new String(passField.getPassword()));
 					user.setStatus(ApplicationLiterals.UNLOCKED);
-					user.setPermission('0');
-					int recordCount = 0;
+					user.setPermission(ApplicationLiterals.VIEW_ONLY);
+					int recordCount;
 					try {
 						recordCount = Accounts.newUser(user);
 					} catch (Exception e1) {

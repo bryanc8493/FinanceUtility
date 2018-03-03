@@ -25,7 +25,7 @@ import com.bryan.finance.security.Encoding;
 
 public class Connect extends ApplicationLiterals {
 
-	private static char PERMISSION = '0';
+	private static char PERMISSION = ApplicationLiterals.VIEW_ONLY;
 	private static User currentUser;
 	private static Logger logger = Logger.getLogger(Connect.class);
 

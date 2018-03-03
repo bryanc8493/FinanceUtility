@@ -36,6 +36,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import javafx.application.Application;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
@@ -202,7 +203,7 @@ public class MainMenu extends Icons {
 
 		JTabbedPane screen = new JTabbedPane(JTabbedPane.TOP);
 		screen.add("Finance", mainPanel);
-		if (Connect.getUsersPermission() == '1') {
+		if (Connect.getUsersPermission() == ApplicationLiterals.FULL_ACCESS) {
 			screen.add("Investments", new InvestmentsTab());
 			screen.add("Accounts", new AccountsTab());
 		}
@@ -225,7 +226,7 @@ public class MainMenu extends Icons {
 
 		// If user permission is read only (0) then disable all GUI elements for
 		// possible editing and deleting
-		if (Connect.getUsersPermission() == '0') {
+		if (Connect.getUsersPermission() == ApplicationLiterals.VIEW_ONLY) {
 			logger.warn("Read Permission only - Editing and deleting disabled");
 			modify.setEnabled(false);
 			InvestmentsTab.fidelity.setEnabled(false);
