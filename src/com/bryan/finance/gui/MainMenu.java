@@ -36,7 +36,6 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import javafx.application.Application;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
