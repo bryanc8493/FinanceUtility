@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.bryan.finance.database.queries.Accounts;
+import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.utilities.HintPassField;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
@@ -138,6 +139,7 @@ public class InsertAccount {
 					int recordCount;
 					try {
 						recordCount = Accounts.newAccount(account);
+						MainMenu.closeWindow();
 					} catch (Exception e1) {
 						throw new AppException(e1);
 					}
@@ -153,6 +155,7 @@ public class InsertAccount {
 						JOptionPane.showMessageDialog(null,
 								"New Accounts added successfully!", "Success",
 								JOptionPane.INFORMATION_MESSAGE);
+						MainMenu.modeSelection(false, 2);
 					}
 				}
 			}

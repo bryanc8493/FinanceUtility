@@ -63,13 +63,14 @@ public class MainMenu extends Icons {
 	private static final ImageIcon appIcon = APP_ICON;
 	private static Logger logger = Logger.getLogger(MainMenu.class);
 	private static NumberFormat decimal = ApplicationLiterals.getNumberFormat();
+	private static JFrame frame;
 
 	private static boolean isFutureBalancePositive = false;
 
 	public static void modeSelection(final boolean showThemeButton,
 			int persistedTab) {
 		logger.debug("Initializing and generating main menu GUI...");
-		final JFrame frame = new JFrame("Finance Utility");
+		frame = new JFrame("Finance Utility");
 
 		String viewingAmount = ReadConfig
 				.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX);
@@ -307,6 +308,10 @@ public class MainMenu extends Icons {
 				f.setLocationRelativeTo(null);
 			}
 		});
+	}
+
+	public static void closeWindow() {
+		frame.dispose();
 	}
 
 	private static void makeCurrentThemeDefault() {
