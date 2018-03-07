@@ -28,6 +28,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.bryan.finance.database.queries.Addresses;
+import com.bryan.finance.gui.MainMenu;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Address;
@@ -57,7 +58,7 @@ public class AddressTab extends JPanel {
 		final JButton edit = new MultiLabelButton(" Edit Addresses ",
 				MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
 
-		if (Connect.getUsersPermission() == '0') {
+		if (Connect.getUsersPermission() == ApplicationLiterals.VIEW_ONLY) {
 			logger.warn("Read permission only, edit button will be disabled");
 			edit.setEnabled(false);
 		}
@@ -99,10 +100,8 @@ public class AddressTab extends JPanel {
 			}
 		});
 
-		add.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				InsertAddress.InsertFrame();
-			}
+		add.addActionListener(e -> {
+			InsertAddress.addNewAddress();
 		});
 
 		edit.addActionListener(new ActionListener() {
@@ -134,6 +133,12 @@ public class AddressTab extends JPanel {
 					public void actionPerformed(ActionEvent e) {
 						f.dispose();
 						Updates.changeAddresses(updates);
+						MainMenu.closeWindow();
+						JOptionPane.showMessageDialog(null,
+								"Successfully updated addresses",
+								"Updated!",
+								JOptionPane.INFORMATION_MESSAGE);
+						MainMenu.modeSelection(false,3);
 					}
 				});
 
@@ -151,6 +156,12 @@ public class AddressTab extends JPanel {
 							if (choice == JOptionPane.YES_OPTION) {
 								f.dispose();
 								Updates.deleteAddress(ID);
+								MainMenu.closeWindow();
+								JOptionPane.showMessageDialog(null,
+										"Record deleted successfully",
+										"Deleted!",
+										JOptionPane.INFORMATION_MESSAGE);
+								MainMenu.modeSelection(false,3);
 							}
 						} else {
 							JOptionPane

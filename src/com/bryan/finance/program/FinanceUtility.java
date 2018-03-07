@@ -24,6 +24,11 @@ import com.bryan.finance.logging.AppLogger;
  * want to eliminate having expenses and income table.  Eventually moving
  * towards full table normalization - this will eliminate redundant data
  * and make querying significantly easier.
+ *
+ * Select distinct(
+ (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Income') - (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Expense')
+ ) as "Total"
+ FROM MONTHLY_TRANSACTIONS
  */
 public class FinanceUtility {
 

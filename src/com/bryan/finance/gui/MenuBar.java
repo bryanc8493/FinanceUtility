@@ -304,7 +304,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private void setPermissions(char permission) {
-		if (permission == '0') {
+		if (permission == ApplicationLiterals.VIEW_ONLY) {
 			userMgmt.setEnabled(false);
 			salary.setEnabled(false);
 			modifyAppSettings.setEnabled(false);

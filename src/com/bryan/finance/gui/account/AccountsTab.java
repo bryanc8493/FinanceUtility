@@ -31,6 +31,7 @@ import javax.swing.table.TableColumn;
 
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.database.queries.Accounts;
+import com.bryan.finance.gui.MainMenu;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.UpdatedRecord;
@@ -117,7 +118,6 @@ public class AccountsTab extends JPanel {
 
 		add.addActionListener(e -> {
 			InsertAccount.addNewAccount();
-
 		});
 
 		edit.addActionListener(new ActionListener() {
@@ -159,6 +159,10 @@ public class AccountsTab extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							f.dispose();
 							Updates.changeAccounts(updates);
+							MainMenu.closeWindow();
+							JOptionPane.showMessageDialog(null, "Successfully updated account records",
+									"Updated!", JOptionPane.INFORMATION_MESSAGE);
+							MainMenu.modeSelection(false,2);
 						}
 					});
 
@@ -177,6 +181,10 @@ public class AccountsTab extends JPanel {
 								if (choice == JOptionPane.YES_OPTION) {
 									f.dispose();
 									Updates.deleteAccount(ID);
+									MainMenu.closeWindow();
+									JOptionPane.showMessageDialog(null, "Record deleted successfully",
+											"Deleted!", JOptionPane.INFORMATION_MESSAGE);
+									MainMenu.modeSelection(false, 2);
 								}
 							} else {
 								JOptionPane.showMessageDialog(null,

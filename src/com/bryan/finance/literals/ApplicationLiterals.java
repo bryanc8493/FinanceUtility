@@ -30,10 +30,13 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "0.1.2";
+	public static final String VERSION = "0.1.3";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
+
+	public static final char VIEW_ONLY = '0';
+	public static final char FULL_ACCESS = '1';
 
 	protected static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";

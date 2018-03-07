@@ -270,8 +270,8 @@ public class Accounts {
 
     public static int resetPassword(String user) {
         int recordsInserted = 0;
-        char permission = '1';
         Connection con = null;
+        char permission = ApplicationLiterals.FULL_ACCESS;
         try {
             con = Connect.getConnection();
             String SQL_TEXT = "SELECT PERMISSION FROM "
@@ -288,7 +288,7 @@ public class Accounts {
                     + Arrays.toString(e.getStackTrace()));
         }
 
-        if (permission == '1') {
+        if (permission == ApplicationLiterals.FULL_ACCESS) {
             JOptionPane.showMessageDialog(null,
                     "Password cannot be changed for this user", "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -300,7 +300,7 @@ public class Accounts {
                         + Encoding.decrypt(ApplicationLiterals
                         .getEncryptionKey()) + "') "
                         +  " WHERE USERNAME = '" + user + "'";
-System.out.println(SQL_TEXT);
+
                 PreparedStatement ps = con.prepareStatement(SQL_TEXT);
                 recordsInserted = ps.executeUpdate();
                 logger.debug("reset password for user: " + user);
