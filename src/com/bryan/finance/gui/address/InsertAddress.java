@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.bryan.finance.database.queries.Addresses;
+import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 
@@ -34,7 +35,7 @@ public class InsertAddress {
 
 	private static Logger logger = Logger.getLogger(InsertAddress.class);
 
-	public static void InsertFrame() {
+	public static void addNewAddress() {
 		logger.debug("Displaying GUI to insert new Address");
 		final JFrame frame = new JFrame("New Address");
 
@@ -147,7 +148,6 @@ public class InsertAddress {
 					frame.pack();
 				}
 
-
 				else {
 					Address address = new Address();
 					address.setLastName(LnameField.getText().trim());
@@ -158,6 +158,7 @@ public class InsertAddress {
 					address.setZipcode(zipField.getText().trim());
 
 					int recordCount = Addresses.newAddress(address);
+					MainMenu.closeWindow();
 					if (recordCount != 1) {
 						missingField
 								.setText("Error inserting new address - check database");
@@ -169,6 +170,8 @@ public class InsertAddress {
 						JOptionPane.showMessageDialog(null,
 								"New Address added successfully!", "Success",
 								JOptionPane.INFORMATION_MESSAGE);
+						MainMenu.modeSelection(false, 3
+						);
 					}
 				}
 			}

@@ -39,11 +39,6 @@ public class Updates {
 				throw new AppException(e);
 			}
 		}
-		int updatedCount = updates.size();
-		logger.debug("Made " + updatedCount + " updates");
-		JOptionPane.showMessageDialog(null, "Successfully updated "
-				+ updatedCount + " address records", "Updated!",
-				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void changeAccounts(List<UpdatedRecord> updates) {
@@ -88,9 +83,6 @@ public class Updates {
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
-
-		JOptionPane.showMessageDialog(null, "Record deleted successfully",
-				"Deleted!", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void deleteAccount(String ID) {

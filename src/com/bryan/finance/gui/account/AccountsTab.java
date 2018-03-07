@@ -45,7 +45,6 @@ import com.bryan.finance.literals.Icons;
 import com.bryan.finance.security.Encoding;
 import com.bryan.finance.utilities.HintPassField;
 import com.bryan.finance.utilities.MultiLabelButton;
-import sun.applet.Main;
 
 public class AccountsTab extends JPanel {
 
