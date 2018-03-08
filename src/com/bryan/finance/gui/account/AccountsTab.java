@@ -1,12 +1,14 @@
 package com.bryan.finance.gui.account;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -78,11 +80,12 @@ public class AccountsTab extends JPanel {
 		buttons.add(view);
 		buttons.add(add);
 		buttons.add(edit);
-		buttons.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		buttons.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-		JPanel content = new JPanel(new BorderLayout(0, 10));
+		JPanel content = new JPanel(new BorderLayout());
 		content.add(buttons, BorderLayout.NORTH);
-		content.add(acctSP, BorderLayout.SOUTH);
+		content.add(acctSP, BorderLayout.CENTER);
+		content.add(new JLabel("* Double-click an account to be navigated to the login page"), BorderLayout.SOUTH);
 
 		content.setBorder(ApplicationLiterals.PADDED_SPACE);
 
@@ -202,11 +205,30 @@ public class AccountsTab extends JPanel {
 	private void getAccountData(boolean showPassword) {
 		Object[][] records = Accounts.getAccounts();
 		Object[] columnNames = { "ACCOUNT", "USERNAME", "PASSWORD" };
-		table = new JTable(records, columnNames);
+		DefaultTableModel model = new DefaultTableModel(records,
+				columnNames) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		table = new JTable(model);
 		passwordColumn = table.getColumnModel().getColumn(2);
 		if (!showPassword) {
 			table.getColumnModel().removeColumn(passwordColumn);
 		}
+
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					String clickedAccount = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
+					String loginUrl = Accounts.getUrl(clickedAccount);
+					openSiteLogin(loginUrl, clickedAccount);
+				}
+			}
+		});
 
 		acctSP = new JScrollPane(table);
 		acctSP.setViewportView(table);
@@ -216,9 +238,32 @@ public class AccountsTab extends JPanel {
 				table.getRowHeight() * 12));
 	}
 
+	private void openSiteLogin(String url, String site) {
+		try {
+			Desktop desktop = java.awt.Desktop.getDesktop();
+			URI oURL = new URI(url);
+			desktop.browse(oURL);
+		} catch (NullPointerException e) {
+			logger.error("No URL defined for " + site);
+			JOptionPane.showMessageDialog(this,
+					site + " does not have a login site URL defined! Please edit the Account to add one",
+					"No Site Defined", JOptionPane.ERROR_MESSAGE);
+		} catch  (IOException ex) {
+			logger.error("IO Exception for " + site + ": " + ex.toString());
+			JOptionPane.showMessageDialog(this,
+					"Unhandled IO Exception - site: " + site + " - error: " + ex.toString(),
+					"IO Exception Error", JOptionPane.ERROR_MESSAGE);
+		} catch (URISyntaxException ux) {
+			logger.error("URI Exception for " + site + ": " + ux.toString());
+			JOptionPane.showMessageDialog(this,
+					"Unhandled URI Exception - site: " + site + " - error: " + ux.toString(),
+					"URI Exception Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	private JScrollPane getFullAccountData() {
 		Object[][] records = Accounts.getFullAccounts();
-		Object[] columnNames = { "ID", "Accounts", "Username", "Password" };
+		Object[] columnNames = { "ID", "Accounts", "Username", "Password", "Site URL" };
 
 		DefaultTableModel model = new DefaultTableModel(records, columnNames) {
 			private static final long serialVersionUID = 1L;
@@ -296,6 +341,7 @@ public class AccountsTab extends JPanel {
 		map.put(1, "ACCOUNT");
 		map.put(2, "USERNAME");
 		map.put(3, "PASS");
+		map.put(4, "URL");
 		return map;
 	}
 

@@ -45,6 +45,7 @@ public class InsertAccount {
 		final JTextField usernameField = new HintTextField("Username", false);
 		final JPasswordField passField = new HintPassField("Password", false);
 		final JPasswordField confPassField = new HintPassField("Confirm Password", false);
+		final JTextField urlField = new HintTextField("Login Site URL", false);
 
 		final JButton insert = new PrimaryButton("    Insert    ");
 		final JButton close = new PrimaryButton("    Close    ");
@@ -54,12 +55,13 @@ public class InsertAccount {
 		missingField.setVisible(false);
 
 		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(4, 1, 5, 15));
+		grid.setLayout(new GridLayout(5, 1, 5, 15));
 		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		grid.add(accountField);
 		grid.add(usernameField);
 		grid.add(passField);
 		grid.add(confPassField);
+		grid.add(urlField);
 
 		JPanel missing = new JPanel();
 		missing.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -136,6 +138,7 @@ public class InsertAccount {
 					account.setUsername(usernameField.getText().trim());
 					account.setPassword(new String(passField.getPassword())
 							.trim());
+					account.setUrl(urlField.getText().trim());
 					int recordCount;
 					try {
 						recordCount = Accounts.newAccount(account);

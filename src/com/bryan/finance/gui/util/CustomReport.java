@@ -294,11 +294,6 @@ public class CustomReport {
 		Map<String, List<CategorySummary>> data = GenerateReport
 				.categoryReportT(startDate, endDate);
 
-		for (Map.Entry<String, List<CategorySummary>> m : data.entrySet()) {
-			System.out.println("DATE: " + m.getKey() + ApplicationLiterals.TAB
-					+ "VALUE: " + printList(m.getValue()));
-		}
-
 		// use data and html template to generate chart
 		GenerateReport.createCategoryChart(data);
 	}

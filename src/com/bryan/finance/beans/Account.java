@@ -5,6 +5,7 @@ public class Account {
 	private String account;
 	private String username;
 	private String password;
+	private String url;
 	
 	public Account() {
 		
@@ -51,5 +52,17 @@ public class Account {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }
