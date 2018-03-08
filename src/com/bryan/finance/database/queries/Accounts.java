@@ -12,6 +12,7 @@ import com.bryan.finance.security.Encoding;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
@@ -22,6 +23,24 @@ import java.util.Set;
 public class Accounts {
 
     private static Logger logger = Logger.getLogger(Accounts.class);
+
+    public static String getUrl(String account) {
+        logger.debug("Getting login URL for account: " + account);
+        Statement statement;
+        ResultSet rs;
+        String SQL_TEXT = "SELECT URL FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + Tables.SITES + " WHERE ACCOUNT = '" + account + "'";
+
+        try {
+            Connection con = Connect.getConnection();
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getString(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
 
     public static Object[][] getAccounts() {
         logger.debug("Getting all accounts...");
@@ -58,7 +77,7 @@ public class Accounts {
     public static Object[][] getFullAccounts() {
         logger.debug("Getting full accounts with password");
         int totalAccounts = getTotalNumberOfAccounts();
-        Object[][] records = new Object[totalAccounts][4];
+        Object[][] records = new Object[totalAccounts][5];
 
         String key;
         try {
@@ -67,7 +86,7 @@ public class Accounts {
             throw new AppException(e2);
         }
         String SQL_TEXT = "SELECT ID, ACCOUNT, USERNAME, AES_DECRYPT(PASS, '" + key
-                + "') FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + "'), URL FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
                 + Tables.SITES + " ORDER BY ACCOUNT ASC";
         try {
             Connection con = Connect.getConnection();
@@ -76,7 +95,7 @@ public class Accounts {
             int recordCount = 0;
 
             while (rs.next()) {
-                for (int i=0; i<4; i++) {
+                for (int i=0; i<5; i++) {
                     records[recordCount][i] = rs.getString(i+1);
                 }
                 recordCount++;
@@ -92,12 +111,13 @@ public class Accounts {
         String acctName = account.getAccount();
         String username = account.getUsername();
         String pass = account.getPassword();
+        String url =  account.getUrl();
 
         logger.debug("Adding new account: " + acctName + " - username: "
-                + username + " - password: *******");
+                + username + " - password: ******* - login url: " + url);
 
         String SQL_TEXT = "INSERT INTO " + Databases.ACCOUNTS +
-                ApplicationLiterals.DOT + Tables.SITES + " (ACCOUNT, USERNAME, PASS) VALUES('"
+                ApplicationLiterals.DOT + Tables.SITES + " (ACCOUNT, USERNAME, PASS, URL) VALUES('"
                 + acctName
                 + "', '"
                 + username
@@ -106,7 +126,7 @@ public class Accounts {
                 + "', "
                 + "'"
                 + Encoding.decrypt(ApplicationLiterals.getEncryptionKey())
-                + "'))";
+                + "'), '" + url + "')";
         PreparedStatement ps;
 
         try {
