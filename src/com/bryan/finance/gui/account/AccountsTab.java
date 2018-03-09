@@ -1,6 +1,8 @@
 package com.bryan.finance.gui.account;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -75,6 +77,9 @@ public class AccountsTab extends JPanel {
 				MultiLabelButton.BOTTOM, Icons.EDIT_ICON);
 
 		JLabel title = new Title("Current Accounts");
+		JLabel clipPassword = new JLabel("* Single-Click to copy password to the clipboard");
+		clipPassword.setForeground(Color.blue);
+		clipPassword.setVisible(false);
 
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buttons.add(view);
@@ -82,10 +87,14 @@ public class AccountsTab extends JPanel {
 		buttons.add(edit);
 		buttons.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
+		JPanel instructions = new JPanel(new BorderLayout());
+		instructions.add(new JLabel("* Double-click an account to be navigated to the login page"), BorderLayout.NORTH);
+		instructions.add(clipPassword, BorderLayout.SOUTH);
+
 		JPanel content = new JPanel(new BorderLayout());
 		content.add(buttons, BorderLayout.NORTH);
 		content.add(acctSP, BorderLayout.CENTER);
-		content.add(new JLabel("* Double-click an account to be navigated to the login page"), BorderLayout.SOUTH);
+		content.add(instructions, BorderLayout.SOUTH);
 
 		content.setBorder(ApplicationLiterals.PADDED_SPACE);
 
@@ -106,6 +115,7 @@ public class AccountsTab extends JPanel {
 					acctSP.setPreferredSize(new Dimension(d.width * 3, table
 							.getRowHeight() * 12));
 					view.setEnabled(false);
+					clipPassword.setVisible(true);
 
 				} else {
 					logger.warn("Invalid encryption key - attempt: "
@@ -222,6 +232,13 @@ public class AccountsTab extends JPanel {
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 1 && isPassVerified()) {
+					String clickedAccount = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
+					String pass = Accounts.getPassword(clickedAccount);
+					StringSelection selection = new StringSelection(pass);
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(selection, selection);
+				}
 				if (e.getClickCount() == 2) {
 					String clickedAccount = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
 					String loginUrl = Accounts.getUrl(clickedAccount);

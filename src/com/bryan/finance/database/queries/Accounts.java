@@ -42,6 +42,30 @@ public class Accounts {
         }
     }
 
+    public static String getPassword(String account) {
+        logger.debug("Getting password for account: " + account);
+        Statement statement;
+        ResultSet rs;
+        String key;
+        try {
+            key = Encoding.decrypt(ApplicationLiterals.getEncryptionKey());
+        } catch(Exception e) {
+            throw new AppException(e);
+        }
+        String SQL_TEXT = "SELECT AES_DECRYPT(PASS, '" + key + "') FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + Tables.SITES + " WHERE ACCOUNT = '" + account + "'";
+
+        try {
+            Connection con = Connect.getConnection();
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getString(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
     public static Object[][] getAccounts() {
         logger.debug("Getting all accounts...");
         int totalAccounts = getTotalNumberOfAccounts();
