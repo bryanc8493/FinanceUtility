@@ -220,4 +220,31 @@ public class Transactions {
         }
         return data;
     }
+
+    public static void addTransaction(Transaction tran) {
+        try {
+            Connection con = Connect.getConnection();
+
+            PreparedStatement ps;
+            String SQL_TEXT = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                    + Tables.MONTHLY_TRANSACTIONS  + " (TITLE, TYPE, CATEGORY, TRANSACTION_DATE, "
+                    + "AMOUNT, DESCRIPTION, CREDIT, CREDIT_PAID) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            ps = con.prepareStatement(SQL_TEXT);
+            ps.setString(1, tran.getTitle());
+            ps.setString(2, tran.getType());
+            ps.setString(3, tran.getCategory());
+            ps.setString(4, tran.getDate());
+            ps.setString(5, tran.getAmount());
+            ps.setString(6, tran.getDescription());
+            ps.setString(7, String.valueOf(tran.getCredit()));
+            ps.setString(8, String.valueOf(tran.getCreditPaid()));
+            ps.executeUpdate();
+
+            con.close();
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
 }

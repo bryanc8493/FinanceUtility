@@ -46,7 +46,7 @@ import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.account.AccountsTab;
 import com.bryan.finance.gui.address.AddressTab;
-import com.bryan.finance.gui.finance.InsertRecord;
+import com.bryan.finance.gui.finance.InsertTransaction;
 import com.bryan.finance.gui.finance.ModifyRecords;
 import com.bryan.finance.gui.finance.TransactionRecord;
 import com.bryan.finance.gui.investments.InvestmentsTab;
@@ -112,7 +112,7 @@ public class MainMenu extends Icons {
 
 		String futurePayments = Balance.getFuturePayments();
 		final JButton futureBalBtn = new JButton();
-		if (futurePayments == null) {
+		if (futurePayments.equals("0.00")) {
 			futureBalBtn.setText(ApplicationLiterals.EMPTY);
 			futureBalBtn.setVisible(false);
 		} else {
@@ -236,7 +236,7 @@ public class MainMenu extends Icons {
 		insert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				InsertRecord.InsertFrame();
+				InsertTransaction.InsertFrame();
 			}
 		});
 

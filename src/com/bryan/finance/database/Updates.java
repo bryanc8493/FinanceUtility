@@ -125,48 +125,20 @@ public class Updates {
 	public static void deleteTransaction(Transaction tran) {
 		logger.debug("Deleting Transactions...");
 		final Connection con = Connect.getConnection();
-		int monthlyTableDel = 0;
-		int expenseTableDel = 0;
-		int incomeTableDel = 0;
 
 		String query = "DELETE from " + Tables.MONTHLY_TRANSACTIONS
 				+ " WHERE TRANSACTION_ID = " + tran.getTransactionID();
 		try {
 			Statement statement = con.createStatement();
-			monthlyTableDel = statement.executeUpdate(query);
+			statement.executeUpdate(query);
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
 
-		if (tran.getType().equals(ApplicationLiterals.EXPENSE)) {
-			String expenseQuery = "DELETE from " + Tables.EXPENSES
-					+ " WHERE TITLE = '" + tran.getTitle() + "' "
-					+ "AND TRANSACTION_DATE = '" + tran.getDate() + "' "
-					+ "AND AMOUNT = '" + tran.getAmount() + "'";
-			try {
-				Statement statement = con.createStatement();
-				expenseTableDel = statement.executeUpdate(expenseQuery);
-			} catch (Exception e) {
-				throw new AppException(e);
-			}
-
-		} else {
-			String incomeQuery = "DELETE from " + Tables.INCOME
-					+ " WHERE TITLE = '" + tran.getTitle() + "' "
-					+ "AND TRANSACTION_DATE = '" + tran.getDate() + "' "
-					+ "AND AMOUNT = '" + tran.getAmount() + "'";
-			try {
-				Statement statement = con.createStatement();
-				incomeTableDel = statement.executeUpdate(incomeQuery);
-			} catch (Exception e) {
-				throw new AppException(e);
-			}
-		}
-
-		int totalDeleted = incomeTableDel + expenseTableDel + monthlyTableDel;
-		logger.debug("Deleted " + totalDeleted + " trans");
-		JOptionPane.showMessageDialog(null, "Deleted " + totalDeleted
-				+ " total records successfully", "Deleted!",
+		logger.debug("Deleted transaction");
+		JOptionPane.showMessageDialog(null,
+				"Deleted record successfully",
+				"Deleted!",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 }

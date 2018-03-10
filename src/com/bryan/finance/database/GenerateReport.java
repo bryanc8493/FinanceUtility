@@ -156,34 +156,34 @@ public class GenerateReport {
 		record.setYear(year);
 
 		// Get expenses to set
-		String expensesSql = "select sum(AMOUNT) from " + Tables.EXPENSES
-				+ " where TRANSACTION_DATE like '" + year
-				+ ApplicationLiterals.DASH + monthSQL + "%' "
-				+ "and UPPER(TITLE) <> 'EVEN OUT' "
-				+ "and category <> 'Savings'";
-		try {
-			rs = statement.executeQuery(expensesSql);
-			while (rs.next()) {
-				record.setExpenses(rs.getDouble(1));
-			}
-		} catch (SQLException e) {
-			logger.error(e.toString() + Arrays.toString(e.getStackTrace()));
-		}
-
-		// Get income to set
-		String incomeSql = "select sum(AMOUNT) from " + Tables.INCOME
-				+ " where TRANSACTION_DATE like '" + year
-				+ ApplicationLiterals.DASH + monthSQL + "%' "
-				+ "and not UPPER(TITLE) like '%EVEN OUT%' "
-				+ "and CATEGORY <> 'Savings Transfer'";
-		try {
-			rs = statement.executeQuery(incomeSql);
-			while (rs.next()) {
-				record.setIncome(rs.getDouble(1));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		String expensesSql = "select sum(AMOUNT) from " + Tables.EXPENSES
+//				+ " where TRANSACTION_DATE like '" + year
+//				+ ApplicationLiterals.DASH + monthSQL + "%' "
+//				+ "and UPPER(TITLE) <> 'EVEN OUT' "
+//				+ "and category <> 'Savings'";
+//		try {
+//			rs = statement.executeQuery(expensesSql);
+//			while (rs.next()) {
+//				record.setExpenses(rs.getDouble(1));
+//			}
+//		} catch (SQLException e) {
+//			logger.error(e.toString() + Arrays.toString(e.getStackTrace()));
+//		}
+//
+//		// Get income to set
+//		String incomeSql = "select sum(AMOUNT) from " + Tables.INCOME
+//				+ " where TRANSACTION_DATE like '" + year
+//				+ ApplicationLiterals.DASH + monthSQL + "%' "
+//				+ "and not UPPER(TITLE) like '%EVEN OUT%' "
+//				+ "and CATEGORY <> 'Savings Transfer'";
+//		try {
+//			rs = statement.executeQuery(incomeSql);
+//			while (rs.next()) {
+//				record.setIncome(rs.getDouble(1));
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 
 		record.setCashFlow(record.getIncome(), record.getExpenses());
 

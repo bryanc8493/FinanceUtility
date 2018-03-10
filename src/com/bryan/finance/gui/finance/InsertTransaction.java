@@ -8,13 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Properties;
-import java.util.prefs.AbstractPreferences;
 
 import javax.swing.*;
 
+import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.gui.util.PromptComboBoxRenderer;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
@@ -25,8 +24,6 @@ import org.jdatepicker.impl.UtilDateModel;
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.InsertExpense;
-import com.bryan.finance.database.InsertIncome;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -36,16 +33,16 @@ import com.bryan.finance.literals.Icons;
 import com.bryan.finance.program.FinanceUtility;
 import com.bryan.finance.utilities.DateLabelFormatter;
 
-public class InsertRecord {
+public class InsertTransaction {
 
-	private static Logger logger = Logger.getLogger(InsertRecord.class);
+	private static Logger logger = Logger.getLogger(InsertTransaction.class);
 	private static String[] EXPENSE_CATEGORIES;
 	private static String[] INCOME_CATEGORIES;
 	private static JComboBox<String> selectCategory = new JComboBox<>();
 
 	private final static JTextField descField = new HintTextField("Description", false);
 	private final static JTextField storeField = new HintTextField("Store", false);
-	private final static JTextField titleField = new HintTextField("Transactions Title", false);
+	private final static JTextField titleField = new HintTextField("Transaction Title", false);
 	private final static JFormattedTextField amountField = new JFormattedTextField(
 			ApplicationLiterals.getCurrencyFormat());
 
@@ -263,15 +260,8 @@ public class InsertRecord {
 					}
 
 					// Call method to run query, pass all selected criteria
-					if (typeCb.getSelectedItem().toString()
-							.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
-						tran.setStore(storeField.getText());
-						InsertExpense.NewExpense(tran, con);
+					Transactions.addTransaction(tran);
 
-					} else if (typeCb.getSelectedItem().toString()
-							.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
-						InsertIncome.NewIncome(tran, con);
-					}
 					resetDefaults();
 				}
 			}
