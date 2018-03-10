@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -135,135 +133,125 @@ public class InsertTransaction {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				if (con != null) {
-					try {
-						con.close();
-					} catch (SQLException e1) {
-						throw new AppException(e1);
-					}
-				}
-				logger.info("Closed by user");
-				FinanceUtility.appLogger.logFooter();
-				System.exit(0);
-			}
-		});
-
-		back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				MainMenu.modeSelection(false, 0);
-			}
-		});
-
-		selectCategory.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		close.addActionListener(e -> {
+			frame.dispose();
+			if (con != null) {
 				try {
-					if (selectCategory.getSelectedItem().toString().equalsIgnoreCase("Credit Card")) {
-						int choice = JOptionPane.showConfirmDialog(null,
-								"Would you like to pay existing outstanding credit charges?", "Confirm",
-								JOptionPane.YES_NO_OPTION);
-						if (choice == JOptionPane.YES_OPTION) {
-							new CreditPayments();
-							resetDefaults();
-						}
-					}
-				} catch (Exception ex) { }
-			}
-		});
-
-		typeCb.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (typeCb.getSelectedItem().toString()
-						.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
-					addCategories(true);
-					storeField.setVisible(true);
-					credit.setVisible(true);
-				} else if (typeCb.getSelectedItem().toString()
-						.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
-					addCategories(false);
-					storeField.setVisible(false);
-					credit.setSelected(false);
-					credit.setVisible(false);
+					con.close();
+				} catch (SQLException e1) {
+					throw new AppException(e1);
 				}
 			}
+			logger.info("Closed by user");
+			FinanceUtility.appLogger.logFooter();
+			System.exit(0);
 		});
 
-		insert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// First will check if any required fields are not filled in
-				String input_title = titleField.getText().trim();
-				String input_amount = amountField
-						.getText()
-						.replace(ApplicationLiterals.DOLLAR,
-								ApplicationLiterals.EMPTY).trim();
-				input_amount = input_amount.replace(ApplicationLiterals.COMMA,
-						ApplicationLiterals.EMPTY);
-				Date selectedDate = (Date) datePicker.getModel().getValue();
-				String input_trans_date = ApplicationLiterals.YEAR_MONTH_DAY
-						.format(selectedDate);
+		back.addActionListener(e -> {
+			frame.dispose();
+			MainMenu.modeSelection(false, 0);
+		});
 
-				// Second will check if the date is in the correct format
-				if (input_trans_date.length() != 10) {
-					logger.warn("Date not in correct format, must be 10 total characters: 'YYYY-MM-DD'");
-				} else if (input_title.equals(ApplicationLiterals.EMPTY)
-						|| input_amount.equals("0.00")
-						|| input_trans_date
-								.contains(ApplicationLiterals.UNDERSCORE)
-						|| typeCb.getSelectedItem().toString()
-								.equals(ApplicationLiterals.EMPTY)) {
-					logger.warn("Missing some required fields");
+		selectCategory.addActionListener(e -> {
+			try {
+				if (selectCategory.getSelectedItem().toString().equalsIgnoreCase("Credit Card")) {
+					int choice = JOptionPane.showConfirmDialog(null,
+							"Would you like to pay existing outstanding credit charges?", "Confirm",
+							JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.YES_OPTION) {
+						new CreditPayments();
+						resetDefaults();
+					}
+				}
+			} catch (Exception ex) { }
+		});
+
+		typeCb.addActionListener(e -> {
+			if (typeCb.getSelectedItem().toString()
+					.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
+				addCategories(true);
+				storeField.setVisible(true);
+				credit.setVisible(true);
+			} else if (typeCb.getSelectedItem().toString()
+					.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
+				addCategories(false);
+				storeField.setVisible(false);
+				credit.setSelected(false);
+				credit.setVisible(false);
+			}
+		});
+
+		insert.addActionListener(e -> {
+			// First will check if any required fields are not filled in
+			String input_title = titleField.getText().trim();
+			String input_amount = amountField
+					.getText()
+					.replace(ApplicationLiterals.DOLLAR,
+							ApplicationLiterals.EMPTY).trim();
+			input_amount = input_amount.replace(ApplicationLiterals.COMMA,
+					ApplicationLiterals.EMPTY);
+			Date selectedDate = (Date) datePicker.getModel().getValue();
+			String input_trans_date = ApplicationLiterals.YEAR_MONTH_DAY
+					.format(selectedDate);
+
+			// Second will check if the date is in the correct format
+			if (input_trans_date.length() != 10) {
+				logger.warn("Date not in correct format, must be 10 total characters: 'YYYY-MM-DD'");
+			} else if (input_title.equals(ApplicationLiterals.EMPTY)
+					|| input_amount.equals("0.00")
+					|| input_trans_date
+							.contains(ApplicationLiterals.UNDERSCORE)
+					|| typeCb.getSelectedItem().toString()
+							.equals(ApplicationLiterals.EMPTY)) {
+				logger.warn("Missing some required fields");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else {
+				// Check that transaction type is selected (i.e. expense or
+				// income) as well as category
+				try {
+					typeCb.getSelectedItem().toString();
+					selectCategory.getSelectedItem().toString();
+				} catch (NullPointerException ex) {
+					logger.warn("Income or expense must be selected as well as a category!");
 					missingField.setVisible(true);
 					frame.pack();
+					return;
 				}
 
-				else {
-					// Check that transaction type is selected (i.e. expense or
-					// income) as well as category
-					try {
-						typeCb.getSelectedItem().toString();
-						selectCategory.getSelectedItem().toString();
-					} catch (NullPointerException ex) {
-						logger.warn("Income or expense must be selected as well as a category!");
-						missingField.setVisible(true);
-						frame.pack();
-						return;
-					}
+				// Will continue and run this if all required fields are
+				// properly filled in
+				Transaction tran = new Transaction();
+				tran.setTitle(input_title);
+				tran.setCategory(selectCategory.getSelectedItem()
+						.toString());
 
-					// Will continue and run this if all required fields are
-					// properly filled in
-					Transaction tran = new Transaction();
-					tran.setTitle(input_title);
-					tran.setCategory(selectCategory.getSelectedItem()
-							.toString());
-
-					if (typeCb.getSelectedItem().toString()
-							.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
-						tran.setType(ApplicationLiterals.EXPENSE);
-						tran.setCombinedAmount(ApplicationLiterals.DASH
-								+ input_amount);
-					} else if (typeCb.getSelectedItem().toString()
-							.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
-						tran.setType(ApplicationLiterals.INCOME);
-						tran.setCombinedAmount(input_amount);
-					}
-
-					tran.setDate(input_trans_date);
-					tran.setAmount(input_amount);
-					tran.setDescription(descField.getText());
-					char creditFlag = credit.isSelected() ? '1' : '0';
-					tran.setCredit(creditFlag);
-					if (creditFlag == '1') {
-						tran.setCreditPaid('0');
-					}
-
-					// Call method to run query, pass all selected criteria
-					Transactions.addTransaction(tran);
-
-					resetDefaults();
+				if (typeCb.getSelectedItem().toString()
+						.equalsIgnoreCase(ApplicationLiterals.EXPENSE)) {
+					tran.setType(ApplicationLiterals.EXPENSE);
+					tran.setCombinedAmount(ApplicationLiterals.DASH
+							+ input_amount);
+				} else if (typeCb.getSelectedItem().toString()
+						.equalsIgnoreCase(ApplicationLiterals.INCOME)) {
+					tran.setType(ApplicationLiterals.INCOME);
+					tran.setCombinedAmount(input_amount);
 				}
+
+				tran.setDate(input_trans_date);
+				tran.setAmount(input_amount);
+				tran.setDescription(descField.getText());
+				char creditFlag = credit.isSelected() ? '1' : '0';
+				tran.setCredit(creditFlag);
+				if (creditFlag == '1') {
+					tran.setCreditPaid('0');
+				}
+
+				// Call method to run query, pass all selected criteria
+				Transactions.addTransaction(tran);
+
+				resetDefaults();
 			}
 		});
 	}

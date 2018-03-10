@@ -2,13 +2,11 @@ package com.bryan.finance.database.queries;
 
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.enums.Databases;
-import com.bryan.finance.enums.Tables;
 import com.bryan.finance.enums.Views;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,9 +15,6 @@ import java.sql.Statement;
 public class Balance {
 
     private static Logger logger = Logger.getLogger(Balance.class);
-
-    private static final String TRANSACTION_TABLE = ""+ Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TRANSACTIONS;
-    private static final String SAVINGS_TABLE = ""+ Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.SAVINGS;
 
     public static String getFutureBalance() {
         logger.debug("Getting future Balance...");
