@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 public class SalaryManagement implements ActionListener {
 
 	private Logger logger = Logger.getLogger(SalaryManagement.class);
-	private JFrame frame = new JFrame("Salaries");
 	private Set<Salary> salaries;
 	private NumberFormat decimal = ApplicationLiterals.getNumberFormat();
 
@@ -51,11 +50,12 @@ public class SalaryManagement implements ActionListener {
 	private JLabel totalBonusAmt = new JLabel();
 	private JLabel totalPayAndBonus = new JLabel();
 
-	public SalaryManagement() {
+	SalaryManagement() {
 		logger.debug("Displaying salary data");
 		salaries = QueryUtil.getSalaryData();
 
 		populateJobGrades();
+		JFrame frame = new JFrame("Salaries");
 		JLabel title = new Title("Salary Calculator");
 
 		// Input labels

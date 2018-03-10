@@ -2,8 +2,6 @@ package com.bryan.finance.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -30,14 +28,14 @@ import com.bryan.finance.literals.Icons;
 import com.bryan.finance.security.Encoding;
 import com.bryan.finance.utilities.DeleteDirectory;
 
-public class Backup {
+class Backup {
 
 	private final String BACKUP_DIR = ReadConfig
 			.getConfigValue(ApplicationLiterals.MY_SQL_BACKUP);
 	private final String MYSQL_DIR = ReadConfig
 			.getConfigValue(ApplicationLiterals.MY_SQL_DIR);
 
-	public Backup() {
+	Backup() {
 		final JFrame frame = new JFrame("Backup Status");
 		JLabel title = new Title("Backup Status");
 
@@ -70,17 +68,11 @@ public class Backup {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
+		close.addActionListener(e -> frame.dispose());
 
-		backup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				performBackup(BACKUP_DIR);
-			}
+		backup.addActionListener(e -> {
+			frame.dispose();
+			performBackup(BACKUP_DIR);
 		});
 	}
 
@@ -143,16 +135,12 @@ public class Backup {
 
 	private boolean enableBackup(SimpleDateFormat format) {
 		String lastBackup = getLastBackupTime(format);
-		if (getToday().equals(lastBackup)) {
-			return false;
-		} else {
-			return true;
-		}
+
+		return (!getToday().equals(lastBackup));
 	}
 
 	private String getToday() {
-		Date now = new Date();
-		return ApplicationLiterals.YEAR_MONTH_DAY_CONDENSED.format(now);
+		return ApplicationLiterals.YEAR_MONTH_DAY_CONDENSED.format(new Date());
 	}
 
 	private int deleteOtherBackups() {

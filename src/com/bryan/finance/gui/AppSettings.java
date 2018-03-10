@@ -3,8 +3,6 @@ package com.bryan.finance.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -27,7 +25,7 @@ import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 
-public class AppSettings extends ApplicationLiterals {
+class AppSettings extends ApplicationLiterals {
 
 	private JTextField expenseCategories = new JTextField(30);
 	private JTextField incomeCategories = new JTextField(30);
@@ -36,9 +34,7 @@ public class AppSettings extends ApplicationLiterals {
 	private JTextField htmlTemplate = new JTextField(30);
 	private JTextField chartOutput = new JTextField(30);
 
-	private JButton update = new PrimaryButton("Apply & Save");
-
-	public AppSettings(boolean isModifiable) {
+	AppSettings(boolean isModifiable) {
 		final JFrame frame = new JFrame("Application Settings");
 
 		JLabel title = new Title("Current Application Settings");
@@ -76,6 +72,8 @@ public class AppSettings extends ApplicationLiterals {
 
 		JButton close = new PrimaryButton("Close");
 
+		JButton update = new PrimaryButton("Apply & Save");
+
 		JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		bottom.add(update);
 		update.setVisible(isModifiable);
@@ -96,17 +94,11 @@ public class AppSettings extends ApplicationLiterals {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
+		close.addActionListener(e -> frame.dispose());
 
-		update.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateProperties();
-				frame.dispose();
-			}
+		update.addActionListener(e -> {
+			updateProperties();
+			frame.dispose();
 		});
 	}
 

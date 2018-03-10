@@ -2,8 +2,6 @@ package com.bryan.finance.gui.investments;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 
 import javax.swing.BorderFactory;
@@ -15,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.bryan.finance.database.Connect;
-import org.apache.log4j.Logger;
 
 import com.bryan.finance.database.InvestmentBalance;
 import com.bryan.finance.gui.util.ApplicationControl;
@@ -28,7 +25,6 @@ import com.bryan.finance.utilities.MultiLabelButton;
 public class InvestmentsTab extends JPanel {
 
 	private static final long serialVersionUID = -3456368332519377049L;
-	private static Logger logger = Logger.getLogger(InvestmentsTab.class);
 
 	public final static JButton fidelity = new MultiLabelButton("Update 401K",
 			MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
@@ -63,70 +59,56 @@ public class InvestmentsTab extends JPanel {
 						(JFrame) SwingUtilities.getRoot(this)),
 				BorderLayout.SOUTH);
 
-		fidelity.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFormattedTextField tf = new JFormattedTextField(
-						ApplicationLiterals.getCurrencyFormat());
-				tf.setColumns(10);
-				tf.setValue(0.0);
-				tf.setFont(ApplicationLiterals.APP_FONT);
-				tf.addAncestorListener(new RequestFocusListener());
-				int input = JOptionPane.showConfirmDialog(null, tf,
-						"Updated Fidelity Balance",
-						JOptionPane.OK_CANCEL_OPTION,
+		fidelity.addActionListener(e -> {
+			JFormattedTextField tf = new JFormattedTextField(
+					ApplicationLiterals.getCurrencyFormat());
+			tf.setColumns(10);
+			tf.setValue(0.0);
+			tf.setFont(ApplicationLiterals.APP_FONT);
+			tf.addAncestorListener(new RequestFocusListener());
+			int input = JOptionPane.showConfirmDialog(null, tf,
+					"Updated Fidelity Balance",
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+			if (input == JOptionPane.OK_OPTION) {
+				String balance = tf
+						.getText()
+						.replace(ApplicationLiterals.DOLLAR,
+								ApplicationLiterals.EMPTY)
+						.replace(ApplicationLiterals.COMMA,
+								ApplicationLiterals.EMPTY);
+
+				InvestmentBalance.updateInvestmentAccount(con,
+						ApplicationLiterals.FIDELITY, balance);
+				JOptionPane.showMessageDialog(null,
+						"Updated Fidelity Table", "Success",
 						JOptionPane.INFORMATION_MESSAGE);
-				if (input == JOptionPane.OK_OPTION) {
-					String balance = tf
-							.getText()
-							.replace(ApplicationLiterals.DOLLAR,
-									ApplicationLiterals.EMPTY)
-							.replace(ApplicationLiterals.COMMA,
-									ApplicationLiterals.EMPTY);
-
-					InvestmentBalance.updateInvestmentAccount(con,
-							ApplicationLiterals.FIDELITY, balance);
-					JOptionPane.showMessageDialog(null,
-							"Updated Fidelity Table", "Success",
-							JOptionPane.INFORMATION_MESSAGE);
-				}
 			}
 		});
 
-		janus.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFormattedTextField tf = new JFormattedTextField(
-						ApplicationLiterals.getCurrencyFormat());
-				tf.setColumns(10);
-				tf.setValue(0.0);
-				tf.setFont(ApplicationLiterals.APP_FONT);
-				tf.addAncestorListener(new RequestFocusListener());
-				int input = JOptionPane.showConfirmDialog(null, tf,
-						"Updated Janus Balance", JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.INFORMATION_MESSAGE);
-				if (input == JOptionPane.OK_OPTION) {
-					String balance = tf.getText().replace("$", "")
-							.replace(",", "");
+		janus.addActionListener(e -> {
+			JFormattedTextField tf = new JFormattedTextField(
+					ApplicationLiterals.getCurrencyFormat());
+			tf.setColumns(10);
+			tf.setValue(0.0);
+			tf.setFont(ApplicationLiterals.APP_FONT);
+			tf.addAncestorListener(new RequestFocusListener());
+			int input = JOptionPane.showConfirmDialog(null, tf,
+					"Updated Janus Balance", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+			if (input == JOptionPane.OK_OPTION) {
+				String balance = tf.getText().replace("$", "")
+						.replace(",", "");
 
-					InvestmentBalance.updateInvestmentAccount(con,
-							ApplicationLiterals.JANUS, balance);
-					JOptionPane.showMessageDialog(null, "Updated Janus Table",
-							"Success", JOptionPane.INFORMATION_MESSAGE);
-				}
+				InvestmentBalance.updateInvestmentAccount(con,
+						ApplicationLiterals.JANUS, balance);
+				JOptionPane.showMessageDialog(null, "Updated Janus Table",
+						"Success", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
-		fidelityV.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying Fidelity balance");
-				InvestmentBalance.getLatestFidelityBalance(con);
-			}
-		});
+		fidelityV.addActionListener(e -> InvestmentBalance.getLatestFidelityBalance(con));
 
-		janusV.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying Janus balance");
-				InvestmentBalance.getLatestJanusBalance(con);
-			}
-		});
+		janusV.addActionListener(e -> InvestmentBalance.getLatestJanusBalance(con));
 	}
 }

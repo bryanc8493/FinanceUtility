@@ -3,11 +3,8 @@ package com.bryan.finance.gui.util;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -182,94 +179,81 @@ public class CustomReport {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				if (con != null) {
-					try {
-						con.close();
-					} catch (SQLException e1) {
-						throw new AppException(e1);
-					}
-				}
-				logger.info("Closed by user");
-				FinanceUtility.appLogger.logFooter();
-				System.exit(0);
-			}
-		});
-
-		back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				MainMenu.modeSelection(false, 0);
-			}
-		});
-
-		monthly.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (monthly.isSelected()) {
-					monthSelect.setVisible(true);
-					dates.setVisible(false);
-					frame.pack();
-					frame.setLocationRelativeTo(null);
+		close.addActionListener(e -> {
+			frame.dispose();
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e1) {
+					throw new AppException(e1);
 				}
 			}
+			logger.info("Closed by user");
+			FinanceUtility.appLogger.logFooter();
+			System.exit(0);
 		});
 
-		reportCB.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		back.addActionListener(e -> {
+			frame.dispose();
+			MainMenu.modeSelection(false, 0);
+		});
+
+		monthly.addActionListener(e -> {
+			if (monthly.isSelected()) {
+				monthSelect.setVisible(true);
+				dates.setVisible(false);
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+			}
+		});
+
+		reportCB.addActionListener(e -> {
+			if (reportCB.getSelectedIndex() == 0) {
+				outputCB.setEnabled(false);
+				outputCB.setSelectedItem(null);
+				monthly.setEnabled(true);
+			} else if (reportCB.getSelectedIndex() == 1) {
+				custom.setSelected(true);
+				monthSelect.setVisible(false);
+				dates.setVisible(true);
+				monthly.setEnabled(false);
+				outputCB.setEnabled(true);
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+			} else {
+				monthly.setEnabled(true);
+				outputCB.setEnabled(true);
+				frame.pack();
+			}
+		});
+
+		custom.addActionListener(e -> {
+			if (custom.isSelected()) {
+				monthSelect.setVisible(false);
+				dates.setVisible(true);
+				frame.pack();
+			}
+		});
+
+		run.addActionListener(e -> {
+			// Verify input
+			if (!isValidInput()) {
+				JOptionPane.showMessageDialog(frame,
+						"Please fill in all selections", "Invalid Input",
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				// run differently based on run type
 				if (reportCB.getSelectedIndex() == 0) {
-					outputCB.setEnabled(false);
-					outputCB.setSelectedItem(null);
-					monthly.setEnabled(true);
+					runMonthlyUpdates();
 				} else if (reportCB.getSelectedIndex() == 1) {
-					custom.setSelected(true);
-					monthSelect.setVisible(false);
-					dates.setVisible(true);
-					monthly.setEnabled(false);
-					outputCB.setEnabled(true);
-					frame.pack();
-					frame.setLocationRelativeTo(null);
+					runExpensesByCategory();
+				} else if (reportCB.getSelectedIndex() == 2) {
+					runJanusPerformance();
 				} else {
-					monthly.setEnabled(true);
-					outputCB.setEnabled(true);
-					frame.pack();
+					runFidelityPerformance();
 				}
 			}
 		});
-
-		custom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (custom.isSelected()) {
-					monthSelect.setVisible(false);
-					dates.setVisible(true);
-					frame.pack();
-				}
-			}
-		});
-
-		run.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Verify input
-				if (!isValidInput()) {
-					JOptionPane.showMessageDialog(frame,
-							"Please fill in all selections", "Invalid Input",
-							JOptionPane.WARNING_MESSAGE);
-				} else {
-					// run differently based on run type
-					if (reportCB.getSelectedIndex() == 0) {
-						runMonthlyUpdates();
-					} else if (reportCB.getSelectedIndex() == 1) {
-						runExpensesByCategory();
-					} else if (reportCB.getSelectedIndex() == 2) {
-						runJanusPerformance();
-					} else {
-						runFidelityPerformance();
-					}
-				}
-			}
-		});
-
 	}
 
 	private static void runFidelityPerformance() {

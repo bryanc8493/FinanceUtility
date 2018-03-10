@@ -30,9 +30,7 @@ public class ButtonEditor extends DefaultCellEditor {
 		button = new JButton();
 		button.setOpaque(true);
 		currentFrame = current;
-		button.addActionListener(e -> {
-			fireEditingStopped();
-		});
+		button.addActionListener(e -> fireEditingStopped());
 	}
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
@@ -86,9 +84,7 @@ public class ButtonEditor extends DefaultCellEditor {
 	private boolean isCurrentUser(String cellValue) {
 		String[] split = cellValue.split(ApplicationLiterals.SEMI_COLON);
 
-		if (split[0].equalsIgnoreCase(currentUser))
-			return true;
-		return false;
+		return (split[0].equalsIgnoreCase(currentUser));
 	}
 
 	private int getConfirmationChoice(String status, String oppositeStatus, String user) {

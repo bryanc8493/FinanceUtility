@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -102,81 +100,75 @@ public class NewUser {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+		close.addActionListener((e) -> frame.dispose());
+
+		insert.addActionListener(e -> {
+			// Verify email field is not blank
+			if (emailField.getText().trim()
+					.equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("email address cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
 			}
-		});
 
-		insert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Verify email field is not blank
-				if (emailField.getText().trim()
-						.equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("email address cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
+			// verify username field is not blank
+			else if (usernameField.getText().trim()
+					.equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("Username cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// verify password field is not blank
+			else if (new String(passField.getPassword()).trim().equals(
+					ApplicationLiterals.EMPTY)) {
+				missingField.setText("Password cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// verify password and confirm password contents match
+			else if (!new String(passField.getPassword()).trim().equals(
+					new String(confPassField.getPassword()).trim())) {
+				missingField.setText("Passwords must match");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// Verify username doesn't already exist
+			else if (VerifyAccess.doesUsernameExist(usernameField.getText()
+					.trim().toUpperCase())) {
+				missingField.setText("Username already exists!");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// Call method to insert new account
+			else {
+				User user = new User();
+				user.setUsername(usernameField.getText().trim()
+						.toUpperCase());
+				user.setEmail(emailField.getText().trim());
+				user.setPassword(new String(passField.getPassword()));
+				user.setStatus(ApplicationLiterals.UNLOCKED);
+				user.setPermission(ApplicationLiterals.VIEW_ONLY);
+				int recordCount;
+				try {
+					recordCount = Accounts.newUser(user);
+				} catch (Exception e1) {
+					throw new AppException(e1);
 				}
 
-				// verify username field is not blank
-				else if (usernameField.getText().trim()
-						.equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("Username cannot be blank");
+				if (recordCount != 1) {
+					missingField
+							.setText("Error creating new user - check database");
 					missingField.setVisible(true);
 					frame.pack();
-				}
-
-				// verify password field is not blank
-				else if (new String(passField.getPassword()).trim().equals(
-						ApplicationLiterals.EMPTY)) {
-					missingField.setText("Password cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				// verify password and confirm password contents match
-				else if (!new String(passField.getPassword()).trim().equals(
-						new String(confPassField.getPassword()).trim())) {
-					missingField.setText("Passwords must match");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				// Verify username doesn't already exist
-				else if (VerifyAccess.doesUsernameExist(usernameField.getText()
-						.trim().toUpperCase())) {
-					missingField.setText("Username already exists!");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				// Call method to insert new account
-				else {
-					User user = new User();
-					user.setUsername(usernameField.getText().trim()
-							.toUpperCase());
-					user.setEmail(emailField.getText().trim());
-					user.setPassword(new String(passField.getPassword()));
-					user.setStatus(ApplicationLiterals.UNLOCKED);
-					user.setPermission(ApplicationLiterals.VIEW_ONLY);
-					int recordCount;
-					try {
-						recordCount = Accounts.newUser(user);
-					} catch (Exception e1) {
-						throw new AppException(e1);
-					}
-
-					if (recordCount != 1) {
-						missingField
-								.setText("Error creating new user - check database");
-						missingField.setVisible(true);
-						frame.pack();
-					} else {
-						JOptionPane.showMessageDialog(null,
-								"Accounts created successfully!", "Success",
-								JOptionPane.INFORMATION_MESSAGE);
-						frame.dispose();
-					}
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Accounts created successfully!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+					frame.dispose();
 				}
 			}
 		});

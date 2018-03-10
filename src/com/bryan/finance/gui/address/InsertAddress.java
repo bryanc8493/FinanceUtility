@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -101,78 +99,72 @@ public class InsertAddress {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+		close.addActionListener(e -> frame.dispose());
+
+		insert.addActionListener(e -> {
+			if (LnameField.getText().trim()
+					.equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("Last name cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
 			}
-		});
 
-		insert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (LnameField.getText().trim()
-						.equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("Last name cannot be blank");
+			else if (FnameField.getText().trim()
+					.equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("First name cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else if (addressField.getText().trim()
+					.equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("Address cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else if (cityField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("City cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else if (states.getSelectedIndex() == -1) {
+				missingField.setText("Please select a state");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else if (zipField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
+				missingField.setText("Zip code cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			else {
+				Address address = new Address();
+				address.setLastName(LnameField.getText().trim());
+				address.setFirstName(FnameField.getText().trim());
+				address.setAddress(addressField.getText().trim());
+				address.setCity(cityField.getText().trim());
+				address.setState(states.getSelectedItem().toString());
+				address.setZipcode(zipField.getText().trim());
+
+				int recordCount = Addresses.newAddress(address);
+				MainMenu.closeWindow();
+				if (recordCount != 1) {
+					missingField
+							.setText("Error inserting new address - check database");
+					logger.error("Error inserting new address - check database");
 					missingField.setVisible(true);
 					frame.pack();
-				}
-
-				else if (FnameField.getText().trim()
-						.equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("First name cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				else if (addressField.getText().trim()
-						.equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("Address cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				else if (cityField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("City cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				else if (states.getSelectedIndex() == -1) {
-					missingField.setText("Please select a state");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				else if (zipField.getText().trim().equals(ApplicationLiterals.EMPTY)) {
-					missingField.setText("Zip code cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				else {
-					Address address = new Address();
-					address.setLastName(LnameField.getText().trim());
-					address.setFirstName(FnameField.getText().trim());
-					address.setAddress(addressField.getText().trim());
-					address.setCity(cityField.getText().trim());
-					address.setState(states.getSelectedItem().toString());
-					address.setZipcode(zipField.getText().trim());
-
-					int recordCount = Addresses.newAddress(address);
-					MainMenu.closeWindow();
-					if (recordCount != 1) {
-						missingField
-								.setText("Error inserting new address - check database");
-						logger.error("Error inserting new address - check database");
-						missingField.setVisible(true);
-						frame.pack();
-					} else {
-						frame.dispose();
-						JOptionPane.showMessageDialog(null,
-								"New Address added successfully!", "Success",
-								JOptionPane.INFORMATION_MESSAGE);
-						MainMenu.modeSelection(false, 3
-						);
-					}
+				} else {
+					frame.dispose();
+					JOptionPane.showMessageDialog(null,
+							"New Address added successfully!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+					MainMenu.modeSelection(false, 3
+					);
 				}
 			}
 		});

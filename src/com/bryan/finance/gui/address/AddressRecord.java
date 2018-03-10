@@ -3,8 +3,6 @@ package com.bryan.finance.gui.address;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,7 +17,7 @@ import com.bryan.finance.beans.Address;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.literals.Icons;
 
-public class AddressRecord {
+class AddressRecord {
 
 	private JTextField lastName = new JTextField();
 	private JTextField firstName = new JTextField();
@@ -28,7 +26,7 @@ public class AddressRecord {
 	private JTextField state = new JTextField();
 	private JTextField zip = new JTextField();
 
-	public AddressRecord(Address record) {
+	AddressRecord(Address record) {
 		final JFrame frame = new JFrame("Address Record");
 
 		JLabel lastNameLabel = new JLabel("Last Name:                      ");
@@ -74,11 +72,7 @@ public class AddressRecord {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
+		close.addActionListener((e) -> frame.dispose());
 	}
 
 	private void setValues(Address record) {

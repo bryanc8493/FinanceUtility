@@ -11,7 +11,7 @@ public class RequestFocusListener implements AncestorListener {
 		this(true);
 	}
 
-	public RequestFocusListener(boolean removeListener) {
+	private RequestFocusListener(boolean removeListener) {
 		this.removeListener = removeListener;
 	}
 

@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -105,102 +103,92 @@ public class VerifyAccess extends ApplicationLiterals {
 		JRootPane rp = SwingUtilities.getRootPane(submit);
 		rp.setDefaultButton(submit);
 
-		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String username = userField.getText().trim().toUpperCase();
-				if (username.equals(ApplicationLiterals.EMPTY)) {
-					logger.debug("User name field was empty");
-					JOptionPane.showMessageDialog(frame,
-							"The username field cannot be empty!",
-							"No Username", JOptionPane.WARNING_MESSAGE);
-					userField.requestFocusInWindow();
-					return;
-				}
+		submit.addActionListener(e -> {
+			String username = userField.getText().trim().toUpperCase();
+			if (username.equals(ApplicationLiterals.EMPTY)) {
+				logger.debug("User name field was empty");
+				JOptionPane.showMessageDialog(frame,
+						"The username field cannot be empty!",
+						"No Username", JOptionPane.WARNING_MESSAGE);
+				userField.requestFocusInWindow();
+				return;
+			}
 
-				if (!doesUsernameExist(username)) {
-					logger.warn("Username " + username + " does not exist."
+			if (!doesUsernameExist(username)) {
+				logger.warn("Username " + username + " does not exist."
+						+ ApplicationLiterals.NEW_LINE
+						+ "Try again or create new account");
+				JOptionPane.showMessageDialog(frame, "Username " + username
+								+ " does not exist." + ApplicationLiterals.NEW_LINE
+								+ "Try again or create new account",
+						"Invalid User", JOptionPane.ERROR_MESSAGE);
+				passField.setText("");
+				frame.pack();
+			} else {
+				verifyNotBanned(username);
+
+				if (validPassword(username,
+						new String(passField.getPassword()))) {
+					frame.dispose();
+					logger.debug("Login successful"
 							+ ApplicationLiterals.NEW_LINE
-							+ "Try again or create new account");
-					JOptionPane.showMessageDialog(frame, "Username " + username
-									+ " does not exist." + ApplicationLiterals.NEW_LINE
-									+ "Try again or create new account",
-							"Invalid User", JOptionPane.ERROR_MESSAGE);
-					passField.setText("");
-					frame.pack();
-				} else {
-					verifyNotBanned(username);
-
-					if (validPassword(username,
-							new String(passField.getPassword()))) {
-						frame.dispose();
-						logger.debug("Login successful"
-								+ ApplicationLiterals.NEW_LINE
-								+ "Launching Application from GUI");
-						// if password is default it MUST be reset before
-						// entering app
-						String defaultPassword = ReadConfig
-								.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
-						if (new String(passField.getPassword())
-								.equals(defaultPassword)) {
-							UserManagement.changePassword(true, username);
-						} else {
-							try {
-								Connect.InitialConnect(username);
-							} catch (GeneralSecurityException | IOException e1) {
-								throw new AppException(e1);
-							}
-						}
+							+ "Launching Application from GUI");
+					// if password is default it MUST be reset before
+					// entering app
+					String defaultPassword = ReadConfig
+							.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
+					if (new String(passField.getPassword())
+							.equals(defaultPassword)) {
+						UserManagement.changePassword(true, username);
 					} else {
-						attempts++;
-						if (attempts == 3) {
-							frame.dispose();
-							banUser(username);
+						try {
+							Connect.InitialConnect(username);
+						} catch (GeneralSecurityException | IOException e1) {
+							throw new AppException(e1);
 						}
-						logger.debug("Incorrect password");
-						passField.setText(ApplicationLiterals.EMPTY);
-						int result = JOptionPane.showOptionDialog(null,
-								"Incorrect Password!", "Incorrect",
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.ERROR_MESSAGE, null, new String[] {
-										"Ok", "Forgot Password?" },
-								JOptionPane.NO_OPTION);
-						if (result == JOptionPane.NO_OPTION) {
-							resetUserPassword();
-						}
-						frame.pack();
 					}
+				} else {
+					attempts++;
+					if (attempts == 3) {
+						frame.dispose();
+						banUser(username);
+					}
+					logger.debug("Incorrect password");
+					passField.setText(ApplicationLiterals.EMPTY);
+					int result = JOptionPane.showOptionDialog(null,
+							"Incorrect Password!", "Incorrect",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.ERROR_MESSAGE, null, new String[] {
+									"Ok", "Forgot Password?" },
+							JOptionPane.NO_OPTION);
+					if (result == JOptionPane.NO_OPTION) {
+						resetUserPassword();
+					}
+					frame.pack();
 				}
 			}
 		});
 
-		showButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showButton.setVisible(false);
-				hideButton.setVisible(true);
-				passField.setEchoChar((char)0);
-			}
+		showButton.addActionListener(e -> {
+			showButton.setVisible(false);
+			hideButton.setVisible(true);
+			passField.setEchoChar((char)0);
 		});
 
-		hideButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				hideButton.setVisible(false);
-				showButton.setVisible(true);
-				passField.setEchoChar('•');
-			}
+		hideButton.addActionListener(e -> {
+			hideButton.setVisible(false);
+			showButton.setVisible(true);
+			passField.setEchoChar('•');
 		});
 
-		forgot.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				forgot.setForeground(LINK_CLICKED);
-				resetUserPassword();
-			}
+		forgot.addActionListener(e -> {
+			forgot.setForeground(LINK_CLICKED);
+			resetUserPassword();
 		});
 
-		create.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				create.setForeground(LINK_CLICKED);
-				NewUser.createUser();
-			}
+		create.addActionListener(e -> {
+			create.setForeground(LINK_CLICKED);
+			NewUser.createUser();
 		});
 	}
 
@@ -262,7 +250,7 @@ public class VerifyAccess extends ApplicationLiterals {
 			try {
 				status = rs.getString(1);
 			} catch (SQLException s) {
-
+				logger.error(s.toString());
 			}
 
 			con.close();
@@ -301,7 +289,7 @@ public class VerifyAccess extends ApplicationLiterals {
 	public static boolean doesUsernameExist(String user) {
 
 		user = user.toUpperCase();
-		boolean exists = false;
+		boolean exists;
 		try {
 			Connection con = Connect.getConnection();
 

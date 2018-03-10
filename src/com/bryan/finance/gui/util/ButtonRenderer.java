@@ -9,8 +9,6 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
-import com.bryan.finance.database.Connect;
-import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 
 public class ButtonRenderer extends JButton implements TableCellRenderer {

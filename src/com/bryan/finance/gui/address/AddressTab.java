@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -23,8 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.bryan.finance.database.queries.Addresses;
@@ -84,95 +80,84 @@ public class AddressTab extends JPanel {
 						(JFrame) SwingUtilities.getRoot(this)),
 				BorderLayout.SOUTH);
 
-		view.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Put data in frame
-				JFrame f = new JFrame("All Addresses");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title("All Addresses");
-				label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-				p.add(label, BorderLayout.NORTH);
-				p.add(getAddressData(), BorderLayout.SOUTH);
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
-			}
+		view.addActionListener(e ->  {
+			JFrame f = new JFrame("All Addresses");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title("All Addresses");
+			label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+			p.add(label, BorderLayout.NORTH);
+			p.add(getAddressData(), BorderLayout.SOUTH);
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 		});
 
-		add.addActionListener(e -> {
-			InsertAddress.addNewAddress();
-		});
+		add.addActionListener(e -> InsertAddress.addNewAddress());
 
-		edit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Put data in frame
-				logger.debug("User Editing Address Data");
-				final JFrame f = new JFrame("Edit Addresses");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title("Edit Addresses");
-				JButton update = new JButton("Update");
-				JButton delete = new JButton("Delete");
-				delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				update.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-				buttons.add(delete);
-				buttons.add(update);
-				buttons.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-				p.add(label, BorderLayout.NORTH);
-				p.add(getAddressData(), BorderLayout.CENTER);
-				p.add(buttons, BorderLayout.SOUTH);
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
+		edit.addActionListener(e ->  {
+			// Put data in frame
+			logger.debug("User Editing Address Data");
+			final JFrame f = new JFrame("Edit Addresses");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title("Edit Addresses");
+			JButton update = new JButton("Update");
+			JButton delete = new JButton("Delete");
+			delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			update.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			buttonPanel.add(delete);
+			buttonPanel.add(update);
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+			p.add(label, BorderLayout.NORTH);
+			p.add(getAddressData(), BorderLayout.CENTER);
+			p.add(buttonPanel, BorderLayout.SOUTH);
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 
-				updates = new ArrayList<>();
+			updates = new ArrayList<>();
 
-				update.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
+			update.addActionListener(ex -> {
+				f.dispose();
+				Updates.changeAddresses(updates);
+				MainMenu.closeWindow();
+				JOptionPane.showMessageDialog(null,
+						"Successfully updated addresses",
+						"Updated!",
+						JOptionPane.INFORMATION_MESSAGE);
+				MainMenu.modeSelection(false,3);
+			});
+
+			delete.addActionListener(exc ->  {
+				int row = table.getSelectedRow();
+				if (row != -1) {
+					String ID = (String) table.getValueAt(row, 0);
+					int choice = JOptionPane
+							.showConfirmDialog(
+									null,
+									"Are you sure you want to delete the selected record?",
+									"Confirm",
+									JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.YES_OPTION) {
 						f.dispose();
-						Updates.changeAddresses(updates);
+						Updates.deleteAddress(ID);
 						MainMenu.closeWindow();
 						JOptionPane.showMessageDialog(null,
-								"Successfully updated addresses",
-								"Updated!",
+								"Record deleted successfully",
+								"Deleted!",
 								JOptionPane.INFORMATION_MESSAGE);
 						MainMenu.modeSelection(false,3);
 					}
-				});
-
-				delete.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						int row = table.getSelectedRow();
-						if (row != -1) {
-							String ID = (String) table.getValueAt(row, 0);
-							int choice = JOptionPane
-									.showConfirmDialog(
-											null,
-											"Are you sure you want to delete the selected record?",
-											"Confirm",
-											JOptionPane.YES_NO_OPTION);
-							if (choice == JOptionPane.YES_OPTION) {
-								f.dispose();
-								Updates.deleteAddress(ID);
-								MainMenu.closeWindow();
-								JOptionPane.showMessageDialog(null,
-										"Record deleted successfully",
-										"Deleted!",
-										JOptionPane.INFORMATION_MESSAGE);
-								MainMenu.modeSelection(false,3);
-							}
-						} else {
-							JOptionPane
-									.showMessageDialog(null,
-											"Please select a record to delete",
-											"No Selection",
-											JOptionPane.WARNING_MESSAGE);
-						}
-					}
-				});
-			}
+				} else {
+					JOptionPane
+							.showMessageDialog(null,
+									"Please select a record to delete",
+									"No Selection",
+									JOptionPane.WARNING_MESSAGE);
+				}
+			});
 		});
 	}
 
@@ -188,11 +173,7 @@ public class AddressTab extends JPanel {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				if (column == 0) {
-					return false;
-				} else {
-					return true;
-				}
+				return (column != 0);
 			}
 		};
 		table = new JTable(model);
@@ -209,22 +190,19 @@ public class AddressTab extends JPanel {
 		// updated and
 		// temporarily store the cells data that was changed and the ID of that
 		// record to update in database
-		table.getModel().addTableModelListener(new TableModelListener() {
+		table.getModel().addTableModelListener(e -> {
+			String changedData;
+			String ID;
+			int row = table.getSelectedRow();
+			int column = table.getSelectedColumn();
+			changedData = (String) table.getValueAt(row, column);
+			ID = (String) table.getValueAt(row, 0);
 
-			public void tableChanged(TableModelEvent e) {
-				String changedData = null;
-				String ID = null;
-				int row = table.getSelectedRow();
-				int column = table.getSelectedColumn();
-				changedData = (String) table.getValueAt(row, column);
-				ID = (String) table.getValueAt(row, 0);
-
-				UpdatedRecord changedRecord = new UpdatedRecord();
-				changedRecord.setID(ID);
-				changedRecord.setAttribute(map.get(column));
-				changedRecord.setData(changedData);
-				updates.add(changedRecord);
-			}
+			UpdatedRecord changedRecord = new UpdatedRecord();
+			changedRecord.setID(ID);
+			changedRecord.setAttribute(map.get(column));
+			changedRecord.setData(changedData);
+			updates.add(changedRecord);
 		});
 		return addrSP;
 	}
@@ -268,8 +246,8 @@ public class AddressTab extends JPanel {
 					String otherCell = (String) table.getValueAt(row,
 							columnOpposite);
 
-					String firstNameValue = ApplicationLiterals.EMPTY;
-					String lastNameValue = ApplicationLiterals.EMPTY;
+					String firstNameValue;
+					String lastNameValue;
 					if (isLastName) {
 						lastNameValue = cell;
 						firstNameValue = otherCell;

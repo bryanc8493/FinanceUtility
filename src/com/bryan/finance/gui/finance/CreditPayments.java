@@ -2,8 +2,6 @@ package com.bryan.finance.gui.finance;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -32,13 +30,13 @@ import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 
-public class CreditPayments {
+class CreditPayments {
 
 	private JFrame frame = new JFrame("Credit Card Transactions");
 	private Set<JCheckBox> records;
 	private static Logger logger = Logger.getLogger(CreditPayments.class);
 
-	public CreditPayments() {
+	CreditPayments() {
 		JPanel p = new JPanel(new BorderLayout(10, 0));
 		JLabel label = new Title("Select Paid Credit Card Transactions");
 
@@ -57,32 +55,26 @@ public class CreditPayments {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
+		close.addActionListener((e) -> frame.dispose());
 
-		update.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Set<Transaction> credits = new HashSet<>();
+		update.addActionListener(e ->  {
+			Set<Transaction> credits = new HashSet<>();
 
-				for (JCheckBox box : records) {
-					if (box.isSelected()) {
-						Transaction t = new Transaction();
-						String boxText = box.getText();
-						String idString = boxText.substring(boxText.indexOf("(")+1, boxText.indexOf(")"));
-						t.setTransactionID(idString);
-						credits.add(t);
-					}
+			for (JCheckBox box : records) {
+				if (box.isSelected()) {
+					Transaction t = new Transaction();
+					String boxText = box.getText();
+					String idString = boxText.substring(boxText.indexOf("(")+1, boxText.indexOf(")"));
+					t.setTransactionID(idString);
+					credits.add(t);
 				}
-
-				// Call query to mark selected credits as paid
-				logger.debug("Marking " + credits.size()
-						+ " credit transactions as paid");
-				Transactions.markCreditsPaid(credits);
-				frame.dispose();
 			}
+
+			// Call query to mark selected credits as paid
+			logger.debug("Marking " + credits.size()
+					+ " credit transactions as paid");
+			Transactions.markCreditsPaid(credits);
+			frame.dispose();
 		});
 	}
 

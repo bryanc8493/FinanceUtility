@@ -71,9 +71,7 @@ public class Savings {
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
 
-        close.addActionListener(e -> {
-            frame.dispose();
-        });
+        close.addActionListener((e) -> frame.dispose());
     }
 
     private void setAmounts() {

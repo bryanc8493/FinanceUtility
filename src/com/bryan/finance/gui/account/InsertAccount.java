@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -94,72 +92,66 @@ public class InsertAccount {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+		close.addActionListener((e) -> frame.dispose());
+
+		insert.addActionListener(e -> {
+			// Verify account name field is not blank
+			if (accountField.getText().trim().equals("")) {
+				missingField.setText("Accounts name cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
 			}
-		});
 
-		insert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Verify account name field is not blank
-				if (accountField.getText().trim().equals("")) {
-					missingField.setText("Accounts name cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
+			// verify username field is not blank
+			else if (usernameField.getText().trim().equals("")) {
+				missingField.setText("Username cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// verify password field is not blank
+			else if (new String(passField.getPassword()).trim().equals("")) {
+				missingField.setText("Password cannot be blank");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// verify password and confirm password contents match
+			else if (!new String(passField.getPassword()).trim().equals(
+					new String(confPassField.getPassword()).trim())) {
+				missingField.setText("Passwords must match");
+				missingField.setVisible(true);
+				frame.pack();
+			}
+
+			// Call method to insert new account
+			else {
+				Account account = new Account();
+				account.setAccount(accountField.getText().trim());
+				account.setUsername(usernameField.getText().trim());
+				account.setPassword(new String(passField.getPassword())
+						.trim());
+				account.setUrl(urlField.getText().trim());
+				int recordCount;
+				try {
+					recordCount = Accounts.newAccount(account);
+					MainMenu.closeWindow();
+				} catch (Exception e1) {
+					throw new AppException(e1);
 				}
 
-				// verify username field is not blank
-				else if (usernameField.getText().trim().equals("")) {
-					missingField.setText("Username cannot be blank");
+				if (recordCount != 1) {
+					missingField
+							.setText("Error inserting new account - check database");
+					logger.error("Error inserting new account - check database");
 					missingField.setVisible(true);
 					frame.pack();
-				}
-
-				// verify password field is not blank
-				else if (new String(passField.getPassword()).trim().equals("")) {
-					missingField.setText("Password cannot be blank");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				// verify password and confirm password contents match
-				else if (!new String(passField.getPassword()).trim().equals(
-						new String(confPassField.getPassword()).trim())) {
-					missingField.setText("Passwords must match");
-					missingField.setVisible(true);
-					frame.pack();
-				}
-
-				// Call method to insert new account
-				else {
-					Account account = new Account();
-					account.setAccount(accountField.getText().trim());
-					account.setUsername(usernameField.getText().trim());
-					account.setPassword(new String(passField.getPassword())
-							.trim());
-					account.setUrl(urlField.getText().trim());
-					int recordCount;
-					try {
-						recordCount = Accounts.newAccount(account);
-						MainMenu.closeWindow();
-					} catch (Exception e1) {
-						throw new AppException(e1);
-					}
-
-					if (recordCount != 1) {
-						missingField
-								.setText("Error inserting new account - check database");
-						logger.error("Error inserting new account - check database");
-						missingField.setVisible(true);
-						frame.pack();
-					} else {
-						frame.dispose();
-						JOptionPane.showMessageDialog(null,
-								"New Accounts added successfully!", "Success",
-								JOptionPane.INFORMATION_MESSAGE);
-						MainMenu.modeSelection(false, 2);
-					}
+				} else {
+					frame.dispose();
+					JOptionPane.showMessageDialog(null,
+							"New Accounts added successfully!", "Success",
+							JOptionPane.INFORMATION_MESSAGE);
+					MainMenu.modeSelection(false, 2);
 				}
 			}
 		});
