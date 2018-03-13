@@ -1,9 +1,6 @@
 package com.bryan.finance.gui.finance;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -38,21 +35,18 @@ public class InsertTransaction {
 	private static String[] INCOME_CATEGORIES;
 	private static JComboBox<String> selectCategory = new JComboBox<>();
 
-	private final static JTextField descField = new HintTextField("Description", false);
-	private final static JTextField storeField = new HintTextField("Store", false);
-	private final static JTextField titleField = new HintTextField("Transaction Title", false);
+	private final static JTextField descField = new HintTextField("Description", false, 12);
+	private final static JTextField storeField = new HintTextField("Store", false, 12);
+	private final static JTextField titleField = new HintTextField("Transaction Title", false, 12);
 	private final static JFormattedTextField amountField = new JFormattedTextField(
 			ApplicationLiterals.getCurrencyFormat());
 
 	public static void InsertFrame() {
 		logger.debug("Displaying GUI to insert new transaction");
 		final Connection con = Connect.getConnection();
-		String rawExpCategories = ReadConfig
-				.getConfigValue(ApplicationLiterals.EXPENSE_CATEGORIES);
-		String rawIncCategories = ReadConfig
-				.getConfigValue(ApplicationLiterals.INCOME_CATEGORIES);
-		EXPENSE_CATEGORIES = getCategories(rawExpCategories);
-		INCOME_CATEGORIES = getCategories(rawIncCategories);
+
+		EXPENSE_CATEGORIES = getCategories(ApplicationLiterals.EXPENSE);
+		INCOME_CATEGORIES = getCategories(ApplicationLiterals.INCOME);
 		final String[] TYPE_CATEGORIES = { "Expense", "Income" };
 
 		final JFrame frame = new JFrame(ApplicationLiterals.APP_TITLE);
@@ -61,6 +55,7 @@ public class InsertTransaction {
 		typeCb.setFont(ApplicationLiterals.APP_FONT);
 		typeCb.setSelectedIndex(-1);
 		typeCb.setRenderer(new PromptComboBoxRenderer("Select Type"));
+		typeCb.setPrototypeDisplayValue(" temp prototype value ");
 
 		UtilDateModel model = new UtilDateModel();
 		Properties p = new Properties();
@@ -88,25 +83,45 @@ public class InsertTransaction {
 		missingField.setForeground(Color.RED);
 		missingField.setVisible(false);
 
-		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(4, 2, 10, 20));
-		grid.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		grid.add(titleField);
-		grid.add(descField);
-		grid.add(typeCb);
-		grid.add(selectCategory);
-		grid.add(datePicker);
-		grid.add(amountField);
-		grid.add(storeField);
-		grid.add(credit);
+		JPanel details = new JPanel(new BorderLayout(0,10));
+		details.add(titleField, BorderLayout.NORTH);
+		details.add(descField, BorderLayout.CENTER);
+		details.add(storeField, BorderLayout.SOUTH);
+		details.setBorder(BorderFactory.createCompoundBorder(
+				ApplicationLiterals.PADDED_SPACE,
+				BorderFactory.createTitledBorder("General Details:")));
+
+		JPanel typeAndCateogry = new JPanel(new BorderLayout(0, 10));
+		selectCategory.setPrototypeDisplayValue(" temp prototype value ");
+		typeAndCateogry.add(typeCb, BorderLayout.NORTH);
+		typeAndCateogry.add(selectCategory, BorderLayout.SOUTH);
+		typeAndCateogry.setBorder(BorderFactory.createCompoundBorder(
+				ApplicationLiterals.PADDED_SPACE,
+				BorderFactory.createTitledBorder("Type and Category:")));
+
+		JPanel top = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		top.add(details);
+		top.add(typeAndCateogry);
+
+		JPanel amountDetails = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		amountDetails.add(datePicker);
+		amountDetails.add(amountField);
+		amountDetails.add(credit);
+		amountDetails.setBorder(BorderFactory.createCompoundBorder(
+				ApplicationLiterals.PADDED_SPACE,
+				BorderFactory.createTitledBorder("Amount and Date")));
+
+		JPanel content = new JPanel(new BorderLayout(0, 5));
+		content.add(top, BorderLayout.NORTH);
+//		content.add(typeAndCateogry, BorderLayout.CENTER);
+		content.add(amountDetails, BorderLayout.SOUTH);
 
 		JPanel missing = new JPanel();
 		missing.setLayout(new FlowLayout(FlowLayout.CENTER));
 		missing.add(missingField);
-
 		JPanel middle = new JPanel();
 		middle.setLayout(new BoxLayout(middle, BoxLayout.Y_AXIS));
-		middle.add(grid);
+		middle.add(content);
 		middle.add(missing);
 
 		JPanel buttons = new JPanel();
@@ -117,7 +132,7 @@ public class InsertTransaction {
 
 		JPanel main = new JPanel();
 		main.setLayout(new BorderLayout());
-		JLabel frameTitle = new Title("Insert Transactions");
+		JLabel frameTitle = new Title("Insert Transaction");
 		main.add(frameTitle, BorderLayout.NORTH);
 		main.add(middle, BorderLayout.CENTER);
 		main.add(buttons, BorderLayout.SOUTH);
@@ -266,13 +281,19 @@ public class InsertTransaction {
 		titleField.requestFocusInWindow();
 	}
 
-	private static String[] getCategories(String str) {
+	private static String[] getCategories(String type) {
+		String rawExpCategories = ReadConfig
+				.getConfigValue(ApplicationLiterals.EXPENSE_CATEGORIES);
+		String rawIncCategories = ReadConfig
+				.getConfigValue(ApplicationLiterals.INCOME_CATEGORIES);
 
-		String[] data = str.split(ApplicationLiterals.COMMA);
-		for (int i = 0; i < data.length; i++) {
-			data[i] = data[i].trim();
+		String categoryData = type.equals(ApplicationLiterals.EXPENSE) ? rawExpCategories : rawIncCategories;
+
+		String[] categories = categoryData.split(ApplicationLiterals.COMMA);
+		for (int i = 0; i < categories.length; i++) {
+			categories[i] = categories[i].trim();
 		}
-		return data;
+		return categories;
 	}
 
 	private static void addCategories(boolean isExpenses) {
