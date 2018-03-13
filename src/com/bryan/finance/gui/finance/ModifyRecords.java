@@ -118,7 +118,7 @@ public class ModifyRecords {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return (column == 0 || column == 2);
+				return column != 0;
 			}
 		};
 		table = new JTable(model);
