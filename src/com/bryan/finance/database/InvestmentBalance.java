@@ -44,7 +44,6 @@ public class InvestmentBalance {
 	}
 
 	public static void getLatestFidelityBalance(Connection con) {
-
 		logger.debug("Getting latest Fidelity Balance...");
 		double balance = 0.0;
 		String date = null;
@@ -79,7 +78,6 @@ public class InvestmentBalance {
 	}
 
 	public static void getLatestJanusBalance(Connection con) {
-
 		logger.debug("Getting latest Janus Balance...");
 		double balance = 0.0;
 		String date = null;

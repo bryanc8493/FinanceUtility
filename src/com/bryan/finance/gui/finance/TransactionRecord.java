@@ -3,8 +3,6 @@ package com.bryan.finance.gui.finance;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -88,11 +86,7 @@ public class TransactionRecord {
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
+		close.addActionListener((e) -> frame.dispose());
 	}
 
 	private void setValues(Transaction selectedTran) {

@@ -21,6 +21,17 @@ public class HintTextField extends JTextField {
 		}
 	}
 
+	public HintTextField(String hint, boolean isBig, int columns) {
+		_hint = hint;
+		this.setFont(ApplicationLiterals.APP_FONT);
+		if(isBig) {
+			Dimension d = this.getPreferredSize();
+			d.height = d.height + 10;
+			this.setPreferredSize(d);
+		}
+		this.setColumns(columns);
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);

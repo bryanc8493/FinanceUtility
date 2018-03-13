@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -46,7 +44,7 @@ import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.account.AccountsTab;
 import com.bryan.finance.gui.address.AddressTab;
-import com.bryan.finance.gui.finance.InsertRecord;
+import com.bryan.finance.gui.finance.InsertTransaction;
 import com.bryan.finance.gui.finance.ModifyRecords;
 import com.bryan.finance.gui.finance.TransactionRecord;
 import com.bryan.finance.gui.investments.InvestmentsTab;
@@ -112,7 +110,7 @@ public class MainMenu extends Icons {
 
 		String futurePayments = Balance.getFuturePayments();
 		final JButton futureBalBtn = new JButton();
-		if (futurePayments == null) {
+		if (futurePayments.equals("0.00")) {
 			futureBalBtn.setText(ApplicationLiterals.EMPTY);
 			futureBalBtn.setVisible(false);
 		} else {
@@ -233,80 +231,64 @@ public class MainMenu extends Icons {
 			InvestmentsTab.janus.setEnabled(false);
 		}
 
-		insert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				InsertRecord.InsertFrame();
-			}
+		insert.addActionListener(e -> {
+			frame.dispose();
+			InsertTransaction.InsertFrame();
 		});
 
-		modify.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				ModifyRecords.editData();
-			}
+		modify.addActionListener(e -> {
+			frame.dispose();
+			ModifyRecords.editData();
 		});
 
-		report.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				CustomReport.selectReport();
-			}
+		report.addActionListener(e -> {
+			frame.dispose();
+			CustomReport.selectReport();
 		});
 
-		lastRecords.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String viewingAmount = ReadConfig
-						.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX);
-				logger.debug("Displaying last " + viewingAmount + " records");
-				JFrame f = new JFrame("Past " + viewingAmount + " Records");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title("Last " + viewingAmount
-						+ " Transactions");
-				p.add(label, BorderLayout.NORTH);
-				p.add(entriesScrollPane, BorderLayout.SOUTH);
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
-			}
+		lastRecords.addActionListener(e -> {
+			logger.debug("Displaying last " + viewingAmount + " records");
+			JFrame f = new JFrame("Past " + viewingAmount + " Records");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title("Last " + viewingAmount
+					+ " Transactions");
+			p.add(label, BorderLayout.NORTH);
+			p.add(entriesScrollPane, BorderLayout.SOUTH);
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 		});
 
-		setThemeDefault.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				makeCurrentThemeDefault();
-				setThemeDefault.setVisible(false);
-			}
+		setThemeDefault.addActionListener(e -> {
+			makeCurrentThemeDefault();
+			setThemeDefault.setVisible(false);
 		});
 
-		futureBalBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying future transaction records");
-				JFrame f = new JFrame("Future Transactions");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title("Future Transactions");
-				p.add(label, BorderLayout.NORTH);
-				p.add(getFutureRecordsPane(), BorderLayout.SOUTH);
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
-			}
+		futureBalBtn.addActionListener(e -> {
+			logger.debug("Displaying future transaction records");
+			JFrame f = new JFrame("Future Transactions");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title("Future Transactions");
+			p.add(label, BorderLayout.NORTH);
+			p.add(getFutureRecordsPane(), BorderLayout.SOUTH);
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 		});
 
-		creditBalBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying unpaid credit records");
-				JFrame f = new JFrame("Unpaid Credits");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title("Unpaid Credit Card Transactions");
-				p.add(label, BorderLayout.NORTH);
-				p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
-			}
+		creditBalBtn.addActionListener(e -> {
+			logger.debug("Displaying unpaid credit records");
+			JFrame f = new JFrame("Unpaid Credits");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title("Unpaid Credit Card Transactions");
+			p.add(label, BorderLayout.NORTH);
+			p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 		});
 	}
 

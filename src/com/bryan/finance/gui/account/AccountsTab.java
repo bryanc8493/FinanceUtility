@@ -3,8 +3,6 @@ package com.bryan.finance.gui.account;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -28,8 +26,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -106,108 +102,98 @@ public class AccountsTab extends JPanel {
 						(JFrame) SwingUtilities.getRoot(this)),
 				BorderLayout.SOUTH);
 
-		view.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (checkEncryptionKey()) {
-					logger.debug("Displaying passwords");
-					table.getColumnModel().addColumn(passwordColumn);
-					Dimension d = table.getPreferredSize();
-					acctSP.setPreferredSize(new Dimension(d.width * 3, table
-							.getRowHeight() * 12));
-					view.setEnabled(false);
-					clipPassword.setVisible(true);
+		view.addActionListener(e ->  {
+			if (checkEncryptionKey()) {
+				logger.debug("Displaying passwords");
+				table.getColumnModel().addColumn(passwordColumn);
+				Dimension d = table.getPreferredSize();
+				acctSP.setPreferredSize(new Dimension(d.width * 3, table
+						.getRowHeight() * 12));
+				view.setEnabled(false);
+				clipPassword.setVisible(true);
 
-				} else {
-					logger.warn("Invalid encryption key - attempt: "
-							+ getAttempts());
-					setAttempts(getAttempts() + 1);
-					if (getAttempts() > 3) {
-						view.setEnabled(false);
-						edit.setEnabled(false);
-					}
+			} else {
+				logger.warn("Invalid encryption key - attempt: "
+						+ getAttempts());
+				setAttempts(getAttempts() + 1);
+				if (getAttempts() > 3) {
+					view.setEnabled(false);
+					edit.setEnabled(false);
 				}
 			}
 		});
 
-		add.addActionListener(e -> {
-			InsertAccount.addNewAccount();
-		});
+		add.addActionListener((e) -> InsertAccount.addNewAccount());
 
-		edit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (!checkEncryptionKey()) {
-					logger.warn("Invalid encryption key - attempt: "
-							+ getAttempts());
-					setAttempts(getAttempts() + 1);
-					if (getAttempts() > 3) {
-						edit.setEnabled(false);
-						view.setEnabled(false);
-					}
-				} else {
-					logger.debug("User editing account data");
-					final JFrame f = new JFrame("Edit Accounts");
-					JPanel p = new JPanel(new BorderLayout(10, 0));
-					JLabel label = new Title("Edit Accounts");
-					JButton update = new JButton("Update");
-					JButton delete = new JButton("Delete");
-					delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-					update.setCursor(new Cursor(Cursor.HAND_CURSOR));
-					JPanel buttons = new JPanel(new FlowLayout(
-							FlowLayout.CENTER));
-					buttons.add(delete);
-					buttons.add(update);
-					buttons.setBorder(BorderFactory.createEmptyBorder(10, 0,
-							10, 0));
-					p.add(label, BorderLayout.NORTH);
-					p.add(getFullAccountData(), BorderLayout.CENTER);
-					p.add(buttons, BorderLayout.SOUTH);
-					f.add(p);
-					f.pack();
-					f.setVisible(true);
-					f.setLocationRelativeTo(null);
-
-					updates = new ArrayList<>();
-
-					update.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							f.dispose();
-							Updates.changeAccounts(updates);
-							MainMenu.closeWindow();
-							JOptionPane.showMessageDialog(null, "Successfully updated account records",
-									"Updated!", JOptionPane.INFORMATION_MESSAGE);
-							MainMenu.modeSelection(false,2);
-						}
-					});
-
-					delete.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							int row = fullTable.getSelectedRow();
-							if (row != -1) {
-								String ID = (String) fullTable.getValueAt(row,
-										0);
-								int choice = JOptionPane
-										.showConfirmDialog(
-												null,
-												"Are you sure you want to delete the selected record?",
-												"Confirm",
-												JOptionPane.YES_NO_OPTION);
-								if (choice == JOptionPane.YES_OPTION) {
-									f.dispose();
-									Updates.deleteAccount(ID);
-									MainMenu.closeWindow();
-									JOptionPane.showMessageDialog(null, "Record deleted successfully",
-											"Deleted!", JOptionPane.INFORMATION_MESSAGE);
-									MainMenu.modeSelection(false, 2);
-								}
-							} else {
-								JOptionPane.showMessageDialog(null,
-										"Please select a record to delete",
-										"No Selection",
-										JOptionPane.WARNING_MESSAGE);
-							}
-						}
-					});
+		edit.addActionListener(e ->  {
+			if (!checkEncryptionKey()) {
+				logger.warn("Invalid encryption key - attempt: "
+						+ getAttempts());
+				setAttempts(getAttempts() + 1);
+				if (getAttempts() > 3) {
+					edit.setEnabled(false);
+					view.setEnabled(false);
 				}
+			} else {
+				logger.debug("User editing account data");
+				final JFrame f = new JFrame("Edit Accounts");
+				JPanel p = new JPanel(new BorderLayout(10, 0));
+				JLabel label = new Title("Edit Accounts");
+				JButton update = new JButton("Update");
+				JButton delete = new JButton("Delete");
+				delete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				update.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				JPanel buttonPanel = new JPanel(new FlowLayout(
+						FlowLayout.CENTER));
+				buttonPanel.add(delete);
+				buttonPanel.add(update);
+				buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0,
+						10, 0));
+				p.add(label, BorderLayout.NORTH);
+				p.add(getFullAccountData(), BorderLayout.CENTER);
+				p.add(buttonPanel, BorderLayout.SOUTH);
+				f.add(p);
+				f.pack();
+				f.setVisible(true);
+				f.setLocationRelativeTo(null);
+
+				updates = new ArrayList<>();
+
+				update.addActionListener(exc ->  {
+					f.dispose();
+					Updates.changeAccounts(updates);
+					MainMenu.closeWindow();
+					JOptionPane.showMessageDialog(null, "Successfully updated account records",
+							"Updated!", JOptionPane.INFORMATION_MESSAGE);
+					MainMenu.modeSelection(false,2);
+				});
+
+				delete.addActionListener(ex ->  {
+					int row = fullTable.getSelectedRow();
+					if (row != -1) {
+						String ID = (String) fullTable.getValueAt(row,
+								0);
+						int choice = JOptionPane
+								.showConfirmDialog(
+										null,
+										"Are you sure you want to delete the selected record?",
+										"Confirm",
+										JOptionPane.YES_NO_OPTION);
+						if (choice == JOptionPane.YES_OPTION) {
+							f.dispose();
+							Updates.deleteAccount(ID);
+							MainMenu.closeWindow();
+							JOptionPane.showMessageDialog(null, "Record deleted successfully",
+									"Deleted!", JOptionPane.INFORMATION_MESSAGE);
+							MainMenu.modeSelection(false, 2);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null,
+								"Please select a record to delete",
+								"No Selection",
+								JOptionPane.WARNING_MESSAGE);
+					}
+				});
 			}
 		});
 	}
@@ -287,11 +273,7 @@ public class AccountsTab extends JPanel {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				if (column == 0) {
-					return false;
-				} else {
-					return true;
-				}
+				return (column != 0);
 			}
 		};
 		fullTable = new JTable(model);
@@ -306,22 +288,19 @@ public class AccountsTab extends JPanel {
 				fullTable.getRowHeight() * 15));
 		final Map<Integer, String> map = getAttributeMap();
 
-		fullTable.getModel().addTableModelListener(new TableModelListener() {
+		fullTable.getModel().addTableModelListener(e ->  {
+			String changedData;
+			String ID;
+			int row = fullTable.getSelectedRow();
+			int column = fullTable.getSelectedColumn();
+			changedData = (String) fullTable.getValueAt(row, column);
+			ID = (String) fullTable.getValueAt(row, 0);
 
-			public void tableChanged(TableModelEvent e) {
-				String changedData;
-				String ID;
-				int row = fullTable.getSelectedRow();
-				int column = fullTable.getSelectedColumn();
-				changedData = (String) fullTable.getValueAt(row, column);
-				ID = (String) fullTable.getValueAt(row, 0);
-
-				UpdatedRecord changedRecord = new UpdatedRecord();
-				changedRecord.setID(ID);
-				changedRecord.setAttribute(map.get(column));
-				changedRecord.setData(changedData);
-				updates.add(changedRecord);
-			}
+			UpdatedRecord changedRecord = new UpdatedRecord();
+			changedRecord.setID(ID);
+			changedRecord.setAttribute(map.get(column));
+			changedRecord.setData(changedData);
+			updates.add(changedRecord);
 		});
 		return sp;
 	}

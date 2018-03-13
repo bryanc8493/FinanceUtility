@@ -3,8 +3,6 @@ package com.bryan.finance.gui.finance;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,21 +72,14 @@ public class ModifyRecords {
 
 		updates = new ArrayList<>();
 
-		cancelBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				MainMenu.modeSelection(false, 0);
-			}
+		cancelBtn.addActionListener(e -> {
+			frame.dispose();
+			MainMenu.modeSelection(false, 0);
 		});
 
-		updateBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Updates.changeTransactions(updates);
-			}
-		});
+		updateBtn.addActionListener((e) -> Updates.changeTransactions(updates));
 
-		deleteBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		deleteBtn.addActionListener(e ->  {
 				// Call DB method to update all changed records
 				int row = table.getSelectedRow();
 				if (row != -1) {
@@ -107,14 +98,12 @@ public class ModifyRecords {
 						frame.dispose();
 						Updates.deleteTransaction(tran);
 						editData();
-//						MainMenu.modeSelection(false, 0);
 					}
 				} else {
 					JOptionPane.showMessageDialog(null,
 							"Please select a record to delete", "No Selection",
 							JOptionPane.WARNING_MESSAGE);
 				}
-			}
 		});
 	}
 
@@ -129,11 +118,7 @@ public class ModifyRecords {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				if (column == 0 || column == 2) {
-					return false;
-				} else {
-					return true;
-				}
+				return (column == 0 || column == 2);
 			}
 		};
 		table = new JTable(model);
@@ -153,9 +138,7 @@ public class ModifyRecords {
 		// updated and
 		// temporarily store the cells data that was changed and the ID of that
 		// record to update in database
-		table.getModel().addTableModelListener(new TableModelListener() {
-
-			public void tableChanged(TableModelEvent e) {
+		table.getModel().addTableModelListener(e ->  {
 				String changedData;
 				String ID;
 				int row = table.getSelectedRow();
@@ -168,13 +151,11 @@ public class ModifyRecords {
 				changedRecord.setData(changedData);
 				updates.add(changedRecord);
 				updateBtn.setEnabled(true);
-			}
 		});
 		return sp;
 	}
 
 	private static Map<Integer, String> getAttributeMap() {
-
 		Map<Integer, String> map = new HashMap<>();
 		map.put(1, "TITLE");
 		map.put(3, "TRANSACTION_DATE");

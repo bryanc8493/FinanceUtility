@@ -3,8 +3,6 @@ package com.bryan.finance.gui;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -49,7 +47,7 @@ public class MenuBar extends JMenuBar {
 		return menuBar;
 	}
 
-	public MenuBar(final JFrame frame, final JTabbedPane menuTabs) {
+	MenuBar(final JFrame frame, final JTabbedPane menuTabs) {
 		JMenu toolsMenu = new JMenu("Tools");
 		toolsMenu.setMnemonic(KeyEvent.VK_T);
 
@@ -131,175 +129,135 @@ public class MenuBar extends JMenuBar {
 		menuBar.add(Box.createHorizontalGlue());
 		menuBar.add(version);
 
-		backup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Backup();
+		backup.addActionListener((e) -> new Backup());
+
+		refresh.addActionListener(e -> {
+			int currentTabIndex = menuTabs.getSelectedIndex();
+			frame.dispose();
+			MainMenu.modeSelection(false, currentTabIndex);
+		});
+
+		changePass.addActionListener(e -> {
+			if (!Connect.getCurrentUser().equalsIgnoreCase("root")) {
+				UserManagement.changePassword(false,
+						Connect.getCurrentUser());
+			} else {
+				JOptionPane.showMessageDialog(frame,
+						"Password cannot be changed for root user",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 
-		refresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int currentTabIndex = menuTabs.getSelectedIndex();
-				frame.dispose();
-				MainMenu.modeSelection(false, currentTabIndex);
+		userMgmt.addActionListener((e) -> new UserManagement());
+
+		salary.addActionListener((e) -> new SalaryManagement());
+
+		webTheme.addActionListener(e -> {
+			try {
+				UIManager.setLookAndFeel(WebLookAndFeel.class
+						.getCanonicalName());
+				logger.debug("Previewing Web L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		changePass.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (!Connect.getCurrentUser().equalsIgnoreCase("root")) {
-					UserManagement.changePassword(false,
-							Connect.getCurrentUser());
-				} else {
-					JOptionPane.showMessageDialog(frame,
-							"Password cannot be changed for root user",
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
+		nimbusTheme.addActionListener(e -> {
+			try {
+				UIManager
+						.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+				logger.debug("Previewing Nimbus L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		userMgmt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new UserManagement();
+		windowsTheme.addActionListener(e -> {
+			try {
+				UIManager
+						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				logger.debug("Previewing windows L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		salary.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new SalaryManagement();
+		windowsClassicTheme.addActionListener(e -> {
+			try {
+				UIManager
+						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
+				logger.debug("Previewing windows classic L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		webTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager.setLookAndFeel(WebLookAndFeel.class
-							.getCanonicalName());
-					logger.debug("Previewing Web L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
+		motifTheme.addActionListener(e -> {
+			try {
+				UIManager
+						.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+				logger.debug("Previewing motif L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		nimbusTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager
-							.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-					logger.debug("Previewing Nimbus L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
+		metalTheme.addActionListener(e -> {
+			try {
+				UIManager
+						.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+				logger.debug("Previewing metal L&F");
+			} catch (Exception ex) {
+				logger.error(ex.toString());
 			}
+			frame.dispose();
+			MainMenu.modeSelection(true, 0);
 		});
 
-		windowsTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager
-							.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-					logger.debug("Previewing windows L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
-			}
+		monthReports.addActionListener(e -> {
+			JFrame f = new JFrame("Monthly Summary Data");
+			JPanel p = new JPanel(new BorderLayout(10, 0));
+			JLabel label = new Title(
+					"Monthly Summary Data (Since January 2016)");
+			p.add(label, BorderLayout.NORTH);
+			p.add(getMonthReportsData(), BorderLayout.SOUTH);
+			p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+			f.add(p);
+			f.pack();
+			f.setVisible(true);
+			f.setLocationRelativeTo(null);
 		});
 
-		windowsClassicTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager
-							.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
-					logger.debug("Previewing windows classic L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
-			}
+		savings.addActionListener((e) -> new Savings());
+
+		viewAppSettings.addActionListener(e -> {
+			logger.debug("Displaying app settings");
+			new AppSettings(false);
 		});
 
-		motifTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager
-							.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-					logger.debug("Previewing motif L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
-			}
+		modifyAppSettings.addActionListener(e -> {
+			logger.debug("Modifying app settings");
+			new AppSettings(true);
 		});
 
-		metalTheme.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					UIManager
-							.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-					logger.debug("Previewing metal L&F");
-				} catch (Exception ex) {
-					logger.error(ex.toString());
-				}
-				frame.dispose();
-				MainMenu.modeSelection(true, 0);
-			}
+		viewDBSettings.addActionListener(e -> {
+			logger.debug("Dislaying database settings");
+			new DatabaseSettings(false);
 		});
 
-		monthReports.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFrame f = new JFrame("Monthly Summary Data");
-				JPanel p = new JPanel(new BorderLayout(10, 0));
-				JLabel label = new Title(
-						"Monthly Summary Data (Since January 2016)");
-				p.add(label, BorderLayout.NORTH);
-				p.add(getMonthReportsData(), BorderLayout.SOUTH);
-				p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-				f.add(p);
-				f.pack();
-				f.setVisible(true);
-				f.setLocationRelativeTo(null);
-			}
-		});
-
-		savings.addActionListener(e -> {
-			new Savings();
-		});
-
-		viewAppSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Displaying app settings");
-				new AppSettings(false);
-			}
-		});
-
-		modifyAppSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Modifying app settings");
-				new AppSettings(true);
-			}
-		});
-
-		viewDBSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Dislaying database settings");
-				new DatabaseSettings(false);
-			}
-		});
-
-		modifyDBSettings.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.debug("Modifying database settings");
-				new DatabaseSettings(true);
-			}
+		modifyDBSettings.addActionListener(e -> {
+			logger.debug("Modifying database settings");
+			new DatabaseSettings(true);
 		});
 	}
 

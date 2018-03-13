@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Set;
@@ -63,9 +61,7 @@ public class UserManagement extends JFrame {
 		setVisible(true);
 		setLocationRelativeTo(null);
 
-		close.addActionListener(e -> {
-			dispose();
-		});
+		close.addActionListener((e) -> dispose());
 	}
 
 	private JScrollPane createDataTable() {
@@ -144,58 +140,54 @@ public class UserManagement extends JFrame {
 		f.setVisible(true);
 		f.setLocationRelativeTo(null);
 
-		cancel.addActionListener(e -> {
-			f.dispose();
-		});
+		cancel.addActionListener((e) -> f.dispose());
 
-		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// Make sure fields match
-				String inputPass = new String(newPass.getPassword()).trim();
-				String inputPassConf = new String(newPassConf.getPassword())
-						.trim();
-				if (inputPass.equals(inputPassConf)) {
-					if (inputPass.length() > 3 && !mustReset) {
-						if (Accounts.setNewPassword(inputPass) > 0) {
-							f.dispose();
-							JOptionPane.showMessageDialog(null,
-									"Password Updated Successfully!",
-									"Success", JOptionPane.INFORMATION_MESSAGE);
-						} else {
-							JOptionPane
-									.showMessageDialog(
-											f,
-											"Unknown error during password update.  Check logs.",
-											"Failed", JOptionPane.ERROR_MESSAGE);
-						}
-					} else if (inputPass.length() > 3) {
-						if (Accounts.setNewPassword(user, inputPass) > 0) {
-							f.dispose();
-							JOptionPane.showMessageDialog(null,
-									"Password Updated Successfully!",
-									"Success", JOptionPane.INFORMATION_MESSAGE);
-							try {
-								Connect.InitialConnect(user);
-							} catch (GeneralSecurityException | IOException e1) {
-								throw new AppException(e1);
-							}
-
-						} else {
-							JOptionPane
-									.showMessageDialog(
-											f,
-											"Unknown error during password update.  Check logs.",
-											"Failed", JOptionPane.ERROR_MESSAGE);
-						}
+		submit.addActionListener(e ->  {
+			// Make sure fields match
+			String inputPass = new String(newPass.getPassword()).trim();
+			String inputPassConf = new String(newPassConf.getPassword())
+					.trim();
+			if (inputPass.equals(inputPassConf)) {
+				if (inputPass.length() > 3 && !mustReset) {
+					if (Accounts.setNewPassword(inputPass) > 0) {
+						f.dispose();
+						JOptionPane.showMessageDialog(null,
+								"Password Updated Successfully!",
+								"Success", JOptionPane.INFORMATION_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(f,
-								"Password must be at least 4 characters long",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(
+										f,
+										"Unknown error during password update.  Check logs.",
+										"Failed", JOptionPane.ERROR_MESSAGE);
+					}
+				} else if (inputPass.length() > 3) {
+					if (Accounts.setNewPassword(user, inputPass) > 0) {
+						f.dispose();
+						JOptionPane.showMessageDialog(null,
+								"Password Updated Successfully!",
+								"Success", JOptionPane.INFORMATION_MESSAGE);
+						try {
+							Connect.InitialConnect(user);
+						} catch (GeneralSecurityException | IOException e1) {
+							throw new AppException(e1);
+						}
+
+					} else {
+						JOptionPane
+								.showMessageDialog(
+										f,
+										"Unknown error during password update.  Check logs.",
+										"Failed", JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
-					JOptionPane.showMessageDialog(f, "Passwords do not match!",
+					JOptionPane.showMessageDialog(f,
+							"Password must be at least 4 characters long",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
+			} else {
+				JOptionPane.showMessageDialog(f, "Passwords do not match!",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
