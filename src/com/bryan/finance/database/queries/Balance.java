@@ -20,7 +20,7 @@ public class Balance {
         logger.debug("Getting future Balance...");
         final Connection con = Connect.getConnection();
 
-        String SQL_TEXT = "SELECT TOTAL FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT + Views.FUTURE_BALANCE_SUM;
+        String SQL_TEXT = "SELECT FUTURE_SUM FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT + Views.FUTURE_BALANCE_SUM;
         Statement statement;
         ResultSet rs;
         try {
@@ -72,7 +72,7 @@ public class Balance {
         logger.debug("Getting credit Balance...");
         final Connection con = Connect.getConnection();
 
-        String SQL_TEXT = "SELECT TOTAL FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT + Views.UNPAID_CREDITS_SUM;
+        String SQL_TEXT = "SELECT VALUE FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT + Views.UNPAID_CREDITS_SUM;
         Statement statement;
         ResultSet rs;
         try {
