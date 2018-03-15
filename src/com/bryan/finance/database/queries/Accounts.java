@@ -216,7 +216,7 @@ public class Accounts {
         String SQL_TEXT = "SELECT DISTINCT CASE WHEN "
             + "((SELECT LOGIN_BEFORE_LOCK FROM "
             + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
-            + " WHERE USERNAME = UPPER('TEST')) > now()) "
+            + " WHERE USERNAME = UPPER('" + user + "')) > now()) "
             + " THEN '1' ELSE '0' END AS RESULT FROM "
             + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS;
 
