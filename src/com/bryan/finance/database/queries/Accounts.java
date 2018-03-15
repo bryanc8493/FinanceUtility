@@ -177,6 +177,65 @@ public class Accounts {
         }
     }
 
+    public static boolean wasUserPasswordReset(String user) {
+        final Connection con = Connect.getConnection();
+        String SQL_TEXT = "SELECT MUST_CHANGE_PASS FROM "
+                + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
+                + " WHERE USERNAME = UPPER('" + user + "')";
+        Statement statement;
+        ResultSet rs;
+        try {
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            String value = rs.getString(1);
+            return value.equals("1");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void removeMustChangeFlag(String user) {
+        final Connection con = Connect.getConnection();
+        String SQL_TEXT = "UPDATE "
+                + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
+                + " SET MUST_CHANGE_PASS = null, LOGIN_BEFORE_LOCK = null "
+                + "WHERE USERNAME = UPPER('" + user +"')";
+        PreparedStatement ps;
+
+        try {
+            ps = con.prepareStatement(SQL_TEXT);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static boolean isResetTimerValid(String user) {
+        System.out.println("'running");
+        final Connection con = Connect.getConnection();
+        String SQL_TEXT = "SELECT DISTINCT CASE WHEN "
+            + "((SELECT LOGIN_BEFORE_LOCK FROM "
+            + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS
+            + " WHERE USERNAME = UPPER('TEST')) > now()) "
+            + " THEN '1' ELSE '0' END AS RESULT FROM "
+            + Databases.ACCOUNTS + ApplicationLiterals.DOT + Tables.USERS;
+
+        Statement statement;
+        ResultSet rs;
+
+        try {
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            String value = rs.getString(1);
+            System.out.println("queried value: " + value);
+            return value.equals("1");
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
     public static int newUser(User user) throws Exception {
         logger.debug("Creating new user: " + user.getUsername());
         final Connection con = Connect.getConnection();
@@ -312,7 +371,7 @@ public class Accounts {
         return updateCount;
     }
 
-    public static int resetPassword(String user) {
+    public static int resetPassword(String user, String pass) {
         int recordsInserted = 0;
         Connection con = null;
         char permission = ApplicationLiterals.FULL_ACCESS;
@@ -340,10 +399,10 @@ public class Accounts {
             try {
                 String SQL_TEXT = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT
                         + Tables.USERS
-                        + " SET ENCRYPTED_PASS = AES_ENCRYPT('daisymae', '"
-                        + Encoding.decrypt(ApplicationLiterals
-                        .getEncryptionKey()) + "') "
-                        +  " WHERE USERNAME = '" + user + "'";
+                        + " SET ENCRYPTED_PASS = AES_ENCRYPT('" + pass + "', '"
+                        + Encoding.decrypt(ApplicationLiterals.getEncryptionKey()) + "'), "
+                        + "LOGIN_BEFORE_LOCK = (now() + INTERVAL 10 MINUTE), "
+                        + "MUST_CHANGE_PASS = '1' WHERE USERNAME = '" + user + "'";
 
                 PreparedStatement ps = con.prepareStatement(SQL_TEXT);
                 recordsInserted = ps.executeUpdate();
