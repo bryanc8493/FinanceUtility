@@ -106,7 +106,6 @@ public class UserManagement extends JFrame {
 	}
 
 	public static void changePassword(final boolean mustReset, final String user) {
-
 		final JFrame f = new JFrame("Change Password");
 		JLabel title = new Title("Change Password");
 		final JPasswordField newPass = new HintPassField("New Password", true);
@@ -167,6 +166,7 @@ public class UserManagement extends JFrame {
 						JOptionPane.showMessageDialog(null,
 								"Password Updated Successfully!",
 								"Success", JOptionPane.INFORMATION_MESSAGE);
+						Accounts.removeMustChangeFlag(user);
 						try {
 							Connect.InitialConnect(user);
 						} catch (GeneralSecurityException | IOException e1) {

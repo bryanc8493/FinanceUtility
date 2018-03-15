@@ -1,10 +1,8 @@
 package com.bryan.finance.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -17,6 +15,7 @@ import java.sql.Statement;
 import javax.swing.*;
 
 import com.bryan.finance.database.queries.Accounts;
+import com.bryan.finance.utilities.PasswordFactory;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
@@ -115,31 +114,21 @@ public class VerifyAccess extends ApplicationLiterals {
 			}
 
 			if (!doesUsernameExist(username)) {
-				logger.warn("Username " + username + " does not exist."
-						+ ApplicationLiterals.NEW_LINE
-						+ "Try again or create new account");
-				JOptionPane.showMessageDialog(frame, "Username " + username
-								+ " does not exist." + ApplicationLiterals.NEW_LINE
-								+ "Try again or create new account",
-						"Invalid User", JOptionPane.ERROR_MESSAGE);
 				passField.setText("");
 				frame.pack();
 			} else {
 				verifyNotBanned(username);
 
-				if (validPassword(username,
-						new String(passField.getPassword()))) {
+				if (validPassword(username, new String(passField.getPassword()))) {
 					frame.dispose();
 					logger.debug("Login successful"
 							+ ApplicationLiterals.NEW_LINE
 							+ "Launching Application from GUI");
-					// if password is default it MUST be reset before
-					// entering app
-					String defaultPassword = ReadConfig
-							.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
-					if (new String(passField.getPassword())
-							.equals(defaultPassword)) {
-						UserManagement.changePassword(true, username);
+					// if forgot password feature was used, they need to reset password
+					if (Accounts.wasUserPasswordReset(username)) {
+						if(Accounts.isResetTimerValid(username)) {
+							UserManagement.changePassword(true, username);
+						}
 					} else {
 						try {
 							Connect.InitialConnect(username);
@@ -196,30 +185,37 @@ public class VerifyAccess extends ApplicationLiterals {
 		String user = JOptionPane.showInputDialog(frame,
 				"Please input your username", "Reset",
 				JOptionPane.INFORMATION_MESSAGE);
+		verifyNotBanned(user);
+		if(doesUsernameExist(user) && isUserAllowedToChangePass(user)) {
+			String tempPassword = PasswordFactory.generatePassword();
+			Accounts.resetPassword(user, tempPassword);
+
+			StringSelection selection = new StringSelection(tempPassword);
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(selection, selection);
+
+			JOptionPane
+				.showMessageDialog(
+						frame,
+						"<html>Your Password has been temporarily reset to: "
+								+ "<i>"
+								+ tempPassword
+								+ "</i><br><br>Your new password has been copied to your clipboard<br>" +
+								"You have 10 minutes to login and set a new password.</html>",
+						"Password Reset", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	private static boolean isUserAllowedToChangePass(String user) {
 		String admin = ReadConfig
 				.getConfigValue(ApplicationLiterals.ADMINISTRATOR);
 		if (user.equalsIgnoreCase("root") || user.equalsIgnoreCase(admin)) {
 			JOptionPane.showMessageDialog(frame,
 					"Cannot use forgot password for this type of user!",
 					"Unauthorized", JOptionPane.ERROR_MESSAGE);
-			return;
+			return false;
 		}
-		if (Accounts.resetPassword(user.trim()) > 0) {
-			String defaultPassword = ReadConfig
-					.getConfigValue(ApplicationLiterals.DEFAULT_PASSWORD);
-			JOptionPane
-					.showMessageDialog(
-							frame,
-							"<html>Password was successfully reset to the default: "
-									+ "<i>"
-									+ defaultPassword
-									+ "</i><br><br>Copy this, and login soon, as you have 5 minutes to login "
-									+ "and set a new passoword.</html>",
-							"Password Reset", JOptionPane.WARNING_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(frame, "Unknown Error!  Check logs",
-					"Error", JOptionPane.ERROR_MESSAGE);
-		}
+		return true;
 	}
 
 	private static void banUser(String user) {
@@ -287,15 +283,12 @@ public class VerifyAccess extends ApplicationLiterals {
 	}
 
 	public static boolean doesUsernameExist(String user) {
-
-		user = user.toUpperCase();
-		boolean exists;
 		try {
 			Connection con = Connect.getConnection();
 
 			String SQL_TEXT = ("SELECT USERNAME from " + Databases.ACCOUNTS
 					+ ApplicationLiterals.DOT + Tables.USERS
-					+ " WHERE USERNAME = '" + user + "'");
+					+ " WHERE USERNAME = UPPER('" + user + "')");
 
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(SQL_TEXT);
@@ -303,16 +296,20 @@ public class VerifyAccess extends ApplicationLiterals {
 			rs.next();
 			try {
 				rs.getString(1);
-				exists = true;
+				return true;
 			} catch (Exception e) {
-				exists = false;
+				logger.warn("Username " + user + " does not exist."
+						+ ApplicationLiterals.NEW_LINE
+						+ "Try again or create new account");
+				JOptionPane.showMessageDialog(frame, "Username " + user
+								+ " does not exist." + ApplicationLiterals.NEW_LINE
+								+ "Try again or create new account!",
+						"Invalid User", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
-
-			con.close();
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
-		return exists;
 	}
 
 	private static boolean validPassword(String user, String pass) {
