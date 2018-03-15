@@ -16,6 +16,7 @@ import javax.swing.*;
 
 import com.bryan.finance.database.queries.Accounts;
 import com.bryan.finance.utilities.PasswordFactory;
+import jdk.nashorn.internal.scripts.JO;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
@@ -120,17 +121,23 @@ public class VerifyAccess extends ApplicationLiterals {
 				verifyNotBanned(username);
 
 				if (validPassword(username, new String(passField.getPassword()))) {
-					frame.dispose();
 					logger.debug("Login successful"
 							+ ApplicationLiterals.NEW_LINE
 							+ "Launching Application from GUI");
 					// if forgot password feature was used, they need to reset password
 					if (Accounts.wasUserPasswordReset(username)) {
 						if(Accounts.isResetTimerValid(username)) {
+							frame.dispose();
 							UserManagement.changePassword(true, username);
+						}else{
+							JOptionPane.showMessageDialog(frame,
+								"Your temporary password has expired\n" +
+										"Please click Forgot Password to generate a new one",
+									"Expired", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
 						try {
+							frame.dispose();
 							Connect.InitialConnect(username);
 						} catch (GeneralSecurityException | IOException e1) {
 							throw new AppException(e1);
