@@ -212,7 +212,6 @@ public class Accounts {
     }
 
     public static boolean isResetTimerValid(String user) {
-        System.out.println("'running");
         final Connection con = Connect.getConnection();
         String SQL_TEXT = "SELECT DISTINCT CASE WHEN "
             + "((SELECT LOGIN_BEFORE_LOCK FROM "
@@ -229,7 +228,6 @@ public class Accounts {
             rs = statement.executeQuery(SQL_TEXT);
             rs.next();
             String value = rs.getString(1);
-            System.out.println("queried value: " + value);
             return value.equals("1");
         } catch (Exception e) {
             throw new AppException(e);
