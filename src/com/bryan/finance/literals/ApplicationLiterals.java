@@ -24,13 +24,12 @@ public abstract class ApplicationLiterals {
 	public static final String BIN = "bin";
 	public static final String EMPTY = "";
 	public static final String SEMI_COLON = ";";
-	public static final String TAB = "\t";
 	public static final String DOLLAR = "$";
 	public static final String DASH = "-";
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "1.1.0";
+	public static final String VERSION = "1.1.1";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -89,7 +88,6 @@ public abstract class ApplicationLiterals {
 	public static final String REPORTS_OUTPUT_DIR = "ReportsOutputDirectory";
 	public static final String THEME_FILE_NAME = "ThemeFileName";
 	public static final String REPORT_TYPES = "ReportTypes";
-	public static final String DEFAULT_PASSWORD = "DefaultPassword";
 	public static final String ADMINISTRATOR = "Administrator";
 
 	/*
