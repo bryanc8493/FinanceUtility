@@ -117,4 +117,19 @@ public class Balance {
             throw new AppException(e);
         }
     }
-}
+
+    public static double getHouseSavings() {
+        logger.debug("Getting total house savings...");
+        final Connection con = Connect.getConnection();
+        String SQL_TEXT = "SELECT TOTAL FROM " + Databases.FINANCIAL + ApplicationLiterals.DOT + Views.TOTAL_HOUSE_SAVINGS;
+        Statement statement;
+        ResultSet rs;
+        try {
+            statement = con.createStatement();
+            rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getDouble(1);
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }}

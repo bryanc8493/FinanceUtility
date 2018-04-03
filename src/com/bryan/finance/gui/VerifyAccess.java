@@ -42,9 +42,8 @@ public class VerifyAccess extends ApplicationLiterals {
 	private static JFrame frame;
 
 	public static void CheckAccess() {
-
 		logger.debug("Displaying GUI Prompting verification");
-		frame = new JFrame("Verification");
+		frame = new JFrame("Version " + VERSION);
 		JPanel p = new JPanel();
 		JLabel title = new JLabel(ApplicationLiterals.APP_TITLE,
 				SwingConstants.CENTER);

@@ -75,7 +75,7 @@ public class Savings {
     }
 
     private void setAmounts() {
-        final Double HOUSE_AMT = 2100.00;
+        final Double HOUSE_AMT = Balance.getHouseSavings();
 
         double totalSavings = Balance.getSavingsBalance();
         String safetyString = ReadConfig.getConfigValue(ApplicationLiterals.SAVINGS_SAFE_AMT);

@@ -21,10 +21,13 @@ import com.bryan.finance.logging.AppLogger;
 /**
  * Application Entry Point
  *
- * Select distinct(
- (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Income') - (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Expense')
- ) as "Total"
- FROM MONTHLY_TRANSACTIONS
+ * left off - added savings view with Foreign Key - now need to fix issue when new tran gets added
+ * it needs to know its a savings tran, add it to the savings table, then also check the category,
+ * if it is "house savings" then we need add that new savings record tran id as a the FK in a new record in the house_savings table
+ *
+ * Once done with that - you then should do further verification on properly updating the savings table when adding expenses and incomes
+ *
+ * Lastly, check on the monthly update to see if the march run will work - some work may be needed around this.
  */
 public class FinanceUtility {
 
