@@ -242,7 +242,39 @@ public class Transactions {
             ps.setString(8, String.valueOf(tran.getCreditPaid()));
             ps.executeUpdate();
 
+            if(tran.getCategory().equals(ApplicationLiterals.SAVINGS) ||
+                    tran.getCategory().equals(ApplicationLiterals.SAVINGS_TRANSFER))
+                addSavingsTransaction(tran, con);
+
             con.close();
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static void addSavingsTransaction(Transaction tran, Connection con) {
+        try {
+            PreparedStatement ps;
+            String SQL_TEXT = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                    + Tables.SAVINGS  + " (TRANS_TYPE, TRANS_DATE, AMOUNT, DESCRIPTION, SUM_AMOUNT) "
+                    + "VALUES (?, ?, ?, ?, ?)";
+
+            String sumAmount = tran.getType().equals(ApplicationLiterals.INCOME) ?
+                    "-" + tran.getAmount() :
+                    tran.getAmount();
+            String tranType = tran.getType().equals(ApplicationLiterals.EXPENSE) ?
+                    ApplicationLiterals.INCOME :
+                    ApplicationLiterals.EXPENSE;
+
+            ps = con.prepareStatement(SQL_TEXT);
+            ps.setString(1, tranType);
+            ps.setString(2, tran.getDate());
+            ps.setString(3, tran.getAmount());
+            ps.setString(4, tran.getDescription());
+            ps.setString(5, sumAmount);
+
+            ps.executeUpdate();
+
         } catch (Exception e) {
             throw new AppException(e);
         }

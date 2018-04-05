@@ -57,6 +57,8 @@ public abstract class ApplicationLiterals {
 
 	public static final String EXPENSE = "Expense";
 	public static final String INCOME = "Income";
+	public static final String SAVINGS = "Savings";
+	public static final String SAVINGS_TRANSFER = "Savings Transfer";
 
 	public static final String LOCK = "lock";
 	public static final String LOCKED = "LOCKED";
