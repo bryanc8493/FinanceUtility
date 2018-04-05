@@ -10,6 +10,7 @@ import com.bryan.finance.literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Set;
 
 
@@ -242,8 +243,82 @@ public class Transactions {
             ps.setString(8, String.valueOf(tran.getCreditPaid()));
             ps.executeUpdate();
 
+            if(tran.getCategory().equals(ApplicationLiterals.SAVINGS) ||
+                    tran.getCategory().equals(ApplicationLiterals.SAVINGS_TRANSFER) ||
+                    tran.getCategory().equals(ApplicationLiterals.HOUSE_SAVINGS))
+                addSavingsTransaction(tran, con);
+
             con.close();
         } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static void addSavingsTransaction(Transaction tran, Connection con) {
+        try {
+            PreparedStatement ps;
+            String SQL_TEXT = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                    + Tables.SAVINGS  + " (TRANS_TYPE, TRANS_DATE, AMOUNT, DESCRIPTION, SUM_AMOUNT) "
+                    + "VALUES (?, ?, ?, ?, ?)";
+
+            String sumAmount = tran.getType().equals(ApplicationLiterals.INCOME) ?
+                    "-" + tran.getAmount() :
+                    tran.getAmount();
+            String tranType = tran.getType().equals(ApplicationLiterals.EXPENSE) ?
+                    ApplicationLiterals.INCOME :
+                    ApplicationLiterals.EXPENSE;
+
+            ps = con.prepareStatement(SQL_TEXT);
+            ps.setString(1, tranType);
+            ps.setString(2, tran.getDate());
+            ps.setString(3, tran.getAmount());
+            ps.setString(4, tran.getDescription());
+            ps.setString(5, sumAmount);
+
+            ps.executeUpdate();
+
+            if(tran.getCategory().equals(ApplicationLiterals.HOUSE_SAVINGS))
+                addHouseSavings(con);
+
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static void addHouseSavings(Connection con) {
+        try {
+            PreparedStatement ps;
+            String SQL_TEXT = "INSERT INTO " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                    + Tables.HOUSE_SAVINGS  + " (SAVINGS_TRAN_ID) "
+                    + "VALUES (?)";
+
+            int tranId = getLastSavingsRecordId();
+
+            ps = con.prepareStatement(SQL_TEXT);
+            ps.setInt(1, tranId);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static int getLastSavingsRecordId() {
+        Statement statement;
+        ResultSet rs ;
+
+        String sql = "SELECT MAX(TRANS_ID) FROM " + Databases.FINANCIAL +
+                ApplicationLiterals.DOT + Tables.SAVINGS;
+        try {
+            Connection con = Connect.getConnection();
+
+            statement = con.createStatement();
+            rs = statement.executeQuery(sql);
+            rs.next();
+            return rs.getInt(1);
+
+        } catch (SQLException e) {
             throw new AppException(e);
         }
     }

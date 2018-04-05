@@ -21,10 +21,7 @@ import com.bryan.finance.logging.AppLogger;
 /**
  * Application Entry Point
  *
- * Select distinct(
- (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Income') - (SELECT SUM(AMOUNT) FROM MONTHLY_TRANSACTIONS WHERE TYPE = 'Expense')
- ) as "Total"
- FROM MONTHLY_TRANSACTIONS
+ * Check on the monthly update to see if the march run will work - some work may be needed around this.
  */
 public class FinanceUtility {
 

@@ -29,7 +29,7 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "1.1.1";
+	public static final String VERSION = "1.2.0";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -57,6 +57,9 @@ public abstract class ApplicationLiterals {
 
 	public static final String EXPENSE = "Expense";
 	public static final String INCOME = "Income";
+	public static final String SAVINGS = "Savings";
+	public static final String SAVINGS_TRANSFER = "Savings Transfer";
+	public static final String HOUSE_SAVINGS = "House Savings";
 
 	public static final String LOCK = "lock";
 	public static final String LOCKED = "LOCKED";

@@ -113,7 +113,6 @@ public class InsertTransaction {
 
 		JPanel content = new JPanel(new BorderLayout(0, 5));
 		content.add(top, BorderLayout.NORTH);
-//		content.add(typeAndCateogry, BorderLayout.CENTER);
 		content.add(amountDetails, BorderLayout.SOUTH);
 
 		JPanel missing = new JPanel();
