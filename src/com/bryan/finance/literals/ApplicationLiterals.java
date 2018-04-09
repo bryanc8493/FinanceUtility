@@ -16,6 +16,7 @@ public abstract class ApplicationLiterals {
 
 	public static final String NEW_LINE = "\n";
 	public static final String DOT_CSV = ".csv";
+	public static final String DOT_JAR = ".jar";
 	public static final String UNDERSCORE = "_";
 	public static final String COMMA = ",";
 	public static final String SLASH = "/";
@@ -29,7 +30,8 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String VERSION = "1.2.0";
+	public static final String APP_ARTIFACT = "FinanceUtility";
+	public static final String VERSION = "1.2.1";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -92,6 +94,7 @@ public abstract class ApplicationLiterals {
 	public static final String THEME_FILE_NAME = "ThemeFileName";
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String ADMINISTRATOR = "Administrator";
+	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
 
 	/*
 	 * Dates
@@ -106,6 +109,7 @@ public abstract class ApplicationLiterals {
 			"EEEE, MMM d  h:mm:ss a");
 	public static final SimpleDateFormat YEAR_MONTH_DAY_CONDENSED = new SimpleDateFormat(
 			"yyyyMMdd");
+	public static final SimpleDateFormat MONTH_DAY_YEAR = new SimpleDateFormat("MMM d, yyyy");
 
 	/*
 	 * States
