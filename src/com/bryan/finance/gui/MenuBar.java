@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 
 import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.gui.finance.Savings;
+import com.bryan.finance.utilities.DateUtil;
 import org.apache.log4j.Logger;
 
 import com.alee.laf.WebLookAndFeel;
@@ -57,13 +58,14 @@ public class MenuBar extends JMenuBar {
 		JMenu settingsMenu = new JMenu("Settings");
 		settingsMenu.setMnemonic(KeyEvent.VK_S);
 
-		JMenu version = new JMenu("Version: " + ApplicationLiterals.VERSION);
+		String releaseDate = DateUtil.getDeploymentDate();
+		JMenu versionAndDate = new JMenu("v" + ApplicationLiterals.VERSION + "  (Released: " + releaseDate + ")");
 		if (ApplicationLiterals.isFromWorkspace()) {
-			version.setIcon(Icons.RED_DOT);
+			versionAndDate.setIcon(Icons.RED_DOT);
 		} else {
-			version.setIcon(Icons.GREEN_DOT);
+			versionAndDate.setIcon(Icons.GREEN_DOT);
 		}
-		version.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		versionAndDate.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
 		JMenuItem backup = new JMenuItem("Backup Databases", KeyEvent.VK_B);
 		backup.setIcon(Icons.BACKUP_ICON);
@@ -127,7 +129,7 @@ public class MenuBar extends JMenuBar {
 		menuBar.add(themeMenu);
 		menuBar.add(settingsMenu);
 		menuBar.add(Box.createHorizontalGlue());
-		menuBar.add(version);
+		menuBar.add(versionAndDate);
 
 		backup.addActionListener((e) -> new Backup());
 
