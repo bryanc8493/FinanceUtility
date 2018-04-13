@@ -57,8 +57,7 @@ public class Transactions {
         Object[][] records = new Object[QueryUtil.getMonthsSinceJan2016()][5];
 
         String SQL_TEXT = "SELECT MONTH, YEAR, TOTAL_EXPENSES, TOTAL_INCOME, MONTHLY_CASH_FLOW FROM "
-            + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TOTALS
-            + " ORDER BY ID DESC";
+            + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TOTALS;
         Statement statement;
         ResultSet rs;
         int recordCount = 0;
