@@ -1,5 +1,6 @@
 package com.bryan.finance.database.queries;
 
+import com.bryan.finance.beans.MonthlyRecord;
 import com.bryan.finance.beans.Transaction;
 import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.Connect;
@@ -7,8 +8,10 @@ import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.literals.ApplicationLiterals;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Set;
@@ -54,8 +57,7 @@ public class Transactions {
         Object[][] records = new Object[QueryUtil.getMonthsSinceJan2016()][5];
 
         String SQL_TEXT = "SELECT MONTH, YEAR, TOTAL_EXPENSES, TOTAL_INCOME, MONTHLY_CASH_FLOW FROM "
-            + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TOTALS
-            + " ORDER BY ID DESC";
+            + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TOTALS;
         Statement statement;
         ResultSet rs;
         int recordCount = 0;
@@ -318,6 +320,43 @@ public class Transactions {
             rs.next();
             return rs.getInt(1);
 
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static void insertMonthlySummaryData(MonthlyRecord record) {
+        String insertSQL = "insert into "
+                + Databases.FINANCIAL + ApplicationLiterals.DOT + Tables.MONTHLY_TOTALS
+                + " (YEAR, MONTH_INT, MONTH, TOTAL_EXPENSES, TOTAL_INCOME, MONTHLY_CASH_FLOW) "
+                + "values (?, ?, ?, ?, ?, ?)";
+
+        try {
+            Connection con = Connect.getConnection();
+            PreparedStatement ps = con.prepareStatement(insertSQL);
+            ps.setInt(1, record.getYear());
+            ps.setInt(2, record.getMonthInt());
+            ps.setString(3, record.getMonth());
+            ps.setDouble(4, record.getExpenses());
+            ps.setDouble(5, record.getIncome());
+            ps.setDouble(6, record.getCashFlow());
+            ps.execute();
+
+            JOptionPane.showMessageDialog(null,
+                    "Data successfully added for " + record.getMonth() + ", " + record.getYear()
+                            + ApplicationLiterals.NEW_LINE + ApplicationLiterals.NEW_LINE
+                            + "Total Income:             $" + record.getIncome()
+                            + ApplicationLiterals.NEW_LINE
+                            + "Total Expenses:       $" + record.getExpenses()
+                            + ApplicationLiterals.NEW_LINE
+                            + "Cash Flow:                 $" + record.getCashFlow(),
+                    "Monthly Summary", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (MySQLIntegrityConstraintViolationException pk) {
+            JOptionPane.showMessageDialog(null,
+                    "Data already exists for "
+                            + record.getMonth() + " " + record.getYear() + "!",
+                    "Duplicate Selection", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException e) {
             throw new AppException(e);
         }

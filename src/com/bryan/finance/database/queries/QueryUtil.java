@@ -10,9 +10,11 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.util.*;
+import java.util.prefs.AbstractPreferences;
 
 public class QueryUtil {
 

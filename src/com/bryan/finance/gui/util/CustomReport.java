@@ -83,6 +83,7 @@ public class CustomReport {
 		JLabel yearLabel = new JLabel("Year:");
 
 		years = new JComboBox<>(getValidYears());
+		years.setSelectedIndex(getLastMonthsYear());
 		months = new JComboBox<>(getMonths());
 		months.setSelectedIndex(getLastMonth());
 		months.setMaximumRowCount(12);
@@ -302,12 +303,7 @@ public class CustomReport {
 			int month = (int) months.getSelectedItem();
 			logger.info("Running monthly report for: " + month + "/" + year);
 
-			// Query DB and get report Data records
 			GenerateReport.createMonthlyReport(year, month);
-
-			JOptionPane.showMessageDialog(null,
-					"Complete!\nData was updated for " + month + "-" + year,
-					"Success", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			Date selectedBeginDate = (Date) datePicker.getModel().getValue();
 			String startDate = ApplicationLiterals.YEAR_MONTH_DAY
@@ -354,6 +350,13 @@ public class CustomReport {
 			currentMonth = currentMonth - 2;
 		}
 		return currentMonth;
+	}
+
+	private static int getLastMonthsYear() {
+		String yearString = ApplicationLiterals.YEAR.format(new Date());
+		int currentYear = Integer.parseInt(yearString);
+
+		return currentYear - MIN_YEAR;
 	}
 
 	private static Integer[] getMonths() {

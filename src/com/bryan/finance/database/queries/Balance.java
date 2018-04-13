@@ -132,4 +132,39 @@ public class Balance {
         } catch (SQLException e) {
             throw new AppException(e);
         }
-    }}
+    }
+
+    public static double getMonthlyExpenseSum(int year, String month) {
+        String sql = "select sum(AMOUNT) from " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                + Views.EXPENSES_V + " where TRANSACTION_DATE like '" + year
+				+ ApplicationLiterals.DASH + month + "%' "
+				+ "and UPPER(TITLE) <> 'EVEN OUT' "
+				+ "and Category <> 'Savings'";
+		try {
+		    Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+			rs.next();
+			return (rs.getDouble(1));
+		} catch (SQLException e) {
+			throw new AppException(e);
+		}
+    }
+
+    public static double getMonthlyIncomeSum(int year, String month) {
+        String sql = "select sum(AMOUNT) from " + Databases.FINANCIAL + ApplicationLiterals.DOT
+                + Views.INCOME_V + " where TRANSACTION_DATE like '" + year
+                + ApplicationLiterals.DASH + month + "%' "
+                + "and UPPER(TITLE) <> 'EVEN OUT' "
+                + "and CATEGORY <> 'Savings Transfer'";
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            rs.next();
+            return (rs.getDouble(1));
+        } catch (SQLException e) {
+            throw new AppException(e);
+        }
+    }
+}
