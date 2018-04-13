@@ -9,30 +9,11 @@ public class MonthlyRecord {
 	public MonthlyRecord() {
 		
 	}
-	
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 
-	/**
-	 * @return the month
-	 */
 	public String getMonth() {
 		return month;
 	}
 
-	/**
-	 * @param month the month to set
-	 */
 	public void setMonth(int month) {
 		if(month == 1) {
 			this.month = "January";
@@ -61,75 +42,49 @@ public class MonthlyRecord {
 		}
 	}
 
-	/**
-	 * @return the year
-	 */
 	public int getYear() {
 		return year;
 	}
 
-	/**
-	 * @param year the year to set
-	 */
 	public void setYear(int year) {
 		this.year = year;
 	}
 
-	/**
-	 * @return the expenses
-	 */
 	public double getExpenses() {
 		return expenses;
 	}
 
-	/**
-	 * @param expenses the expenses to set
-	 */
 	public void setExpenses(double expenses) {
 		this.expenses = expenses;
 	}
 
-	/**
-	 * @return the income
-	 */
 	public double getIncome() {
 		return income;
 	}
 
-	/**
-	 * @param income the income to set
-	 */
 	public void setIncome(double income) {
 		this.income = income;
 	}
 
-	/**
-	 * @return the cashFlow
-	 */
 	public double getCashFlow() {
 		return cashFlow;
 	}
 
-	/**
-	 * @param cashFlow the cashFlow to set
-	 */
 	public void setCashFlow(double income, double expenses) {
 		String temp = df.format(income - expenses);
 		this.cashFlow = Double.parseDouble(temp);
 	}
-	
-	@Override
-	public String toString() {
-		return "ID:\t"+ this.id +
-				"\nMonth:\t"+ this.month + 
-				"\nYear:\t"+ this.year +
-				"\nExpenses:\t" + this.expenses +
-				"\nIncome:\t" + this.income +
-				"\nCash Flow:\t" + this.cashFlow;
+
+	public int getMonthInt() {
+		return monthInt;
 	}
 
-	private int id;
+	public void setMonthInt(int monthInt) {
+		this.monthInt = monthInt;
+	}
+
 	private String month;
+	private int monthInt;
 	private int year;
 	private double expenses;
 	private double income;

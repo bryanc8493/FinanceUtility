@@ -25,6 +25,10 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
+import com.bryan.finance.beans.Transaction;
+import com.bryan.finance.database.queries.Balance;
+import com.bryan.finance.database.queries.QueryUtil;
+import com.bryan.finance.database.queries.Transactions;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.CategorySummary;
@@ -57,8 +61,7 @@ public class GenerateReport {
 			monthPrefix = "0";
 		}
 
-		// update monthly table
-		updateMonthlyTranTable(year, month, monthPrefix + month, con);
+		updateMonthlySummaryTable(year, month, monthPrefix + month);
 
 		String SQL_TEXT = "select * FROM " + Tables.MONTHLY_TRANSACTIONS
 				+ " WHERE " + DATE + " like '" + year + "-" + monthPrefix
@@ -134,76 +137,18 @@ public class GenerateReport {
 		return data;
 	}
 
-	private static void updateMonthlyTranTable(int year, int month,
-			String monthSQL, Connection con) {
+	private static void updateMonthlySummaryTable(int year, int month, String monthSQL) {
 		MonthlyRecord record = new MonthlyRecord();
 
-		String sql = "select max(ID) from " + Tables.MONTHLY_TOTALS;
-		Statement statement = null;
-		ResultSet rs = null;
-		try {
-			statement = con.createStatement();
-			rs = statement.executeQuery(sql);
-			while (rs.next()) {
-				int currentMax = rs.getInt(1);
-				record.setId(currentMax + 1);
-			}
-		} catch (SQLException e) {
-			logger.error(e.toString() + Arrays.toString(e.getStackTrace()));
-		}
-
-		record.setMonth(month);
 		record.setYear(year);
+		record.setMonth(month);
+		record.setMonthInt(month);
 
-		// Get expenses to set
-//		String expensesSql = "select sum(AMOUNT) from " + Tables.EXPENSES
-//				+ " where TRANSACTION_DATE like '" + year
-//				+ ApplicationLiterals.DASH + monthSQL + "%' "
-//				+ "and UPPER(TITLE) <> 'EVEN OUT' "
-//				+ "and category <> 'Savings'";
-//		try {
-//			rs = statement.executeQuery(expensesSql);
-//			while (rs.next()) {
-//				record.setExpenses(rs.getDouble(1));
-//			}
-//		} catch (SQLException e) {
-//			logger.error(e.toString() + Arrays.toString(e.getStackTrace()));
-//		}
-//
-//		// Get income to set
-//		String incomeSql = "select sum(AMOUNT) from " + Tables.INCOME
-//				+ " where TRANSACTION_DATE like '" + year
-//				+ ApplicationLiterals.DASH + monthSQL + "%' "
-//				+ "and not UPPER(TITLE) like '%EVEN OUT%' "
-//				+ "and CATEGORY <> 'Savings Transfer'";
-//		try {
-//			rs = statement.executeQuery(incomeSql);
-//			while (rs.next()) {
-//				record.setIncome(rs.getDouble(1));
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-
+		record.setExpenses(Balance.getMonthlyExpenseSum(year, monthSQL));
+		record.setIncome(Balance.getMonthlyIncomeSum(year, monthSQL));
 		record.setCashFlow(record.getIncome(), record.getExpenses());
 
-		String insertSQL = "insert into "
-				+ Tables.MONTHLY_TOTALS
-				+ " (ID, MONTH, YEAR, TOTAL_EXPENSES, TOTAL_INCOME, MONTHLY_CASH_FLOW) "
-				+ "values (?, ?, ?, ?, ?, ?)";
-		PreparedStatement ps = null;
-		try {
-			ps = con.prepareStatement(insertSQL);
-			ps.setInt(1, record.getId());
-			ps.setString(2, record.getMonth());
-			ps.setInt(3, record.getYear());
-			ps.setDouble(4, record.getExpenses());
-			ps.setDouble(5, record.getIncome());
-			ps.setDouble(6, record.getCashFlow());
-			ps.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		Transactions.insertMonthlySummaryData(record);
 	}
 
 	public static Map<String, List<CategorySummary>> categoryReportT(
