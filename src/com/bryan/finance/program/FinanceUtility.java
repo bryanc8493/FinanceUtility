@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import javax.swing.UIManager;
 
+import com.bryan.finance.gui.reminder.ModifyReminders;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
@@ -20,8 +21,6 @@ import com.bryan.finance.logging.AppLogger;
 
 /**
  * Application Entry Point
- *
- * Check on the monthly update to see if the march run will work - some work may be needed around this.
  */
 public class FinanceUtility {
 
@@ -34,6 +33,30 @@ public class FinanceUtility {
 		appLogger = new AppLogger();
 		logger = Logger.getLogger(FinanceUtility.class);
 
+		// Check args if launched by user or task scheduler
+		if (args.length > 0) {
+			if (isValidArgs(args)) {
+				new ModifyReminders(true);
+			}
+		} else{
+			runApp();
+		}
+
+	}
+
+	private static boolean isValidArgs(String[] args) {
+		if (args.length != 1) {
+			logger.fatal("Invalid args passed: " + Arrays.toString(args));
+		} else if (args[0].equalsIgnoreCase("-checkReminders")) {
+			logger.info("Programmatically checking for reminders...");
+			return true;
+		}
+		logger.fatal("Invalid arg passed in first position: " + args[0]);
+		return false;
+	}
+
+	private static void runApp() throws GeneralSecurityException,
+			IOException {
 		// Set custom look and feel if there is one
 		setLookAndFeel();
 

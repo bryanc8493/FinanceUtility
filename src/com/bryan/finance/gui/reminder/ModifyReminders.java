@@ -31,9 +31,33 @@ public class ModifyReminders {
     private Logger logger = Logger.getLogger(ModifyReminders.class);
 
     public ModifyReminders(boolean fromCommandArg) {
+        if(QueryUtil.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
+            logger.info("no reminders to display");
+            FinanceUtility.appLogger.logFooter();
+            System.exit(0);
+        }
+
         JPanel p = new JPanel(new BorderLayout(10, 0));
         JLabel label = new Title("Select Reminders To Dismiss");
         label.setBorder(ApplicationLiterals.PADDED_SPACE);
+
+        JPanel reminderTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        reminderTop.add(getReminderDataForEditing(true));
+        reminderTop.setBorder(BorderFactory.createCompoundBorder(
+                ApplicationLiterals.PADDED_SPACE,
+                BorderFactory.createTitledBorder("Active Reminders")));
+
+        JPanel reminderBottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        reminderBottom.add(getReminderDataForEditing(false));
+        reminderBottom.setBorder(BorderFactory.createCompoundBorder(
+                ApplicationLiterals.PADDED_SPACE,
+                BorderFactory.createTitledBorder("Future Reminders")));
+
+        JPanel reminderContent = new JPanel(new BorderLayout(0,10));
+        reminderContent.add(reminderTop, BorderLayout.NORTH);
+        if(!fromCommandArg) {
+            reminderContent.add(reminderBottom, BorderLayout.SOUTH);
+        }
 
         JButton save = new PrimaryButton("Save");
         JButton close = new PrimaryButton("Close");
@@ -42,7 +66,7 @@ public class ModifyReminders {
         button.add(save);
         button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         p.add(label, BorderLayout.NORTH);
-        p.add(getReminderDataForEditing(), BorderLayout.CENTER);
+        p.add(reminderContent, BorderLayout.CENTER);
         p.add(button, BorderLayout.SOUTH);
         frame.setIconImage(Icons.APP_ICON.getImage());
         frame.add(p);
@@ -50,7 +74,13 @@ public class ModifyReminders {
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
 
-        close.addActionListener((e) -> frame.dispose());
+        close.addActionListener((e) -> {
+            frame.dispose();
+            if(fromCommandArg) {
+                FinanceUtility.appLogger.logFooter();
+                System.exit(0);
+            }
+        });
 
         save.addActionListener(e ->  {
             Set<Reminder> reminders = new HashSet<>();
@@ -80,7 +110,7 @@ public class ModifyReminders {
         });
     }
 
-    private JPanel getReminderDataForEditing() {
+    private JPanel getReminderDataForEditing(boolean onlyActive) {
         records = new LinkedHashSet<>();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -89,10 +119,18 @@ public class ModifyReminders {
             Connection con = Connect.getConnection();
             Statement statement = con.createStatement();
 
-            String SQL_TEXT = "SELECT ID, TITLE, DATE "
-                    + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                    + Tables.REMINDERS
-                    + " where DISMISSED = 'F'";
+            String SQL_TEXT;
+            if (onlyActive) {
+                SQL_TEXT = "SELECT ID, TITLE, DATE "
+                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                        + Tables.REMINDERS
+                        + " where DISMISSED = 'F' AND DATE <= now() ORDER BY DATE ASC";
+            } else {
+                SQL_TEXT = "SELECT ID, TITLE, DATE "
+                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                        + Tables.REMINDERS
+                        + " where DISMISSED = 'F' AND DATE > now() ORDER BY DATE ASC";
+            }
             ResultSet rs = statement.executeQuery(SQL_TEXT);
 
             while (rs.next()) {

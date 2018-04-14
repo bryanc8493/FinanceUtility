@@ -92,7 +92,23 @@ public class QueryUtil {
     public static int getTotalActiveReminders() {
         logger.debug("Getting all active reminders");
         String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DATE > now()";
+                + Tables.REMINDERS + " WHERE DISMISSED = 'F'";
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static int getTotalActiveRemindersToNotify() {
+        logger.debug("Getting all active reminders");
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
+                + Tables.REMINDERS + " WHERE DISMISSED = 'F' AND DATE <= now()";
 
         try {
             Connection con = Connect.getConnection();
