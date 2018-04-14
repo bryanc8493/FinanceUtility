@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.bryan.finance.gui.reminder.RemindersTab;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
@@ -206,6 +207,7 @@ public class MainMenu extends Icons {
 			screen.add("Accounts", new AccountsTab());
 		}
 		screen.add("Addresses", new AddressTab());
+		screen.add("Reminders", new RemindersTab());
 		screen.setSelectedIndex(persistedTab);
 
 		MenuBar m = new MenuBar(frame, screen);

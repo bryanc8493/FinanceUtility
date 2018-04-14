@@ -186,10 +186,6 @@ public class AddressTab extends JPanel {
 				table.getRowHeight() * 18));
 		final Map<Integer, String> map = getAttributeMap();
 
-		// Add action listener on the table model to catch and time a cell is
-		// updated and
-		// temporarily store the cells data that was changed and the ID of that
-		// record to update in database
 		table.getModel().addTableModelListener(e -> {
 			String changedData;
 			String ID;
