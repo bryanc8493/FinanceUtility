@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import com.bryan.finance.database.queries.Transactions;
 import com.bryan.finance.gui.util.PromptComboBoxRenderer;
+import com.bryan.finance.utilities.DateUtil;
 import com.bryan.finance.utilities.HintTextField;
 import org.apache.log4j.Logger;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -57,16 +58,7 @@ public class InsertTransaction {
 		typeCb.setRenderer(new PromptComboBoxRenderer("Select Type"));
 		typeCb.setPrototypeDisplayValue(" temp prototype value ");
 
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		final JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,
-				new DateLabelFormatter());
-		model.setValue(new Date());
-		model.setSelected(true);
+		final JDatePickerImpl datePicker = DateUtil.getDatePicker();
 
 		amountField.setColumns(10);
 		amountField.setValue(0.0);

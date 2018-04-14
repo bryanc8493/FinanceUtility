@@ -79,7 +79,6 @@ class CreditPayments {
 	}
 
 	private JPanel getCreditPanel() {
-
 		records = new LinkedHashSet<>();
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
