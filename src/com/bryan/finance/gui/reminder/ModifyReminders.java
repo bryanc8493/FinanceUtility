@@ -27,7 +27,6 @@ import java.util.Set;
 public class ModifyReminders {
 
     private JFrame frame = new JFrame("Modify Reminders");
-    private Set<JCheckBox> records;
     private Logger logger = Logger.getLogger(ModifyReminders.class);
 
     public ModifyReminders(boolean fromCommandArg) {
@@ -41,17 +40,24 @@ public class ModifyReminders {
         JLabel label = new Title("Select Reminders To Dismiss");
         label.setBorder(ApplicationLiterals.PADDED_SPACE);
 
+        Set<JCheckBox> activeCheckboxes = QueryUtil.getReminderCheckboxesForEditing(true);
+        Set<JCheckBox> futureCheckboxes = QueryUtil.getReminderCheckboxesForEditing(false);
+
         JPanel reminderTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        reminderTop.add(getReminderDataForEditing(true));
-        reminderTop.setBorder(BorderFactory.createCompoundBorder(
-                ApplicationLiterals.PADDED_SPACE,
-                BorderFactory.createTitledBorder("Active Reminders")));
+        if(activeCheckboxes.size() > 0) {
+            reminderTop.add(renderReminderData(activeCheckboxes));
+            reminderTop.setBorder(BorderFactory.createCompoundBorder(
+                    ApplicationLiterals.PADDED_SPACE,
+                    BorderFactory.createTitledBorder("Active Reminders")));
+        }
 
         JPanel reminderBottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        reminderBottom.add(getReminderDataForEditing(false));
-        reminderBottom.setBorder(BorderFactory.createCompoundBorder(
-                ApplicationLiterals.PADDED_SPACE,
-                BorderFactory.createTitledBorder("Future Reminders")));
+        if(futureCheckboxes.size() > 0) {
+            reminderBottom.add(renderReminderData(futureCheckboxes));
+            reminderBottom.setBorder(BorderFactory.createCompoundBorder(
+                    ApplicationLiterals.PADDED_SPACE,
+                    BorderFactory.createTitledBorder("Future Reminders")));
+        }
 
         JPanel reminderContent = new JPanel(new BorderLayout(0,10));
         reminderContent.add(reminderTop, BorderLayout.NORTH);
@@ -83,17 +89,7 @@ public class ModifyReminders {
         });
 
         save.addActionListener(e ->  {
-            Set<Reminder> reminders = new HashSet<>();
-
-            for (JCheckBox box : records) {
-                if (box.isSelected()) {
-                    Reminder reminder = new Reminder();
-                    String boxText = box.getText();
-                    String idString = boxText.substring(boxText.indexOf("(")+1, boxText.indexOf(")"));
-                    reminder.setId(idString);
-                    reminders.add(reminder);
-                }
-            }
+            Set<Reminder> reminders = getCheckedRemindersToDismiss(activeCheckboxes, futureCheckboxes);
 
             logger.debug("Dismissing " + reminders.size() + " reminders");
             QueryUtil.dismissReminders(reminders);
@@ -110,47 +106,41 @@ public class ModifyReminders {
         });
     }
 
-    private JPanel getReminderDataForEditing(boolean onlyActive) {
-        records = new LinkedHashSet<>();
+    private JPanel renderReminderData(Set<JCheckBox> data) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-
-            String SQL_TEXT;
-            if (onlyActive) {
-                SQL_TEXT = "SELECT ID, TITLE, DATE "
-                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                        + Tables.REMINDERS
-                        + " where DISMISSED = 'F' AND DATE <= now() ORDER BY DATE ASC";
-            } else {
-                SQL_TEXT = "SELECT ID, TITLE, DATE "
-                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                        + Tables.REMINDERS
-                        + " where DISMISSED = 'F' AND DATE > now() ORDER BY DATE ASC";
-            }
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-
-            while (rs.next()) {
-                String id = rs.getString(1);
-                String title = rs.getString(2);
-                String date = rs.getString(3);
-
-                JCheckBox box = new JCheckBox();
-                box.setText("(" + id + ") " + title + "  |  " + date);
-                records.add(box);
-            }
-
-            for (JCheckBox x : records) {
-                panel.add(x);
-            }
-
-            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        } catch (Exception e) {
-            throw new AppException(e);
+        for (JCheckBox c : data) {
+            panel.add(c);
         }
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         return panel;
+    }
+
+    private Set<Reminder> getCheckedRemindersToDismiss(Set<JCheckBox> active, Set<JCheckBox> future) {
+        Set<Reminder> reminders = new HashSet<>();
+
+        for (JCheckBox box : active) {
+            if (box.isSelected()) {
+                Reminder reminder = new Reminder();
+                String boxText = box.getText();
+                String idString = boxText.substring(boxText.indexOf("(")+1, boxText.indexOf(")"));
+                reminder.setId(idString);
+                reminders.add(reminder);
+            }
+        }
+
+        for (JCheckBox box : future) {
+            if (box.isSelected()) {
+                Reminder reminder = new Reminder();
+                String boxText = box.getText();
+                String idString = boxText.substring(boxText.indexOf("(")+1, boxText.indexOf(")"));
+                reminder.setId(idString);
+                reminders.add(reminder);
+            }
+        }
+
+        return reminders;
     }
 }
