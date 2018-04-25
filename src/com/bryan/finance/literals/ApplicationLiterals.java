@@ -95,6 +95,7 @@ public abstract class ApplicationLiterals {
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String ADMINISTRATOR = "Administrator";
 	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
+	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
 
 	/*
 	 * Dates

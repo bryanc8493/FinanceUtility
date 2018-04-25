@@ -13,13 +13,18 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ModifyReminders {
+public class ModifyReminders implements ActionListener {
 
     private JFrame frame = new JFrame("Modify Reminders");
     private Logger logger = Logger.getLogger(ModifyReminders.class);
+    private Set<JCheckBox> activeCheckboxes;
+    private Set<JCheckBox> futureCheckboxes;
+    private JButton save = new PrimaryButton("Save");
 
     public ModifyReminders(boolean fromCommandArg) {
         if(QueryUtil.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
@@ -32,8 +37,8 @@ public class ModifyReminders {
         JLabel label = new Title("Select Reminders To Dismiss");
         label.setBorder(ApplicationLiterals.PADDED_SPACE);
 
-        Set<JCheckBox> activeCheckboxes = QueryUtil.getReminderCheckboxesForEditing(true);
-        Set<JCheckBox> futureCheckboxes = QueryUtil.getReminderCheckboxesForEditing(false);
+        activeCheckboxes = QueryUtil.getReminderCheckboxesForEditing(true);
+        futureCheckboxes = QueryUtil.getReminderCheckboxesForEditing(false);
 
         JPanel reminderTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         if(activeCheckboxes.size() > 0) {
@@ -57,7 +62,7 @@ public class ModifyReminders {
             reminderContent.add(reminderBottom, BorderLayout.SOUTH);
         }
 
-        JButton save = new PrimaryButton("Save");
+        save.setEnabled(false);
         JButton close = new PrimaryButton("Close");
         JButton openFullApp = new PrimaryButton("Open Full App");
         openFullApp.setVisible(fromCommandArg);
@@ -124,6 +129,7 @@ public class ModifyReminders {
 
         for (JCheckBox c : data) {
             panel.add(c);
+            c.addActionListener(this);
         }
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -154,5 +160,33 @@ public class ModifyReminders {
         }
 
         return reminders;
+    }
+
+    private int getTotalSelectedReminders() {
+        int selectedReminders = 0;
+
+        for(JCheckBox active : activeCheckboxes) {
+            if(active.isSelected()) {
+                selectedReminders ++;
+            }
+        }
+
+        for(JCheckBox future : futureCheckboxes) {
+            if(future.isSelected()) {
+                selectedReminders ++;
+            }
+        }
+        return selectedReminders;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selectedReminders = getTotalSelectedReminders();
+
+        if(selectedReminders > 0) {
+            save.setEnabled(true);
+        } else {
+            save.setEnabled(false);
+        }
     }
 }
