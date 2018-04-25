@@ -38,6 +38,8 @@ public class InvestmentsTab extends JPanel {
 				MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
 		final JButton janusV = new MultiLabelButton("View Janus",
 				MultiLabelButton.BOTTOM, Icons.JANUS_ICON);
+		janusV.setEnabled(false);
+		janus.setEnabled(false);
 
 		JPanel investContent = new JPanel(new GridLayout(1, 4, 5, 5));
 		investContent.add(fidelityV);

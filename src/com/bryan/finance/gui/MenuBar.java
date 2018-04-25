@@ -59,11 +59,13 @@ public class MenuBar extends JMenuBar {
 		settingsMenu.setMnemonic(KeyEvent.VK_S);
 
 		String releaseDate = DateUtil.getDeploymentDate();
-		JMenu versionAndDate = new JMenu("v" + ApplicationLiterals.VERSION + "  (Released: " + releaseDate + ")");
+		JMenu versionAndDate = new JMenu();
 		if (ApplicationLiterals.isFromWorkspace()) {
 			versionAndDate.setIcon(Icons.RED_DOT);
+			versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Development)");
 		} else {
 			versionAndDate.setIcon(Icons.GREEN_DOT);
+			versionAndDate.setText("v" + ApplicationLiterals.VERSION + "  (Released: " + releaseDate + ")");
 		}
 		versionAndDate.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
@@ -235,6 +237,7 @@ public class MenuBar extends JMenuBar {
 			p.add(getMonthReportsData(), BorderLayout.SOUTH);
 			p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 			f.add(p);
+			f.setIconImage(Icons.APP_ICON.getImage());
 			f.pack();
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);

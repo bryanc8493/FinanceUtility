@@ -29,6 +29,9 @@ public class ReadConfig extends ApplicationLiterals {
 	}
 
 	public static String getLaunchPath() {
+		if (System.getProperty(USER_DIR).startsWith("C:\\WINDOWS\\system32")) {
+			return "C:\\Users\\Bryan\\repos\\FinanceUtility";
+		}
 		return System.getProperty(USER_DIR);
 	}
 

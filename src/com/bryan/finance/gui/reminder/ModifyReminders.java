@@ -1,11 +1,7 @@
 package com.bryan.finance.gui.reminder;
 
 import com.bryan.finance.beans.Reminder;
-import com.bryan.finance.database.Connect;
 import com.bryan.finance.database.queries.QueryUtil;
-import com.bryan.finance.database.queries.Transactions;
-import com.bryan.finance.enums.Databases;
-import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -17,11 +13,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ModifyReminders {
@@ -67,9 +59,12 @@ public class ModifyReminders {
 
         JButton save = new PrimaryButton("Save");
         JButton close = new PrimaryButton("Close");
+        JButton openFullApp = new PrimaryButton("Open Full App");
+        openFullApp.setVisible(fromCommandArg);
         JPanel button = new JPanel(new FlowLayout(FlowLayout.CENTER));
         button.add(close);
         button.add(save);
+        button.add(openFullApp);
         button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         p.add(label, BorderLayout.NORTH);
         p.add(reminderContent, BorderLayout.CENTER);
@@ -103,6 +98,23 @@ public class ModifyReminders {
                 MainMenu.closeWindow();
                 MainMenu.modeSelection(false, 4);
             }
+        });
+
+        openFullApp.addActionListener((e) -> {
+            frame.dispose();
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        FinanceUtility.runApp();
+                    } catch (Exception ex) {
+                        throw new AppException(ex);
+                    }
+                }
+            });
+
+            thread.start();
         });
     }
 

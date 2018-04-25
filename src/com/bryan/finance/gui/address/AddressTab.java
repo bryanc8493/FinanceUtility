@@ -88,6 +88,7 @@ public class AddressTab extends JPanel {
 			p.add(label, BorderLayout.NORTH);
 			p.add(getAddressData(), BorderLayout.SOUTH);
 			f.add(p);
+			f.setIconImage(Icons.APP_ICON.getImage());
 			f.pack();
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);
@@ -113,6 +114,7 @@ public class AddressTab extends JPanel {
 			p.add(getAddressData(), BorderLayout.CENTER);
 			p.add(buttonPanel, BorderLayout.SOUTH);
 			f.add(p);
+			f.setIconImage(Icons.APP_ICON.getImage());
 			f.pack();
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);
