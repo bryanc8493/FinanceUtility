@@ -1,6 +1,5 @@
 package com.bryan.finance.database.queries;
 
-import com.bryan.finance.beans.Reminder;
 import com.bryan.finance.beans.Salary;
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.enums.Databases;
@@ -9,7 +8,6 @@ import com.bryan.finance.exception.AppException;
 import com.bryan.finance.literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.*;
@@ -63,144 +61,5 @@ public class QueryUtil {
             throw new AppException(e);
         }
         return data;
-    }
-
-    public static void addReminder(Reminder reminder) {
-        logger.debug("running query");
-        try {
-            Connection con = Connect.getConnection();
-
-            PreparedStatement ps;
-            String SQL_TEXT = "INSERT INTO " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                    + Tables.REMINDERS  + " (TITLE, DATE, DISMISSED) "
-                    + "VALUES (?, ?, ?)";
-
-            ps = con.prepareStatement(SQL_TEXT);
-            ps.setString(1, reminder.getText());
-            ps.setObject(2, reminder.getDate());
-            ps.setString(3, reminder.getDismissed());
-            ps.executeUpdate();
-
-            con.close();
-            JOptionPane.showMessageDialog(null, "Reminder added!",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
-    public static int getTotalActiveReminders() {
-        logger.debug("Getting all active reminders");
-        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DISMISSED = 'F'";
-
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-            rs.next();
-            return rs.getInt(1);
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
-    public static int getTotalActiveRemindersToNotify() {
-        logger.debug("Getting all active reminders");
-        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DISMISSED = 'F' AND DATE <= now()";
-
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-            rs.next();
-            return rs.getInt(1);
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
-    public static Object[][] getReminders() {
-        Object[][] records = new Object[getTotalActiveReminders()][2];
-        String SQL_TEXT = "SELECT TITLE, DATE FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DISMISSED = 'F' ORDER BY DATE ASC";
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-            int recordCount = 0;
-            while (rs.next()) {
-                records[recordCount][0] = rs.getString(1);
-                records[recordCount][1] = rs.getString(2);
-                recordCount++;
-            }
-        } catch (SQLException e1) {
-            throw new AppException(e1);
-        }
-
-        return records;
-    }
-
-    public static void dismissReminders(Set<Reminder> reminders) {
-        try {
-            Connection con = Connect.getConnection();
-
-            PreparedStatement ps;
-            String SQL_TEXT = "UPDATE " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                    + Tables.REMINDERS + " SET DISMISSED = 'T' WHERE ID = ?";
-
-            for (Reminder r : reminders) {
-                ps = con.prepareStatement(SQL_TEXT);
-                ps.setString(1, r.getId());
-                ps.executeUpdate();
-            }
-
-            con.close();
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
-    public static Set<JCheckBox> getReminderCheckboxesForEditing(boolean onlyActive) {
-        Set<JCheckBox> records = new LinkedHashSet<>();
-
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-
-            String SQL_TEXT;
-            if (onlyActive) {
-                SQL_TEXT = "SELECT ID, TITLE, DATE "
-                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                        + Tables.REMINDERS
-                        + " where DISMISSED = 'F' AND DATE <= now() ORDER BY DATE ASC";
-            } else {
-                SQL_TEXT = "SELECT ID, TITLE, DATE "
-                        + "from " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                        + Tables.REMINDERS
-                        + " where DISMISSED = 'F' AND DATE > now() ORDER BY DATE ASC";
-            }
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-
-            while (rs.next()) {
-                String id = rs.getString(1);
-                String title = rs.getString(2);
-                String date = rs.getString(3);
-
-                JCheckBox box = new JCheckBox();
-                box.setText("(" + id + ") " + title + "  |  " + date);
-                records.add(box);
-            }
-            return records;
-
-//            for (JCheckBox x : records) {
-//                panel.add(x);
-//            }
-//
-//            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
     }
 }

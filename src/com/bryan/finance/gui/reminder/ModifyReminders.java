@@ -1,7 +1,7 @@
 package com.bryan.finance.gui.reminder;
 
 import com.bryan.finance.beans.Reminder;
-import com.bryan.finance.database.queries.QueryUtil;
+import com.bryan.finance.database.queries.Reminders;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -27,7 +27,7 @@ public class ModifyReminders implements ActionListener {
     private JButton save = new PrimaryButton("Save");
 
     public ModifyReminders(boolean fromCommandArg) {
-        if(QueryUtil.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
+        if(Reminders.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
             logger.info("no reminders to display");
             FinanceUtility.appLogger.logFooter();
             System.exit(0);
@@ -37,8 +37,8 @@ public class ModifyReminders implements ActionListener {
         JLabel label = new Title("Select Reminders To Dismiss");
         label.setBorder(ApplicationLiterals.PADDED_SPACE);
 
-        activeCheckboxes = QueryUtil.getReminderCheckboxesForEditing(true);
-        futureCheckboxes = QueryUtil.getReminderCheckboxesForEditing(false);
+        activeCheckboxes = Reminders.getReminderCheckboxesForEditing(true);
+        futureCheckboxes = Reminders.getReminderCheckboxesForEditing(false);
 
         JPanel reminderTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         if(activeCheckboxes.size() > 0) {
@@ -92,7 +92,7 @@ public class ModifyReminders implements ActionListener {
             Set<Reminder> reminders = getCheckedRemindersToDismiss(activeCheckboxes, futureCheckboxes);
 
             logger.debug("Dismissing " + reminders.size() + " reminders");
-            QueryUtil.dismissReminders(reminders);
+            Reminders.dismissReminders(reminders);
 
             if(fromCommandArg) {
                 logger.info("User Dismissed reminders");
