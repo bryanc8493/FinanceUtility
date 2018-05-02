@@ -275,6 +275,7 @@ public class MainMenu extends Icons {
 			p.add(label, BorderLayout.NORTH);
 			p.add(getFutureRecordsPane(), BorderLayout.SOUTH);
 			f.add(p);
+			f.setIconImage(Icons.APP_ICON.getImage());
 			f.pack();
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);
@@ -288,6 +289,7 @@ public class MainMenu extends Icons {
 			p.add(label, BorderLayout.NORTH);
 			p.add(getCreditRecordsPane(), BorderLayout.SOUTH);
 			f.add(p);
+			f.setIconImage(Icons.APP_ICON.getImage());
 			f.pack();
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);

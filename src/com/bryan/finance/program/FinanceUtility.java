@@ -55,7 +55,7 @@ public class FinanceUtility {
 		return false;
 	}
 
-	private static void runApp() throws GeneralSecurityException,
+	public static void runApp() throws GeneralSecurityException,
 			IOException {
 		// Set custom look and feel if there is one
 		setLookAndFeel();

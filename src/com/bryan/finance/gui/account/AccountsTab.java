@@ -153,6 +153,7 @@ public class AccountsTab extends JPanel {
 				p.add(getFullAccountData(), BorderLayout.CENTER);
 				p.add(buttonPanel, BorderLayout.SOUTH);
 				f.add(p);
+				f.setIconImage(Icons.APP_ICON.getImage());
 				f.pack();
 				f.setVisible(true);
 				f.setLocationRelativeTo(null);

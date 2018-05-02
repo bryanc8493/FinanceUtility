@@ -1,11 +1,7 @@
 package com.bryan.finance.gui.reminder;
 
 import com.bryan.finance.beans.Reminder;
-import com.bryan.finance.database.Connect;
-import com.bryan.finance.database.queries.QueryUtil;
-import com.bryan.finance.database.queries.Transactions;
-import com.bryan.finance.enums.Databases;
-import com.bryan.finance.enums.Tables;
+import com.bryan.finance.database.queries.Reminders;
 import com.bryan.finance.exception.AppException;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
@@ -17,20 +13,21 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ModifyReminders {
+public class ModifyReminders implements ActionListener {
 
     private JFrame frame = new JFrame("Modify Reminders");
     private Logger logger = Logger.getLogger(ModifyReminders.class);
+    private Set<JCheckBox> activeCheckboxes;
+    private Set<JCheckBox> futureCheckboxes;
+    private JButton save = new PrimaryButton("Save");
 
     public ModifyReminders(boolean fromCommandArg) {
-        if(QueryUtil.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
+        if(Reminders.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
             logger.info("no reminders to display");
             FinanceUtility.appLogger.logFooter();
             System.exit(0);
@@ -40,8 +37,8 @@ public class ModifyReminders {
         JLabel label = new Title("Select Reminders To Dismiss");
         label.setBorder(ApplicationLiterals.PADDED_SPACE);
 
-        Set<JCheckBox> activeCheckboxes = QueryUtil.getReminderCheckboxesForEditing(true);
-        Set<JCheckBox> futureCheckboxes = QueryUtil.getReminderCheckboxesForEditing(false);
+        activeCheckboxes = Reminders.getReminderCheckboxesForEditing(true);
+        futureCheckboxes = Reminders.getReminderCheckboxesForEditing(false);
 
         JPanel reminderTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         if(activeCheckboxes.size() > 0) {
@@ -65,11 +62,14 @@ public class ModifyReminders {
             reminderContent.add(reminderBottom, BorderLayout.SOUTH);
         }
 
-        JButton save = new PrimaryButton("Save");
+        save.setEnabled(false);
         JButton close = new PrimaryButton("Close");
+        JButton openFullApp = new PrimaryButton("Open Full App");
+        openFullApp.setVisible(fromCommandArg);
         JPanel button = new JPanel(new FlowLayout(FlowLayout.CENTER));
         button.add(close);
         button.add(save);
+        button.add(openFullApp);
         button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         p.add(label, BorderLayout.NORTH);
         p.add(reminderContent, BorderLayout.CENTER);
@@ -92,7 +92,7 @@ public class ModifyReminders {
             Set<Reminder> reminders = getCheckedRemindersToDismiss(activeCheckboxes, futureCheckboxes);
 
             logger.debug("Dismissing " + reminders.size() + " reminders");
-            QueryUtil.dismissReminders(reminders);
+            Reminders.dismissReminders(reminders);
 
             if(fromCommandArg) {
                 logger.info("User Dismissed reminders");
@@ -104,6 +104,23 @@ public class ModifyReminders {
                 MainMenu.modeSelection(false, 4);
             }
         });
+
+        openFullApp.addActionListener((e) -> {
+            frame.dispose();
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        FinanceUtility.runApp();
+                    } catch (Exception ex) {
+                        throw new AppException(ex);
+                    }
+                }
+            });
+
+            thread.start();
+        });
     }
 
     private JPanel renderReminderData(Set<JCheckBox> data) {
@@ -112,6 +129,7 @@ public class ModifyReminders {
 
         for (JCheckBox c : data) {
             panel.add(c);
+            c.addActionListener(this);
         }
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -142,5 +160,33 @@ public class ModifyReminders {
         }
 
         return reminders;
+    }
+
+    private int getTotalSelectedReminders() {
+        int selectedReminders = 0;
+
+        for(JCheckBox active : activeCheckboxes) {
+            if(active.isSelected()) {
+                selectedReminders ++;
+            }
+        }
+
+        for(JCheckBox future : futureCheckboxes) {
+            if(future.isSelected()) {
+                selectedReminders ++;
+            }
+        }
+        return selectedReminders;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selectedReminders = getTotalSelectedReminders();
+
+        if(selectedReminders > 0) {
+            save.setEnabled(true);
+        } else {
+            save.setEnabled(false);
+        }
     }
 }

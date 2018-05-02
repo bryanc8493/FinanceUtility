@@ -99,7 +99,7 @@ public class TransactionRecord {
 		amount.setText(selectedTran.getAmount());
 		description.setText(selectedTran.getDescription());
 		credit.setText(setCreditText(selectedTran.getCredit()));
-		creditPaid.setText(String.valueOf(selectedTran.getCreditPaid()));
+		creditPaid.setText(setCreditText(selectedTran.getCreditPaid()));
 
 		tranID.setEditable(false);
 		title.setEditable(false);

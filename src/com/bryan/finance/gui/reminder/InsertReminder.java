@@ -1,11 +1,10 @@
 package com.bryan.finance.gui.reminder;
 
 import com.bryan.finance.beans.Reminder;
-import com.bryan.finance.database.queries.QueryUtil;
+import com.bryan.finance.database.queries.Reminders;
 import com.bryan.finance.gui.MainMenu;
 import com.bryan.finance.gui.util.PrimaryButton;
 import com.bryan.finance.gui.util.Title;
-import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 import com.bryan.finance.utilities.DateUtil;
 import org.apache.log4j.Logger;
@@ -89,7 +88,7 @@ public class InsertReminder {
                 reminderData.setDate(inputDate);
                 reminderData.setIsDismissed(false);
 
-                QueryUtil.addReminder(reminderData);
+                Reminders.addReminder(reminderData);
                 MainMenu.closeWindow();
                 frame.dispose();
                 MainMenu.modeSelection(false, 4);

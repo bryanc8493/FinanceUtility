@@ -12,6 +12,8 @@ import com.bryan.finance.literals.ApplicationLiterals;
 
 public class ReadConfig extends ApplicationLiterals {
 
+	private static final String WINDOWS_TASK_DIRECTORY = "C:\\WINDOWS\\system32";
+
 	public static String getConfigValue(String property) {
 
 		String value;
@@ -29,6 +31,9 @@ public class ReadConfig extends ApplicationLiterals {
 	}
 
 	public static String getLaunchPath() {
+		if (System.getProperty(USER_DIR).startsWith(WINDOWS_TASK_DIRECTORY)) {
+			return getConfigValue(ApplicationLiterals.LOCAL_DEVELOPMENT_DIRECTORY);
+		}
 		return System.getProperty(USER_DIR);
 	}
 

@@ -104,10 +104,11 @@ public class CustomReport {
 		outputPanel.add(new JLabel("Select Output Type:"));
 		outputPanel.add(outputCB);
 
-		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buttons.add(back);
 		buttons.add(close);
 		buttons.add(run);
+		buttons.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 
 		JPanel selection = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		selection.add(monthly);

@@ -31,7 +31,7 @@ public abstract class ApplicationLiterals {
 
 	public static final String APP_TITLE = "Finance Utility";
 	public static final String APP_ARTIFACT = "FinanceUtility";
-	public static final String VERSION = "1.4.1";
+	public static final String VERSION = "1.4.4";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -43,12 +43,17 @@ public abstract class ApplicationLiterals {
 	public static final String USER_NAME = "user.name";
 	public static final String THEME_DIR = getLaunchPath() + SLASH + "theme";
 
-	public static final Font APP_FONT = new Font("Sans serif", Font.PLAIN, 16);
+	public static final Font APP_FONT = new Font("Sans Serif", Font.PLAIN, 16);
 	public static final Font BOLD_FONT = new Font("Sans Serif", Font.BOLD, 12);
+	public static final Font ACTIVE_TAB_FONT = new Font("Sans Serif", Font.BOLD, 14);
+	public static final Font TAB_FONT = new Font("Sans Serif", Font.PLAIN, 14);
 
 	public static final Color APP_COLOR = new Color(7, 142, 104);
 	protected static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
 	public static Color LINK_CLICKED = new Color(102, 51, 102);
+	public static final Color GREY_TAB = Color.gray;
+
+	public static final Border TAB_BORDER = BorderFactory.createEmptyBorder(0,0,10,0);
 
 	public static final String LOG_PROPERTY_FILE = SLASH + "config" + SLASH
 			+ "log4j.properties";
@@ -95,6 +100,7 @@ public abstract class ApplicationLiterals {
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String ADMINISTRATOR = "Administrator";
 	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
+	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
 
 	/*
 	 * Dates
