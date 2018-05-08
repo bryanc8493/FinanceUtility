@@ -42,6 +42,51 @@ public class Reminders {
         }
     }
 
+    private static int getTotalDismissedReminders() {
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS
+            + ApplicationLiterals.DOT + Views.DISMISSED_REMINDERS;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    public static int getTotalActiveReminders() {
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS
+                + ApplicationLiterals.DOT + Views.ACTIVE_REMINDERS;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
+    private static int getTotalFutureReminders() {
+        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS
+                + ApplicationLiterals.DOT + Views.FUTURE_REMINDERS;
+
+        try {
+            Connection con = Connect.getConnection();
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
+    }
+
     public static int getTotalNonDismissedReminders() {
         String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
                 + Tables.REMINDERS + " WHERE DISMISSED = 'F'";
@@ -57,24 +102,8 @@ public class Reminders {
         }
     }
 
-    public static int getTotalActiveRemindersToNotify() {
-        logger.debug("Getting all active reminders");
-        String SQL_TEXT = "SELECT COUNT(*) FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT
-                + Tables.REMINDERS + " WHERE DISMISSED = 'F' AND DATE <= now()";
-
-        try {
-            Connection con = Connect.getConnection();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(SQL_TEXT);
-            rs.next();
-            return rs.getInt(1);
-        } catch (Exception e) {
-            throw new AppException(e);
-        }
-    }
-
     public static Object[][] getActiveReminders() {
-        Object[][] records = new Object[getTotalNonDismissedReminders()][2];
+        Object[][] records = new Object[getTotalActiveReminders()][2];
         String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Views.ACTIVE_REMINDERS;
         try {
             Connection con = Connect.getConnection();
@@ -94,7 +123,7 @@ public class Reminders {
     }
 
     public static Object[][] getFutureReminders() {
-        Object[][] records = new Object[getTotalNonDismissedReminders()][2];
+        Object[][] records = new Object[getTotalFutureReminders()][2];
         String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Views.FUTURE_REMINDERS;
         try {
             Connection con = Connect.getConnection();
@@ -114,7 +143,7 @@ public class Reminders {
     }
 
     public static Object[][] getDismissedReminders() {
-        Object[][] records = new Object[getTotalNonDismissedReminders()][2];
+        Object[][] records = new Object[getTotalDismissedReminders()][2];
         String SQL_TEXT = "SELECT * FROM " + Databases.ACCOUNTS + ApplicationLiterals.DOT + Views.DISMISSED_REMINDERS;
         try {
             Connection con = Connect.getConnection();

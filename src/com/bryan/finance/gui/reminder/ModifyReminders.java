@@ -27,7 +27,7 @@ public class ModifyReminders implements ActionListener {
     private JButton save = new PrimaryButton("Save");
 
     public ModifyReminders(boolean fromCommandArg) {
-        if(Reminders.getTotalActiveRemindersToNotify() == 0 && fromCommandArg) {
+        if(Reminders.getTotalActiveReminders() == 0 && fromCommandArg) {
             logger.info("no reminders to display");
             FinanceUtility.appLogger.logFooter();
             System.exit(0);
