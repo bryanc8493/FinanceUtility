@@ -170,7 +170,6 @@ public class RemindersTab extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     String id = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
-                    System.out.println("double clicked - id: " + id);
 
                     Reminder selectedReminder = Reminders.getReminder(id);
                     new ReminderRecord(selectedReminder);
