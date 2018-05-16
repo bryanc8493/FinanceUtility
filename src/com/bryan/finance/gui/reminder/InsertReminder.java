@@ -25,9 +25,11 @@ public class InsertReminder {
 
         final JLabel reminderLabel = new JLabel("Remind me to:");
         final JLabel dateLabel = new JLabel("Remind me on:");
+        final JLabel notesLabel = new JLabel("Further notes:");
 
         final JTextField reminder = new JTextField(17);
         JDatePickerImpl datePicker = DateUtil.getDatePicker();
+        final JTextArea notes = new JTextArea(3,17);
 
         final JButton insert = new PrimaryButton("    Add    ");
         final JButton close = new PrimaryButton("    Close    ");
@@ -43,6 +45,10 @@ public class InsertReminder {
         secondRow.add(dateLabel);
         secondRow.add(datePicker);
 
+        JPanel thirdRow = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        thirdRow.add(notesLabel);
+        thirdRow.add(notes);
+
         JPanel missing = new JPanel();
         missing.setLayout(new FlowLayout(FlowLayout.CENTER));
         missing.add(missingField);
@@ -51,6 +57,7 @@ public class InsertReminder {
         middle.setLayout(new BoxLayout(middle, BoxLayout.Y_AXIS));
         middle.add(topRow);
         middle.add(secondRow);
+        middle.add(thirdRow);
         middle.add(missing);
 
         JPanel buttons = new JPanel();
@@ -81,12 +88,14 @@ public class InsertReminder {
         insert.addActionListener(e -> {
             Date inputDate = (Date) datePicker.getModel().getValue();
             String inputReminder = reminder.getText().trim();
+            String inputNotes = notes.getText().trim();
 
             if (validateInput(inputReminder, inputDate)) {
                 Reminder reminderData = new Reminder();
                 reminderData.setText(inputReminder);
                 reminderData.setDate(inputDate);
                 reminderData.setIsDismissed(false);
+                reminderData.setNotes(inputNotes);
 
                 Reminders.addReminder(reminderData);
                 MainMenu.closeWindow();

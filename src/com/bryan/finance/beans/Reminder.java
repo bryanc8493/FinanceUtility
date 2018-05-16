@@ -9,6 +9,7 @@ public class Reminder {
     private boolean isDismissed;
     private String dismissed;
     private String id;
+    private String notes;
 
     public String getText() {
         return text;
@@ -53,5 +54,13 @@ public class Reminder {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
