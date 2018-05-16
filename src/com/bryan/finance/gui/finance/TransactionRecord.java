@@ -31,7 +31,7 @@ public class TransactionRecord {
 
 	public TransactionRecord(Transaction selectedTran) {
 
-		final JFrame frame = new JFrame("Selected Transactions");
+		final JFrame frame = new JFrame("Selected Transaction");
 
 		JLabel tranIDLabel = new JLabel("Transactions ID:                   ");
 		JLabel titleLabel = new JLabel("Title:");
@@ -75,7 +75,6 @@ public class TransactionRecord {
 		full.add(content, BorderLayout.CENTER);
 		full.add(buttonHolder, BorderLayout.SOUTH);
 
-		// Add to frame and display
 		frame.add(full);
 		frame.setIconImage(Icons.APP_ICON.getImage());
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -15,7 +15,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 
 public class RemindersTab extends JPanel {
@@ -127,7 +130,7 @@ public class RemindersTab extends JPanel {
     }
 
     private JScrollPane getActiveReminderData(String dataType) {
-        Object[] columnNames = { "Reminder Text", "Reminder Date" };
+        Object[] columnNames = { "Id", "Reminder Text", "Reminder Date" };
         Object[][] records;
 
         switch (dataType) {
@@ -142,18 +145,38 @@ public class RemindersTab extends JPanel {
                 break;
         }
 
-        DefaultTableModel model = new DefaultTableModel(records, columnNames);
+        DefaultTableModel model = new DefaultTableModel(records, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         final JTable table = new JTable(model);
         final JScrollPane remSP = new JScrollPane(table,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         remSP.setViewportView(table);
         remSP.setVisible(true);
-        table.getColumnModel().getColumn(0).setPreferredWidth(315);
-        table.getColumnModel().getColumn(1).setPreferredWidth(105);
+        table.getColumnModel().getColumn(1).setPreferredWidth(300);
+        table.getColumnModel().getColumn(2).setPreferredWidth(90);
         Dimension d = table.getPreferredSize();
         remSP.setPreferredSize(new Dimension(d.width,
                 table.getRowHeight() * 12));
+
+        TableColumn idColumn = table.getColumnModel().getColumn(0);
+        table.getColumnModel().removeColumn(idColumn);
+
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    String id = table.getModel().getValueAt(table.getSelectedRow(),0).toString();
+                    System.out.println("double clicked - id: " + id);
+
+                    Reminder selectedReminder = Reminders.getReminder(id);
+                    new ReminderRecord(selectedReminder);
+                }
+            }
+        });
 
         return remSP;
     }
