@@ -136,7 +136,7 @@ public class NewUser {
 			}
 
 			// Verify username doesn't already exist
-			else if (VerifyAccess.doesUsernameExist(usernameField.getText()
+			else if (Accounts.doesUsernameExist(usernameField.getText()
 					.trim().toUpperCase())) {
 				missingField.setText("Username already exists!");
 				missingField.setVisible(true);

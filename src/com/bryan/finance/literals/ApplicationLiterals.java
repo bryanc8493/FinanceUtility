@@ -16,7 +16,7 @@ public abstract class ApplicationLiterals {
 
 	public static final String NEW_LINE = "\n";
 	public static final String DOT_CSV = ".csv";
-	public static final String DOT_JAR = ".jar";
+	protected static final String DOT_JAR = ".jar";
 	public static final String UNDERSCORE = "_";
 	public static final String COMMA = ",";
 	public static final String SLASH = "/";
@@ -30,8 +30,8 @@ public abstract class ApplicationLiterals {
 	public static final String SPACE = " ";
 
 	public static final String APP_TITLE = "Finance Utility";
-	public static final String APP_ARTIFACT = "FinanceUtility";
-	public static final String VERSION = "1.4.6";
+	protected static final String APP_ARTIFACT = "FinanceUtility";
+	public static final String VERSION = "1.5.0";
 
 	private static final String ROOT_PASSWORD = "RootPassword";
 	private static final String ENCRYPTION_KEY = "EncryptionKey";
@@ -50,7 +50,7 @@ public abstract class ApplicationLiterals {
 
 	public static final Color APP_COLOR = new Color(7, 142, 104);
 	protected static Color LINK_NOT_CLICKED = new Color(6, 69, 173);
-	public static Color LINK_CLICKED = new Color(102, 51, 102);
+	protected static Color LINK_CLICKED = new Color(102, 51, 102);
 	public static final Color GREY_TAB = Color.gray;
 
 	public static final Border TAB_BORDER = BorderFactory.createEmptyBorder(0,0,10,0);
@@ -99,7 +99,7 @@ public abstract class ApplicationLiterals {
 	public static final String THEME_FILE_NAME = "ThemeFileName";
 	public static final String REPORT_TYPES = "ReportTypes";
 	public static final String ADMINISTRATOR = "Administrator";
-	public static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
+	protected static final String DEPLOYMENT_LOCATION = "DeploymentLocation";
 	public static final String LOCAL_DEVELOPMENT_DIRECTORY = "LocalDevelopmentDirectory";
 
 	/*
@@ -115,7 +115,7 @@ public abstract class ApplicationLiterals {
 			"EEEE, MMM d  h:mm:ss a");
 	public static final SimpleDateFormat YEAR_MONTH_DAY_CONDENSED = new SimpleDateFormat(
 			"yyyyMMdd");
-	public static final SimpleDateFormat MONTH_DAY_YEAR = new SimpleDateFormat("MMM d, yyyy");
+	protected static final SimpleDateFormat MONTH_DAY_YEAR = new SimpleDateFormat("MMM d, yyyy");
 
 	/*
 	 * States

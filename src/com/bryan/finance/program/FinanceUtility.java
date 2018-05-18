@@ -33,7 +33,6 @@ public class FinanceUtility {
 		appLogger = new AppLogger();
 		logger = Logger.getLogger(FinanceUtility.class);
 
-		// Check args if launched by user or task scheduler
 		if (args.length > 0) {
 			if (isValidArgs(args)) {
 				new ModifyReminders(true);
@@ -57,19 +56,16 @@ public class FinanceUtility {
 
 	public static void runApp() throws GeneralSecurityException,
 			IOException {
-		// Set custom look and feel if there is one
 		setLookAndFeel();
 
-		// Show initial Loading GUI
 		new Loading();
 
-		// Set security based on if it was launched from the dev workspace
 		if (ApplicationLiterals.isFromWorkspace()) {
-			USER_VALIDATION = false;
+			USER_VALIDATION = true;
 		}
 
 		if (USER_VALIDATION) {
-			VerifyAccess.CheckAccess();
+			new VerifyAccess();
 		} else {
 			logger.debug("Skipping authentication - working from dev workspace");
 			Connect.InitialConnect("ROOT");

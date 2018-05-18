@@ -26,7 +26,7 @@ import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 import com.bryan.finance.security.Encoding;
-import com.bryan.finance.utilities.DeleteDirectory;
+import com.bryan.finance.utilities.Helpers;
 
 class Backup {
 
@@ -149,7 +149,7 @@ class Backup {
 		int deletedBackups = 0;
 		for (File f : files) {
 			if (!f.getName().contains(getToday())) {
-				if (DeleteDirectory.deleteDir(f)) {
+				if (Helpers.deleteDirectory(f)) {
 					deletedBackups++;
 				}
 			}

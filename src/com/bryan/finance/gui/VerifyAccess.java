@@ -16,7 +16,6 @@ import javax.swing.*;
 
 import com.bryan.finance.database.queries.Accounts;
 import com.bryan.finance.utilities.PasswordFactory;
-import jdk.nashorn.internal.scripts.JO;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.config.ReadConfig;
@@ -36,12 +35,12 @@ import com.bryan.finance.utilities.HintTextField;
 
 public class VerifyAccess extends ApplicationLiterals {
 
-	private static int attempts = 0;
-	private static Logger logger = Logger.getLogger(VerifyAccess.class);
+	private int attempts = 0;
+	private Logger logger = Logger.getLogger(VerifyAccess.class);
 
-	private static JFrame frame;
+	private JFrame frame;
 
-	public static void CheckAccess() {
+	public VerifyAccess() {
 		logger.debug("Displaying GUI Prompting verification");
 		frame = new JFrame("Version " + VERSION);
 		JPanel p = new JPanel();
@@ -113,7 +112,7 @@ public class VerifyAccess extends ApplicationLiterals {
 				return;
 			}
 
-			if (!doesUsernameExist(username)) {
+			if (!Accounts.doesUsernameExist(username)) {
 				passField.setText("");
 				frame.pack();
 			} else {
@@ -187,12 +186,12 @@ public class VerifyAccess extends ApplicationLiterals {
 		});
 	}
 
-	private static void resetUserPassword() {
+	private void resetUserPassword() {
 		String user = JOptionPane.showInputDialog(frame,
 				"Please input your username", "Reset",
 				JOptionPane.INFORMATION_MESSAGE);
 		verifyNotBanned(user);
-		if(doesUsernameExist(user) && isUserAllowedToChangePass(user)) {
+		if(Accounts.doesUsernameExist(user) && isUserAllowedToChangePass(user)) {
 			String tempPassword = PasswordFactory.generatePassword();
 			Accounts.resetPassword(user, tempPassword);
 
@@ -212,7 +211,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		}
 	}
 
-	private static boolean isUserAllowedToChangePass(String user) {
+	private boolean isUserAllowedToChangePass(String user) {
 		String admin = ReadConfig
 				.getConfigValue(ApplicationLiterals.ADMINISTRATOR);
 		if (user.equalsIgnoreCase("root") || user.equalsIgnoreCase(admin)) {
@@ -224,7 +223,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		return true;
 	}
 
-	private static void banUser(String user) {
+	private void banUser(String user) {
 		Accounts.lockUser(user);
 
 		FinanceUtility.appLogger.logFooter();
@@ -236,7 +235,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		System.exit(1);
 	}
 
-	private static void verifyNotBanned(String user) {
+	private void verifyNotBanned(String user) {
 		String status = "";
 		try {
 			Connection con = Connect.getConnection();
@@ -270,55 +269,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		}
 	}
 
-	public static String[] getSystemInfo() {
-		InetAddress ip;
-		String hostname;
-		String username;
-		String[] data = new String[3];
-		try {
-			ip = InetAddress.getLocalHost();
-			hostname = ip.getHostName();
-			username = System.getProperty(ApplicationLiterals.USER_NAME);
-			data[0] = ip.toString();
-			data[1] = hostname;
-			data[2] = username;
-		} catch (UnknownHostException e) {
-			logger.warn("unable to log system info");
-		}
-		return data;
-	}
-
-	public static boolean doesUsernameExist(String user) {
-		try {
-			Connection con = Connect.getConnection();
-
-			String SQL_TEXT = ("SELECT USERNAME from " + Databases.ACCOUNTS
-					+ ApplicationLiterals.DOT + Tables.USERS
-					+ " WHERE USERNAME = UPPER('" + user + "')");
-
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(SQL_TEXT);
-
-			rs.next();
-			try {
-				rs.getString(1);
-				return true;
-			} catch (Exception e) {
-				logger.warn("Username " + user + " does not exist."
-						+ ApplicationLiterals.NEW_LINE
-						+ "Try again or create new account");
-				JOptionPane.showMessageDialog(frame, "Username " + user
-								+ " does not exist." + ApplicationLiterals.NEW_LINE
-								+ "Try again or create new account!",
-						"Invalid User", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}
-		} catch (Exception e) {
-			throw new AppException(e);
-		}
-	}
-
-	private static boolean validPassword(String user, String pass) {
+	private boolean validPassword(String user, String pass) {
 
 		boolean valid = false;
 		try {
@@ -346,7 +297,7 @@ public class VerifyAccess extends ApplicationLiterals {
 		return valid;
 	}
 
-	private static void makeButtonLink(JButton b) {
+	private void makeButtonLink(JButton b) {
 
 		b.setBorder(null);
 		b.setForeground(LINK_NOT_CLICKED);

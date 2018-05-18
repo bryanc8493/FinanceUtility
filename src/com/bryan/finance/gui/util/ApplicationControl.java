@@ -21,8 +21,7 @@ import com.bryan.finance.program.FinanceUtility;
 
 public class ApplicationControl {
 
-	private static final Logger logger = Logger
-			.getLogger(ApplicationControl.class);
+	private static final Logger logger = Logger.getLogger(ApplicationControl.class);
 
 	public static JPanel closeAndLogout(final Connection con, final JFrame frame) {
 		final JButton close = new PrimaryButton("Close", Icons.EXIT_ICON);
@@ -72,7 +71,7 @@ public class ApplicationControl {
 				frame.dispose();
 				logger.info("Closed by user");
 
-				VerifyAccess.CheckAccess();
+				new VerifyAccess();
 			}
 		});
 		return panelWrapper;
