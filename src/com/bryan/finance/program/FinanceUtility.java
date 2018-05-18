@@ -61,7 +61,7 @@ public class FinanceUtility {
 		new Loading();
 
 		if (ApplicationLiterals.isFromWorkspace()) {
-			USER_VALIDATION = true;
+			USER_VALIDATION = false;
 		}
 
 		if (USER_VALIDATION) {
