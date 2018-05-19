@@ -32,6 +32,7 @@ import javax.swing.table.TableColumn;
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.database.queries.Accounts;
 import com.bryan.finance.gui.MainMenu;
+import com.bryan.finance.gui.util.Loading;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.UpdatedRecord;
@@ -61,8 +62,10 @@ public class AccountsTab extends JPanel {
 	private int attempts = 1;
 
 	public AccountsTab() {
-		Connection con = Connect.getConnection();
 		logger.debug("Initializing and populating Accounts Tab");
+		Loading.update("Retrieving account data", 81);
+
+		Connection con = Connect.getConnection();
 		getAccountData(false);
 
 		final JButton view = new MultiLabelButton("View Passwords",

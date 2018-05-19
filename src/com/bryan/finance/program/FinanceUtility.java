@@ -58,8 +58,6 @@ public class FinanceUtility {
 			IOException {
 		setLookAndFeel();
 
-		new Loading();
-
 		if (ApplicationLiterals.isFromWorkspace()) {
 			USER_VALIDATION = false;
 		}
@@ -68,7 +66,7 @@ public class FinanceUtility {
 			new VerifyAccess();
 		} else {
 			logger.debug("Skipping authentication - working from dev workspace");
-			Connect.InitialConnect("ROOT");
+			new Loading("ROOT");
 		}
 	}
 

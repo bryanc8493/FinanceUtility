@@ -28,6 +28,7 @@ public abstract class ApplicationLiterals {
 	public static final String DOLLAR = "$";
 	public static final String DASH = "-";
 	public static final String SPACE = " ";
+	public static final String PERCENT = "%";
 
 	public static final String APP_TITLE = "Finance Utility";
 	protected static final String APP_ARTIFACT = "FinanceUtility";

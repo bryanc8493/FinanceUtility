@@ -21,10 +21,8 @@ public class Transactions {
 
     private static Logger logger = Logger.getLogger(Transactions.class);
 
-    public static Object[][] getPastEntries() {
+    public static Object[][] getPastEntries(int entriesToRetrieve) {
         final Connection con = Connect.getConnection();
-        int entriesToRetrieve = Integer.parseInt(ReadConfig
-                .getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
         Object[][] records = new Object[entriesToRetrieve][5];
         logger.debug("Getting past " + entriesToRetrieve + " transaction records...");
 

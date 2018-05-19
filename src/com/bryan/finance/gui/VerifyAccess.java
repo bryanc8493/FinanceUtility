@@ -3,10 +3,6 @@ package com.bryan.finance.gui;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,7 +91,6 @@ public class VerifyAccess extends ApplicationLiterals {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.pack();
-		Loading.terminate();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 		JRootPane rp = SwingUtilities.getRootPane(submit);
@@ -134,12 +129,19 @@ public class VerifyAccess extends ApplicationLiterals {
 									"Expired", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
-						try {
-							frame.dispose();
-							Connect.InitialConnect(username);
-						} catch (GeneralSecurityException | IOException e1) {
-							throw new AppException(e1);
-						}
+						frame.dispose();
+						Thread thread = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									new Loading(username);
+								} catch (Exception ex) {
+									throw new AppException(ex);
+								}
+							}
+						});
+
+						thread.start();
 					}
 				} else {
 					attempts++;

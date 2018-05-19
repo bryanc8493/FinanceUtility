@@ -4,6 +4,7 @@ import com.bryan.finance.beans.Reminder;
 import com.bryan.finance.database.Connect;
 import com.bryan.finance.database.queries.Reminders;
 import com.bryan.finance.gui.util.ApplicationControl;
+import com.bryan.finance.gui.util.Loading;
 import com.bryan.finance.gui.util.TabButton;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
@@ -29,8 +30,10 @@ public class RemindersTab extends JPanel {
     private JScrollPane dismissedTable = getActiveReminderData("DISMISSED");
 
     public RemindersTab() {
+        log.debug("Initializing and populating Reminders Tab");
+        Loading.update("Retrieving reminder data", 100);
+
         Connection con = Connect.getConnection();
-        log.debug("getting all data for reminders");
 
         final JButton add = new MultiLabelButton(" New Reminder ",
                 MultiLabelButton.BOTTOM, Icons.ADD_ICON);

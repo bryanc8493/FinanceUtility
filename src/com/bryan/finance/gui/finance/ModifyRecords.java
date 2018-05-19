@@ -17,11 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.bryan.finance.config.ReadConfig;
 import com.bryan.finance.database.queries.Transactions;
+import com.bryan.finance.literals.ApplicationLiterals;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Transaction;
@@ -59,7 +59,8 @@ public class ModifyRecords {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(title, BorderLayout.NORTH);
-		mainPanel.add(getTransactionData(), BorderLayout.CENTER);
+		int entriesToRetrieve = Integer.parseInt(ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
+		mainPanel.add(getTransactionData(entriesToRetrieve), BorderLayout.CENTER);
 		mainPanel.add(bottom, BorderLayout.SOUTH);
 
 		frame.add(mainPanel);
@@ -107,8 +108,8 @@ public class ModifyRecords {
 		});
 	}
 
-	private static JScrollPane getTransactionData() {
-		Object[][] records = Transactions.getPastEntries();
+	private static JScrollPane getTransactionData(int entries) {
+		Object[][] records = Transactions.getPastEntries(entries);
 		Object[] columnNames = { "ID", "Title", "Type", "Date", "Amount" };
 
 		// Creating table model to hold data and only make certain columns

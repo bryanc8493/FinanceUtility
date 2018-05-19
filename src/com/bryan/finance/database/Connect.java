@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import javax.swing.JOptionPane;
 
+import com.bryan.finance.gui.util.Loading;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.User;
@@ -42,6 +43,7 @@ public class Connect extends ApplicationLiterals {
 		String Dpass = Encoding.decrypt(ReadConfig.getConfigValue(DB_PASS));
 
 		logger.info("Establishing initial database connection...");
+		Loading.update("Connecting to database", 9);
 
 		try {
 			Class.forName(className);
@@ -114,8 +116,8 @@ public class Connect extends ApplicationLiterals {
 			rs.next();
 			PERMISSION = rs.getString(1).charAt(0);
 			currentUser.setPermission(PERMISSION);
-			logger.info("User " + currentUser.getUsername()
-					+ " set with permission " + PERMISSION);
+			logger.info("User " + currentUser.getUsername() + " set with permission " + PERMISSION);
+			Loading.update("Setting user's permission", 18);
 		} catch (Exception e) {
 			logger.error("Failed getting user's permission, default to 0 - "
 					+ e.toString() + Arrays.toString(e.getStackTrace()));
