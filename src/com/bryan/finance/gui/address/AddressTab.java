@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.bryan.finance.database.queries.Addresses;
 import com.bryan.finance.gui.MainMenu;
+import com.bryan.finance.gui.util.Loading;
 import org.apache.log4j.Logger;
 
 import com.bryan.finance.beans.Address;
@@ -45,8 +46,10 @@ public class AddressTab extends JPanel {
 	private static Logger logger = Logger.getLogger(AddressTab.class);
 
 	public AddressTab() {
-		Connection con = Connect.getConnection();
 		logger.debug("Initializing and populating Address Tab");
+		Loading.update("Retrieving address data", 90);
+
+		Connection con = Connect.getConnection();
 		final JButton view = new MultiLabelButton("View Addresses",
 				MultiLabelButton.BOTTOM, Icons.VIEW_ICON);
 		final JButton add = new MultiLabelButton(" New Address ",

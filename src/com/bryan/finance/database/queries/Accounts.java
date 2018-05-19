@@ -6,13 +6,12 @@ import com.bryan.finance.database.Connect;
 import com.bryan.finance.enums.Databases;
 import com.bryan.finance.enums.Tables;
 import com.bryan.finance.exception.AppException;
-import com.bryan.finance.gui.VerifyAccess;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.security.Encoding;
+import com.bryan.finance.utilities.Helpers;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.sql.*;
@@ -285,7 +284,7 @@ public class Accounts {
     public static void lockUser(String user) {
         try {
             Connection con = Connect.getConnection();
-            String[] systemInfo = VerifyAccess.getSystemInfo();
+            String[] systemInfo = Helpers.getSystemInfo();
 
             PreparedStatement ps;
             String SQL_TEXT = ("INSERT INTO " + Databases.ACCOUNTS + ApplicationLiterals.DOT
@@ -411,5 +410,35 @@ public class Accounts {
             }
         }
         return recordsInserted;
+    }
+
+    public static boolean doesUsernameExist(String user) {
+        try {
+            Connection con = Connect.getConnection();
+
+            String SQL_TEXT = ("SELECT USERNAME from " + Databases.ACCOUNTS
+                    + ApplicationLiterals.DOT + Tables.USERS
+                    + " WHERE USERNAME = UPPER('" + user + "')");
+
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(SQL_TEXT);
+
+            rs.next();
+            try {
+                rs.getString(1);
+                return true;
+            } catch (Exception e) {
+                logger.warn("Username " + user + " does not exist."
+                        + ApplicationLiterals.NEW_LINE
+                        + "Try again or create new account");
+                JOptionPane.showMessageDialog(null, "Username " + user
+                                + " does not exist." + ApplicationLiterals.NEW_LINE
+                                + "Try again or create new account!",
+                        "Invalid User", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (Exception e) {
+            throw new AppException(e);
+        }
     }
 }

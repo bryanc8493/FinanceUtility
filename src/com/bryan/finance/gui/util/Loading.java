@@ -10,23 +10,29 @@ import javax.swing.JProgressBar;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
+import com.bryan.finance.database.Connect;
+import com.bryan.finance.exception.AppException;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 
-public class Loading {
+public class Loading extends ApplicationLiterals {
 
 	private static JFrame frame;
+	private static JProgressBar progressBar;
+	private static JLabel title;
 
-	public Loading() {
-		frame = new JFrame(ApplicationLiterals.APP_TITLE);
-		JProgressBar pb = new JProgressBar();
-		pb.setIndeterminate(true);
+	public Loading(String user) {
+		frame = new JFrame(APP_TITLE);
+		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setString("");
+		progressBar.setValue(0);
 
-		JLabel title = new Title("Loading and initializing application....");
+		title = new Title("Loading and initializing application....");
 
 		JPanel content = new JPanel(new BorderLayout(0, 5));
 		content.add(title, BorderLayout.NORTH);
-		content.add(pb, BorderLayout.SOUTH);
+		content.add(progressBar, BorderLayout.SOUTH);
 
 		frame.add(content);
 		frame.setIconImage(Icons.APP_ICON.getImage());
@@ -37,9 +43,21 @@ public class Loading {
 		frame.pack();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
+
+		try {
+			Connect.InitialConnect(user);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
 	}
 
 	public static void terminate() {
 		frame.dispose();
+	}
+
+	public static void update(String text, int value) {
+		progressBar.setString(String.valueOf(value) + PERCENT);
+		progressBar.setValue(value);
+		title.setText(text);
 	}
 }

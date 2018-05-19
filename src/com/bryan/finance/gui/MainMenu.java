@@ -69,6 +69,7 @@ public class MainMenu extends Icons {
 	public static void modeSelection(final boolean showThemeButton,
 			int persistedTab) {
 		logger.debug("Initializing and generating main menu GUI...");
+		Loading.update("Initializing main menu", 27);
 		frame = new JFrame("Finance Utility");
 
 		String viewingAmount = ReadConfig
@@ -84,6 +85,7 @@ public class MainMenu extends Icons {
 				+ viewingAmount, MultiLabelButton.BOTTOM, QUERY_ICON);
 
 		// Get current balance as of current date and time
+		Loading.update("Determining account balances", 36);
 		final Connection con = Connect.getConnection();
 		String amount = Balance.getTodaysBalance();
 		amount = decimal.format(Double.parseDouble(amount));
@@ -99,9 +101,11 @@ public class MainMenu extends Icons {
 
 		// Get data for last specified (in config) past entries and put in
 		// scroll pane for table
-		Object[][] records = Transactions.getPastEntries();
+		int entriesToRetrieve = Integer.parseInt(ReadConfig.getConfigValue(ApplicationLiterals.VIEWING_AMOUNT_MAX));
+		Loading.update("Gathering last " + entriesToRetrieve + " entries", 45);
+		Object[][] previousRecords = Transactions.getPastEntries(entriesToRetrieve);
 		Object[] columnNames = { "ID", "TITLE", "TYPE", "DATE", "AMOUNT" };
-		final JTable table = new JTable(records, columnNames);
+		final JTable table = new JTable(previousRecords, columnNames);
 		final JScrollPane entriesScrollPane = new JScrollPane(table);
 		entriesScrollPane.setViewportView(table);
 		entriesScrollPane.setVisible(true);
@@ -109,6 +113,7 @@ public class MainMenu extends Icons {
 		entriesScrollPane.setPreferredSize(new Dimension(d.width * 2, table
 				.getRowHeight() * 15));
 
+		Loading.update("Looking for future payments", 54);
 		String futurePayments = Balance.getFuturePayments();
 		final JButton futureBalBtn = new JButton();
 		if (futurePayments.equals("0.00")) {
@@ -133,6 +138,7 @@ public class MainMenu extends Icons {
 			futureBalBtn.setForeground(Color.RED);
 		}
 
+		Loading.update("Looking for credit card payments", 63);
 		String credits = Balance.getCreditBalance();
 		final JButton creditBalBtn = new JButton();
 		if (credits == null) {
@@ -182,12 +188,11 @@ public class MainMenu extends Icons {
 
 		JPanel center = new JPanel(new BorderLayout());
 		center.add(content, BorderLayout.NORTH);
-		content.add(getLatestRecords(), BorderLayout.SOUTH);
+		content.add(getLatestRecordsPane(entriesToRetrieve), BorderLayout.SOUTH);
 
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
-		final JButton setThemeDefault = new JButton(
-				"Make This My Default Theme");
+		final JButton setThemeDefault = new JButton("Make This My Default Theme");
 		setThemeDefault.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		if (!showThemeButton) {
 			setThemeDefault.setVisible(false);
@@ -350,8 +355,8 @@ public class MainMenu extends Icons {
 		return sp;
 }
 
-	private static JScrollPane getLatestRecords() {
-		Object[][] records = Transactions.getPastEntries();
+	private static JScrollPane getLatestRecordsPane(int entries) {
+		Object[][] records = Transactions.getPastEntries(entries);
 		Object[][] partialRecords = getPartialDataColumns(records);
 		Object[] columnNames = { "Transactions ID", "Title", "Type", "Amount" };
 

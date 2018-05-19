@@ -16,15 +16,18 @@ import com.bryan.finance.database.Connect;
 
 import com.bryan.finance.database.InvestmentBalance;
 import com.bryan.finance.gui.util.ApplicationControl;
+import com.bryan.finance.gui.util.Loading;
 import com.bryan.finance.gui.util.RequestFocusListener;
 import com.bryan.finance.gui.util.Title;
 import com.bryan.finance.literals.ApplicationLiterals;
 import com.bryan.finance.literals.Icons;
 import com.bryan.finance.utilities.MultiLabelButton;
+import org.apache.log4j.Logger;
 
 public class InvestmentsTab extends JPanel {
 
 	private static final long serialVersionUID = -3456368332519377049L;
+	private static Logger logger = Logger.getLogger(InvestmentsTab.class);
 
 	public final static JButton fidelity = new MultiLabelButton("Update 401K",
 			MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
@@ -33,6 +36,9 @@ public class InvestmentsTab extends JPanel {
 	private Connection con;
 
 	public InvestmentsTab() {
+		logger.debug("Initializing and population Investments Tab");
+		Loading.update("Retrieving investment data", 72);
+
 		con = Connect.getConnection();
 		final JButton fidelityV = new MultiLabelButton("View 401K",
 				MultiLabelButton.BOTTOM, Icons.FIDELITY_ICON);
